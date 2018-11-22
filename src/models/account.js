@@ -1,4 +1,6 @@
-import mongoose, { connect } from 'infrastructure/mongoose'
+import bcrypt from 'bcrypt'
+import hash from 'shorthash'
+import mongoose, { register } from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({
   identifier: {
@@ -25,12 +27,26 @@ const schema = mongoose.Schema({
     default: false,
     index: true
   }
+}, {
+  timestamps: true
 })
 
 schema.index({ email: 'text' })
 
-export default async () => {
-  const connection = await connect()
+schema.pre('save', function(next) {
+  if (!this.identifier) {
+    this.identifier = hash.unique(this._id.toString())
+  }
 
-  return connection.model('Account', schema)
+  next()
+})
+
+schema.virtual('password').set(function(password) {
+  this.hashedPassword = hashPassword(password)
+})
+
+export const hashPassword = (plain) => {
+  return bcrypt.hashSync(plain, 12)
 }
+
+export default async () => register('Account', schema)

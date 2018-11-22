@@ -1,11 +1,23 @@
-import { NOT_IMPLEMENTED } from 'http-status-codes'
+import { CREATED, CONFLICT } from 'http-status-codes'
 
 import resource from 'rest/resource'
+import accountService from 'services/account'
 
-export default resource(
+export default resource('ACCOUNT')(
   async (req) => {
+    const { email } = JSON.parse(req.body)
+
+    const newAccount = await accountService.create({ email })
+
+    if (!newAccount) {
+      return {
+        statusCode: CONFLICT
+      }
+    }
+
     return {
-      statusCode: NOT_IMPLEMENTED
+      statusCode: CREATED,
+      resource: newAccount
     }
   }
 )

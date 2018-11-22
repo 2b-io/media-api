@@ -50,10 +50,13 @@ const authorize = async (req) => {
     throw UNAUTHORIZED
   }
 
-  // TODO: verify app & account
-  const account = await accountService.get(accountIdentifier)
+  // TODO: verify app
 
-  if (!account) {
+  const account = accountIdentifier ?
+    await accountService.get(accountIdentifier) :
+    null
+
+  if (accountIdentifier && !account) {
     throw UNAUTHORIZED
   }
 

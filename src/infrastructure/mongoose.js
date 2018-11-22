@@ -37,6 +37,16 @@ export const connect = async () => {
   return connection
 }
 
+export const register = async (modelName, schema) => {
+  const connection = await connect()
+
+  if (connection.modelNames().includes(modelName)) {
+    return connection.model(modelName)
+  } else {
+    return connection.model(modelName, schema)
+  }
+}
+
 // don't use `mpromise`
 mongoose.Promise = Promise
 export default mongoose
