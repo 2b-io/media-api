@@ -24,28 +24,28 @@ custom:
 functions:
   # ACCOUNT
   ACCOUNT___list:
-    handler: src/handler.account___list
+    handler: src/handler.ACCOUNT___list
     events:
       - http:
           path: /accounts
           method: get
 
   ACCOUNT___get:
-    handler: src/handler.account___get
+    handler: src/handler.ACCOUNT___get
     events:
       - http:
           path: /accounts/{accountIdentifier}
           method: get
 
   ACCOUNT___create:
-    handler: src/handler.notImplemented
+    handler: src/handler.ACCOUNT___create
     events:
       - http:
           path: /accounts
           method: post
 
   ACCOUNT___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.ACCOUNT___replace
     events:
       - http:
           path: /accounts/{accountIdentifier}
@@ -55,7 +55,7 @@ functions:
 
   # ACCOUNT > PASSWORD
   ACCOUNT__PASSWORD___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.ACCOUNT__PASSWORD___replace
     events:
       - http:
           path: /accounts/{accountIdentifier}/password
@@ -65,14 +65,14 @@ functions:
 
   # ACCOUNT > PINNED_PROJECT
   ACCOUNT__PINNED_PROJECT___list:
-    handler: src/handler.notImplemented
+    handler: src/handler.ACCOUNT__PINNED_PROJECT___list
     events:
       - http:
           path: /accounts/{accountIdentifier}/pinned-projects
           method: get
 
   ACCOUNT__PINNED_PROJECT___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.ACCOUNT__PINNED_PROJECT___replace
     events:
       - http:
           path: /accounts/{accountIdentifier}/pinned-projects
@@ -82,7 +82,7 @@ functions:
 
   # RESET_TOKEN
   RESET_TOKEN___create:
-    handler: src/handler.notImplemented
+    handler: src/handler.RESET_TOKEN___create
     events:
       - http:
           path: /reset-tokens
@@ -92,35 +92,35 @@ functions:
 
   # PROJECT
   PROJECT___list:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT___list
     events:
       - http:
           path: /projects
           method: get
 
   PROJECT___get:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT___get
     events:
       - http:
           path: /projects/{projectIdentifier}
           method: get
 
   PROJECT___create:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT___create
     events:
       - http:
           path: /projects
           method: post
 
   PROJECT___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT___replace
     events:
       - http:
           path: /projects/{projectIdentifier}
           method: put
 
   PROJECT___delete:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT___delete
     events:
       - http:
           path: /projects/{projectIdentifier}
@@ -130,14 +130,14 @@ functions:
 
   # PROJECT > INFRASTRUCTURE
   PROJECT__INFRASTRUCTURE___get:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__INFRASTRUCTURE___get
     events:
       - http:
           path: /projects/{projectIdentifier}/infrastructure
           method: get
 
   PROJECT__INFRASTRUCTURE___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__INFRASTRUCTURE___replace
     events:
       - http:
           path: /projects/{projectIdentifier}/infrastructure
@@ -147,28 +147,28 @@ functions:
 
   # PROJECT > COLLABORATOR
   PROJECT__COLLABORATOR___list:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__COLLABORATOR___list
     events:
       - http:
           path: /projects/{projectIdentifier}/collaborators
           method: get
 
-  PROJECT__COLLABORATOR___create:
-    handler: src/handler.notImplemented
+  PROJECT__COLLABORATOR___update:
+    handler: src/handler.PROJECT__COLLABORATOR___update
     events:
       - http:
           path: /projects/{projectIdentifier}/collaborators
-          method: post
+          method: patch
 
-  PROJECT__COLLABORATOR___update:
-    handler: src/handler.notImplemented
+  PROJECT__COLLABORATOR___replace:
+    handler: src/handler.PROJECT__COLLABORATOR___replace
     events:
       - http:
           path: /projects/{projectIdentifier}/collaborators/{accountIdentifier}
-          method: patch
+          method: put
 
   PROJECT__COLLABORATOR___delete:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__COLLABORATOR___delete
     events:
       - http:
           path: /projects/{projectIdentifier}/collaborators/{accountIdentifier}
@@ -177,15 +177,15 @@ functions:
   # PROJECT > COLLABORATOR --- END
 
   # PROJECT > METRIC
-  PROJECT__METRIC___list:
-    handler: src/handler.notImplemented
+  PROJECT__METRIC__DATAPOINT___list:
+    handler: src/handler.PROJECT__METRIC__DATAPOINT___list
     events:
       - http:
           path: /projects/{projectIdentifier}/metrics/{metricName}/datapoints
           method: get
 
-  PROJECT__METRIC___update:
-    handler: src/handler.notImplemented
+  PROJECT__METRIC__DATAPOINT___update:
+    handler: src/handler.PROJECT__METRIC__DATAPOINT___update
     events:
       - http:
           path: /projects/{projectIdentifier}/metrics/{metricName}/datapoints
@@ -195,35 +195,35 @@ functions:
 
   # PROJECT > RULE
   PROJECT__RULE___list:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__RULE___list
     events:
       - http:
           path: /projects/{projectIdentifier}/rules
           method: get
 
   PROJECT__RULE___get:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__RULE___get
     events:
       - http:
           path: /projects/{projectIdentifier}/rules/{ruleIdentifier}
           method: get
 
   PROJECT__RULE___create:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__RULE___create
     events:
       - http:
           path: /projects/{projectIdentifier}/rules
           method: post
 
   PROJECT__RULE___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__RULE___replace
     events:
       - http:
           path: /projects/{projectIdentifier}/rules/{ruleIdentifier}
           method: put
 
   PROJECT__RULE___delete:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__RULE___delete
     events:
       - http:
           path: /projects/{projectIdentifier}/rules/{ruleIdentifier}
@@ -233,14 +233,14 @@ functions:
 
   # PROJECT > CACHE_SETTING
   PROJECT__CACHE_SETTING___get:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__CACHE_SETTING___get
     events:
       - http:
           path: /projects/{projectIdentifier}/cache-setting
           method: get
 
   PROJECT__CACHE_SETTING___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__CACHE_SETTING___replace
     events:
       - http:
           path: /projects/{projectIdentifier}/cache-setting
@@ -250,14 +250,14 @@ functions:
 
   # PROJECT > PULL_SETTING
   PROJECT__PULL_SETTING___get:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__PULL_SETTING___get
     events:
       - http:
           path: /projects/{projectIdentifier}/pull-setting
           method: get
 
   PROJECT__PULL_SETTING___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__PULL_SETTING___replace
     events:
       - http:
           path: /projects/{projectIdentifier}/pull-setting
@@ -267,35 +267,35 @@ functions:
 
   # PROJECT > PRESET
   PROJECT__PRESET___list:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__PRESET___list
     events:
       - http:
           path: /projects/{projectIdentifier}/presets
           method: get
 
   PROJECT__PRESET___get:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__PRESET___get
     events:
       - http:
           path: /projects/{projectIdentifier}/presets/{contentType}
           method: get
 
   PROJECT__PRESET___create:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__PRESET___create
     events:
       - http:
           path: /projects/{projectIdentifier}/presets
           method: post
 
   PROJECT__PRESET___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__PRESET___replace
     events:
       - http:
           path: /projects/{projectIdentifier}/presets/{contentType}
           method: put
 
   PROJECT__PRESET___delete:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__PRESET___delete
     events:
       - http:
           path: /projects/{projectIdentifier}/presets/{contentType}
@@ -305,28 +305,28 @@ functions:
 
   # PROJECT > INVALIDATION
   PROJECT__INVALIDATION___list:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__INVALIDATION___list
     events:
       - http:
           path: /projects/{projectIdentifier}/invalidations
           method: get
 
   PROJECT__INVALIDATION___get:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__INVALIDATION___get
     events:
       - http:
           path: /projects/{projectIdentifier}/invalidations/{invalidationIdentifier}
           method: get
 
   PROJECT__INVALIDATION___create:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__INVALIDATION___create
     events:
       - http:
           path: /projects/{projectIdentifier}/invalidations
           method: post
 
   PROJECT__INVALIDATION___replace:
-    handler: src/handler.notImplemented
+    handler: src/handler.PROJECT__INVALIDATION___replace
     events:
       - http:
           path: /projects/{projectIdentifier}/invalidations/{invalidationIdentifier}

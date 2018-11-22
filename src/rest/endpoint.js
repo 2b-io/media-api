@@ -30,9 +30,7 @@ const parseAuthorizationHeader = (value) => {
 }
 
 const authorize = (event) => {
-  const headers = normalizeHttpHeaders(event.headers)
-
-  const authorization = event.headers.authorization
+  const { authorization } = normalizeHttpHeaders(event.headers)
 
   if (!authorization) {
     throw UNAUTHORIZED
