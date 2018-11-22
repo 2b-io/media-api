@@ -1,6 +1,8 @@
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes'
 import serializeError from 'serialize-error'
 
+import accountService from 'services/account'
+
 const normalizeHttpHeaders = (headers) => Object.entries(headers).reduce(
   (headers, [ name, value ]) => ({
     ...headers,
@@ -29,20 +31,29 @@ const parseAuthorizationHeader = (value) => {
   }
 }
 
-const authorize = (req) => {
+const authorize = async (req) => {
   const { authorization } = normalizeHttpHeaders(req.headers)
 
   if (!authorization) {
     throw UNAUTHORIZED
   }
 
-  const { type, app, account } = parseAuthorizationHeader(authorization)
+  const {
+    type,
+    app,
+    account: accountIdentifier
+  } = parseAuthorizationHeader(authorization)
 
   if (type !== 'MEDIA_CDN') {
     throw UNAUTHORIZED
   }
 
   // TODO: verify app & account
+  const account = await accountService.get(accountIdentifier)
+
+  if (!account) {
+    throw UNAUTHORIZED
+  }
 
   return {
     app,
@@ -56,7 +67,7 @@ export default (handler) => async (req, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   try {
-    const session = authorize(req)
+    const session = await authorize(req)
 
     const { statusCode, resource } = await handler(req, session)
 

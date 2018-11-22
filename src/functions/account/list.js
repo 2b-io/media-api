@@ -1,13 +1,11 @@
 import { OK } from 'http-status-codes'
 
-import account from 'models/account'
 import endpoint from 'rest/endpoint'
+import accountService from 'services/account'
 
 export default endpoint(
   async (req) => {
-    const Account = await account()
-
-    const accounts = await Account.find()
+    const accounts = await accountService.list()
 
     return {
       statusCode: OK,

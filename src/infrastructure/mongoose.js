@@ -1,12 +1,6 @@
-/*
-https://mongoosejs.com/docs/lambda.html
-*/
-
+// Using Mongoose With AWS Lambda: https://mongoosejs.com/docs/
 import mongoose from 'mongoose'
-
 import config from 'infrastructure/config'
-
-mongoose.Promise = Promise
 
 let connection = null
 let connectionExpiration = null
@@ -28,10 +22,6 @@ export const connect = async () => {
     })
 
     console.log('MongoDB connected!')
-
-    connection.on('disconnected', () => {
-      console.log('Disconnected from MongoDB!')
-    });
   } else {
     console.log('Reuse alive MongoDB connection.')
   }
@@ -47,4 +37,6 @@ export const connect = async () => {
   return connection
 }
 
+// don't use `mpromise`
+mongoose.Promise = Promise
 export default mongoose
