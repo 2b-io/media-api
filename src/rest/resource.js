@@ -63,13 +63,9 @@ const authorize = async (req) => {
   }
 }
 
-const transform = (type, resource) => {
-  if (isArray(resource)) {
-    return resource.map(transformers[ type ])
-  } else {
-    return transformers[ type ](resource)
-  }
-}
+const transform = (type, resource) => isArray(resource) ?
+  resource.map(transformers[ type ]) :
+  transformers[ type ](resource)
 
 export default (resourceType) => (handler) => async (req, context) => {
   // Make sure to add this so you can re-use `connnection` between function calls.

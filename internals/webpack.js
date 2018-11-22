@@ -1,4 +1,5 @@
 const slsw = require('serverless-webpack')
+const webpack = require('webpack')
 
 module.exports = {
   entry: slsw.lib.entries,
@@ -40,5 +41,11 @@ module.exports = {
       'node_modules',
       'src'
     ]
-  }
+  },
+  plugins: [
+    // https://github.com/webpack/webpack/issues/3404#issuecomment-264342120
+    new webpack.DefinePlugin({
+      'typeof window': '"object"'
+    })
+  ]
 }
