@@ -1,16 +1,23 @@
-import { OK } from 'http-status-codes'
+import { NOT_FOUND, OK } from 'http-status-codes'
 
-import endpoint from 'rest/endpoint'
+import resource from 'rest/resource'
+import accountService from 'services/account'
 
-export default endpoint(
+export default resource('account')(
   async (req) => {
-    const { identifier } = req.pathParameters
+    const { accountIdentifier } = req.pathParameters
+
+    const account = await accountService.get(accountIdentifier)
+
+    if (!account) {
+      return {
+        statusCode: NOT_FOUND
+      }
+    }
 
     return {
       statusCode: OK,
-      resource: {
-        identifier
-      }
+      resource: account
     }
   }
 )

@@ -1,8 +1,8 @@
 import { NOT_IMPLEMENTED } from 'http-status-codes'
 
-import endpoint from 'rest/endpoint'
+import resource from 'rest/resource'
 
-export default endpoint(
+export default resource(
   async (req) => {
     return {
       statusCode: NOT_IMPLEMENTED

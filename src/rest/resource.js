@@ -1,7 +1,9 @@
 import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes'
+import isArray from 'isarray'
 import serializeError from 'serialize-error'
 
 import accountService from 'services/account'
+import * as transformers from 'transformers'
 
 const normalizeHttpHeaders = (headers) => Object.entries(headers).reduce(
   (headers, [ name, value ]) => ({
@@ -61,7 +63,15 @@ const authorize = async (req) => {
   }
 }
 
-export default (handler) => async (req, context) => {
+const transform = (type, resource) => {
+  if (isArray(resource)) {
+    return resource.map(transformers[ type ])
+  } else {
+    return transformers[ type ](resource)
+  }
+}
+
+export default (resourceType) => (handler) => async (req, context) => {
   // Make sure to add this so you can re-use `connnection` between function calls.
   // See https://www.mongodb.com/blog/post/serverless-development-with-nodejs-aws-lambda-mongodb-atlas
   context.callbackWaitsForEmptyEventLoop = false;
@@ -69,12 +79,15 @@ export default (handler) => async (req, context) => {
   try {
     const session = await authorize(req)
 
-    const { statusCode, resource } = await handler(req, session)
+    const {
+      statusCode,
+      resource
+    } = await handler(req, session)
 
     return {
       statusCode,
       body: resource ?
-        JSON.stringify(resource) :
+        JSON.stringify(transform(resourceType, resource)) :
         null
     }
   } catch (e) {
