@@ -5,6 +5,22 @@ provider:
   runtime: nodejs8.10
   timeout: 30
 
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    port: 3008
+    host: "0.0.0.0"
+
+  webpack:
+    webpackConfig: internals/webpack.js
+
+# ========================= #
+#  ALL REST ENDPOINTS HERE  #
+# ========================= #
+
 functions:
   # ACCOUNT
   ACCOUNT___list:
@@ -177,6 +193,44 @@ functions:
 
   # PROJECT > METRIC --- END
 
+  # PROJECT > RULE
+  PROJECT__RULE___list:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/rules
+          method: get
+
+  PROJECT__RULE___get:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/rules/{ruleIdentifier}
+          method: get
+
+  PROJECT__RULE___create:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/rules
+          method: post
+
+  PROJECT__RULE___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/rules/{ruleIdentifier}
+          method: put
+
+  PROJECT__RULE___delete:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/rules/{ruleIdentifier}
+          method: delete
+
+  # PROJECT > RULE --- END
+
   # PROJECT > CACHE_SETTING
   PROJECT__CACHE_SETTING___get:
     handler: src/handler.notImplemented
@@ -279,15 +333,3 @@ functions:
           method: put
 
   # PROJECT > INVALIDATION --- END
-
-plugins:
-  - serverless-webpack
-  - serverless-offline
-
-custom:
-  serverless-offline:
-    port: 3008
-    host: "0.0.0.0"
-
-  webpack:
-    webpackConfig: internals/webpack.js
