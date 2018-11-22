@@ -1,5 +1,7 @@
+import { NOT_IMPLEMENTED } from 'http-status-codes'
+
 export default async (event) => {
   return {
-    statusCode: 501 // NOT IMPLEMENTED
+    statusCode: NOT_IMPLEMENTED
   }
 }

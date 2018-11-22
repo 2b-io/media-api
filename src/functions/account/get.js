@@ -1,3 +1,5 @@
+import { OK } from 'http-status-codes'
+
 import endpoint from 'rest/endpoint'
 
 export default endpoint(
@@ -5,7 +7,7 @@ export default endpoint(
     const { identifier } = event.pathParameters
 
     return {
-      statusCode: 201,
+      statusCode: OK,
       resource: {
         identifier
       }

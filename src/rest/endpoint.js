@@ -1,3 +1,4 @@
+import { INTERNAL_SERVER_ERROR } from 'http-status-codes'
 import serializeError from 'serialize-error'
 
 export default (handler) => async (event) => {
@@ -14,7 +15,7 @@ export default (handler) => async (event) => {
     }
   } catch (e) {
     return {
-      statusCode: 500,
+      statusCode: INTERNAL_SERVER_ERROR,
       body: JSON.stringify({
         reason: serializeError(e)
       })
