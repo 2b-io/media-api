@@ -1,0 +1,39 @@
+{
+  "name": "@media-network/media-api",
+  "version": "1.0.0",
+  "description": "Serverless REST API for Media CDN",
+  "main": "handler.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/media-network/media-api.git"
+  },
+  "keywords": [
+    "serverless",
+    "aws"
+  ],
+  "author": "LongLH <d@dapps.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/media-network/media-api/issues"
+  },
+  "homepage": "https://github.com/media-network/media-api#readme",
+  "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "7.0.0",
+    "@babel/plugin-transform-runtime": "7.1.0",
+    "@babel/preset-env": "7.1.6",
+    "babel-loader": "8.0.4",
+    "run.env": "1.1.0",
+    "serverless": "1.33.2",
+    "serverless-offline": "3.31.3",
+    "serverless-webpack": "5.2.0",
+    "webpack": "4.26.0",
+    "webpack-node-externals": "1.7.2"
+  },
+  "dependencies": {
+    "mongoose": "5.3.13",
+    "serialize-error": "3.0.0"
+  },
+  "scripts": {
+    "start": "run.env serverless offline start"
+  }
+}

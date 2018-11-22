@@ -1,0 +1,34 @@
+service: media-api
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  account__list:
+    handler: src/handler.account__list
+    timeout: 30
+    events:
+      - http:
+          path: /accounts
+          method: get
+
+  account__get:
+    handler: src/handler.account__get
+    timeout: 30
+    events:
+      - http:
+          path: /accounts/{identifier}
+          method: get
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    port: 3008
+    host: "0.0.0.0"
+
+  webpack:
+    webpackConfig: internals/webpack.js
