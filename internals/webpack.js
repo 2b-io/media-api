@@ -8,6 +8,7 @@ module.exports = {
   externals: [
     /aws-sdk/
   ],
+  stats: 'minimal',
   module: {
     rules: [
       {

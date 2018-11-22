@@ -3,23 +3,282 @@ service: media-api
 provider:
   name: aws
   runtime: nodejs8.10
+  timeout: 30
 
 functions:
-  account__list:
-    handler: src/handler.account__list
-    timeout: 30
+  # ACCOUNT
+  ACCOUNT___list:
+    handler: src/handler.account___list
     events:
       - http:
           path: /accounts
           method: get
 
-  account__get:
-    handler: src/handler.account__get
-    timeout: 30
+  ACCOUNT___get:
+    handler: src/handler.account___get
     events:
       - http:
-          path: /accounts/{identifier}
+          path: /accounts/{accountIdentifier}
           method: get
+
+  ACCOUNT___create:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /accounts
+          method: post
+
+  ACCOUNT___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /accounts/{accountIdentifier}
+          method: put
+
+  # ACCOUNT --- END
+
+  # ACCOUNT > PASSWORD
+  ACCOUNT__PASSWORD___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /accounts/{accountIdentifier}/password
+          method: put
+
+  # ACCOUNT > PASSWORD --- END
+
+  # ACCOUNT > PINNED_PROJECT
+  ACCOUNT__PINNED_PROJECT___list:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /accounts/{accountIdentifier}/pinned-projects
+          method: get
+
+  ACCOUNT__PINNED_PROJECT___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /accounts/{accountIdentifier}/pinned-projects
+          method: put
+
+  # ACCOUNT > PINNED_PROJECT --- END
+
+  # RESET_TOKEN
+  RESET_TOKEN___create:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /reset-tokens
+          method: post
+
+  # RESET_TOKEN --- END
+
+  # PROJECT
+  PROJECT___list:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects
+          method: get
+
+  PROJECT___get:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}
+          method: get
+
+  PROJECT___create:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects
+          method: post
+
+  PROJECT___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}
+          method: put
+
+  PROJECT___delete:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}
+          method: delete
+
+  # PROJECT --- END
+
+  # PROJECT > INFRASTRUCTURE
+  PROJECT__INFRASTRUCTURE___get:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/infrastructure
+          method: get
+
+  PROJECT__INFRASTRUCTURE___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/infrastructure
+          method: put
+
+  # PROJECT > INFRASTRUCTURE --- END
+
+  # PROJECT > COLLABORATOR
+  PROJECT__COLLABORATOR___list:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/collaborators
+          method: get
+
+  PROJECT__COLLABORATOR___create:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/collaborators
+          method: post
+
+  PROJECT__COLLABORATOR___update:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/collaborators/{accountIdentifier}
+          method: patch
+
+  PROJECT__COLLABORATOR___delete:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/collaborators/{accountIdentifier}
+          method: delete
+
+  # PROJECT > COLLABORATOR --- END
+
+  # PROJECT > METRIC
+  PROJECT__METRIC___list:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/metrics/{metricName}/datapoints
+          method: get
+
+  PROJECT__METRIC___update:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/metrics/{metricName}/datapoints
+          method: patch
+
+  # PROJECT > METRIC --- END
+
+  # PROJECT > CACHE_SETTING
+  PROJECT__CACHE_SETTING___get:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/cache-setting
+          method: get
+
+  PROJECT__CACHE_SETTING___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/cache-setting
+          method: put
+
+  # PROJECT > CACHE_SETTING --- END
+
+  # PROJECT > PULL_SETTING
+  PROJECT__PULL_SETTING___get:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/pull-setting
+          method: get
+
+  PROJECT__PULL_SETTING___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/pull-setting
+          method: put
+
+  # PROJECT > PULL_SETTING --- END
+
+  # PROJECT > PRESET
+  PROJECT__PRESET___list:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/presets
+          method: get
+
+  PROJECT__PRESET___get:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/presets/{contentType}
+          method: get
+
+  PROJECT__PRESET___create:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/presets
+          method: post
+
+  PROJECT__PRESET___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/presets/{contentType}
+          method: put
+
+  PROJECT__PRESET___delete:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/presets/{contentType}
+          method: delete
+
+  # PROJECT > PRESET --- END
+
+  # PROJECT > INVALIDATION
+  PROJECT__INVALIDATION___list:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/invalidations
+          method: get
+
+  PROJECT__INVALIDATION___get:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/invalidations/{invalidationIdentifier}
+          method: get
+
+  PROJECT__INVALIDATION___create:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/invalidations
+          method: post
+
+  PROJECT__INVALIDATION___replace:
+    handler: src/handler.notImplemented
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/invalidations/{invalidationIdentifier}
+          method: put
+
+  # PROJECT > INVALIDATION --- END
 
 plugins:
   - serverless-webpack
