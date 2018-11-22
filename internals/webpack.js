@@ -37,8 +37,8 @@ module.exports = {
   },
   resolve: {
     modules: [
-      'src',
-      'node_modules'
+      'node_modules',
+      'src'
     ]
   }
 }

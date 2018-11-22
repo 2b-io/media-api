@@ -29,8 +29,8 @@ const parseAuthorizationHeader = (value) => {
   }
 }
 
-const authorize = (event) => {
-  const { authorization } = normalizeHttpHeaders(event.headers)
+const authorize = (req) => {
+  const { authorization } = normalizeHttpHeaders(req.headers)
 
   if (!authorization) {
     throw UNAUTHORIZED
@@ -50,7 +50,11 @@ const authorize = (event) => {
   }
 }
 
-export default (handler) => async (req) => {
+export default (handler) => async (req, context) => {
+  // Make sure to add this so you can re-use `connnection` between function calls.
+  // See https://www.mongodb.com/blog/post/serverless-development-with-nodejs-aws-lambda-mongodb-atlas
+  context.callbackWaitsForEmptyEventLoop = false;
+
   try {
     const session = authorize(req)
 
