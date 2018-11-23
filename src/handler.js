@@ -3,7 +3,7 @@
 export { default as ACCOUNT___create } from './functions/account/create'
 export { default as ACCOUNT___get } from './functions/account/get'
 export { default as ACCOUNT___list } from './functions/account/list'
-export { default as ACCOUNT___replace } from './functions/account/replace'
+export { default as ACCOUNT___update } from './functions/account/update'
 
 export { default as ACCOUNT__PASSWORD___replace } from './functions/account/password/replace'
 

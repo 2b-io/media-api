@@ -44,12 +44,12 @@ functions:
           path: /accounts
           method: post
 
-  ACCOUNT___replace:
-    handler: src/handler.ACCOUNT___replace
+  ACCOUNT___update:
+    handler: src/handler.ACCOUNT___update
     events:
       - http:
           path: /accounts/{accountIdentifier}
-          method: put
+          method: patch
 
   # ACCOUNT --- END
 

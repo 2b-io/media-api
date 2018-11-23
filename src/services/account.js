@@ -43,9 +43,20 @@ const list = async (condition) => {
   return await Account.find(condition).lean()
 }
 
+const update = async (identifier, data) => {
+  const Account = await createAccountModel()
+
+  return await Account.findOneAndUpdate({
+    identifier
+  }, data, {
+    new: true
+  })
+}
+
 export default {
   create,
   get,
   getByEmail,
-  list
+  list,
+  update
 }
