@@ -1,6 +1,7 @@
 import namor from 'namor'
 
 import createProjectModel from 'models/project'
+import cacheSettingService from 'services/cache-setting'
 import collaboratorService from 'services/collaborator'
 import pullSettingService from 'services/pull-setting'
 
@@ -45,9 +46,16 @@ const create = async ({ name, owner }) => {
       accountId: owner,
       privilege: 'OWNER'
     })
+
+    await cacheSettingService.create({
+      projectId: project._id
+    })
+
     await pullSettingService.create({
       projectId: project._id
     })
+
+    // craete infrastructure
 
     return project
   } catch (e) {
@@ -58,18 +66,41 @@ const create = async ({ name, owner }) => {
   }
 }
 
-const get = async (identifier) => {
+const get = async (identifier, collaboratorId) => {
   const Project = await createProjectModel()
 
-  return await Project.findOne({
+  const project = await Project.findOne({
     identifier
   })
+
+  if (!project) {
+    return null
+  }
+
+  if (collaboratorId) {
+    const collaborator = await collaboratorService.get(project._id, collaboratorId)
+
+    if (!collaborator) {
+      return null
+    }
+  }
+
+  return project
 }
 
-const list = async (condition) => {
+const list = async (condition = {}, collaboratorId) => {
+  const collaborators = await collaboratorService.listByAccountId(collaboratorId)
+
   const Project = await createProjectModel()
 
-  return await Project.find(condition)
+  const projects = await Project.find({
+    _id: {
+      $in: collaborators.map((c) => c.project)
+    },
+    ...condition
+  })
+
+  return projects
 }
 
 export default {
