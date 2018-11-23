@@ -1,4 +1,4 @@
-import { BAD_REQUEST, CREATED, NOT_IMPLEMENTED } from 'http-status-codes'
+import { BAD_REQUEST, CREATED } from 'http-status-codes'
 import uuid from 'uuid'
 
 import resource from 'rest/resource'

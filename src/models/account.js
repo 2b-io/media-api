@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import hash from 'shorthash'
+
 import mongoose, { register } from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({

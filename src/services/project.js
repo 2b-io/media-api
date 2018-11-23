@@ -3,6 +3,7 @@ import namor from 'namor'
 import createProjectModel from 'models/project'
 import cacheSettingService from 'services/cache-setting'
 import collaboratorService from 'services/collaborator'
+import infrastructureService from 'services/infrastructure'
 import pullSettingService from 'services/pull-setting'
 
 const generateUniqueIdentifier = async (retry) => {
@@ -28,7 +29,7 @@ const generateUniqueIdentifier = async (retry) => {
   return await generateUniqueIdentifier(retry - 1)
 }
 
-const create = async ({ name, owner }) => {
+const create = async ({ name, provider, owner }) => {
   const identifier = await generateUniqueIdentifier(10)
 
   const Project = await createProjectModel()
@@ -55,7 +56,10 @@ const create = async ({ name, owner }) => {
       projectId: project._id
     })
 
-    // craete infrastructure
+    await infrastructureService.create({
+      projectId: project._id,
+      provider
+    })
 
     return project
   } catch (e) {

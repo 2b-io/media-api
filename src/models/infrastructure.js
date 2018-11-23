@@ -1,9 +1,11 @@
+import hash from 'shorthash'
+
 import mongoose, { register } from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({
   identifier: {
     type: String,
-    required: true,
+    unique: true,
     index: true
   },
   project: {
@@ -17,7 +19,6 @@ const schema = mongoose.Schema({
   },
   domain: {
     type: String,
-    required: true,
     index: true
   },
   settings: {
@@ -29,6 +30,14 @@ const schema = mongoose.Schema({
   }
 }, {
   timestamps: true
+})
+
+schema.pre('save', function(next) {
+  if (!this.identifier) {
+    this.identifier = hash.unique(this._id.toString())
+  }
+
+  next()
 })
 
 export default () => register('Infrastructure', schema)
