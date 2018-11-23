@@ -16,6 +16,7 @@ const schema = mongoose.Schema({
   },
   allowedOrigins: [ String ]
 }, {
+  collection: 'pullSettings',
   timestamps: true
 })
 

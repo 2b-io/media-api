@@ -6,7 +6,7 @@ import invalidationService from 'services/invalidation'
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
-    const { patterns } = JSON.parse(req.body) || {}
+    const { patterns, options } = JSON.parse(req.body) || {}
     // TODO: validate
     if (!patterns || !Array.isArray(patterns)) {
       return {
@@ -16,7 +16,10 @@ export default resource('INVALIDATION')(
 
     const newInvadidation = await invalidationService.create(
       projectIdentifier,
-      patterns
+      {
+        patterns,
+        options
+      }
     )
 
     if (!newInvadidation) {
