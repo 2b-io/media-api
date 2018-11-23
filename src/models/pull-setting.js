@@ -16,7 +16,8 @@ const schema = mongoose.Schema({
   },
   allowedOrigins: [ String ]
 }, {
-  collection: 'pullSettings'
+  collection: 'pullSettings',
+  timestamps: true
 })
 
 export default async () => register('PullSetting', schema)

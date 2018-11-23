@@ -13,6 +13,6 @@ export default {
 
     return await PullSetting.findOne({
       project: project._id
-    }).lean()
+    })
   }
 }

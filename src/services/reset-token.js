@@ -15,6 +15,15 @@ const create = async (data) => {
   }).save()
 }
 
+const get = async (token) => {
+  const ResetToken = await createResetTokenModel()
+
+  return await ResetToken.findOne({
+    token
+  })
+}
+
 export default {
-  create
+  create,
+  get
 }
