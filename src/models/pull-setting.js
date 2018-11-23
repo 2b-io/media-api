@@ -15,8 +15,6 @@ const schema = mongoose.Schema({
     index: true
   },
   allowedOrigins: [ String ]
-}, {
-  collection: 'pullSettings'
 })
 
-export default async () => register('PullSetting', schema)
+export default () => register('PullSetting', schema)

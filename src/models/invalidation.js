@@ -17,11 +17,8 @@ const schema = mongoose.Schema({
   status: {
     type: String
   },
-  createdAt: {
-    type: Number
-  }
 }, {
-  collection: 'invalidation'
+  timestamps: true
 })
 
 schema.pre('save', function(next) {
@@ -33,4 +30,4 @@ schema.pre('save', function(next) {
 })
 
 
-export default async () => register('Invalidation', schema)
+export default () => register('Invalidation', schema)

@@ -1,4 +1,4 @@
-import invalidationModel from 'models/invalidation'
+import createInvalidationModel from 'models/invalidation'
 import projectService from 'services/project'
 
 export default {
@@ -9,7 +9,7 @@ export default {
       return null
     }
 
-    const Invalidation = await invalidationModel()
+    const Invalidation = await createInvalidationModel()
 
     return await new Invalidation({
       project: project._id,
