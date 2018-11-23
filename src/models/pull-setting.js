@@ -6,12 +6,10 @@ const schema = mongoose.Schema({
     required: true,
     index: true
   },
-  headers: [
-    {
-      name: String,
-      value: String
-    }
-  ],
+  headers: [ {
+    name: String,
+    value: String
+  } ],
   pullURL: {
     type: String,
     index: true

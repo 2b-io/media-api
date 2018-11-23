@@ -1,5 +1,5 @@
-export default (pullSetting) => { console.log('pullSetting', pullSetting); return({
+export default (pullSetting) => ({
   pullUrl: pullSetting.pullURL,
   allowedOrigins: pullSetting.allowedOrigins,
   headers: pullSetting.headers
-})}
+})

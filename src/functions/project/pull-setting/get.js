@@ -6,7 +6,7 @@ import pullSettingServices from 'services/pull-setting'
 export default resource('PULL_SETTING')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
-
+    // TODO: validate
     const pullSetting = await pullSettingServices.get(projectIdentifier)
 
     if (!pullSetting) {
