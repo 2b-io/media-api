@@ -6180,6 +6180,11 @@
       "integrity": "sha1-SJYrGeFp/R38JAs/HnMXYnu8R9s=",
       "dev": true
     },
+    "namor": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/namor/-/namor-1.1.1.tgz",
+      "integrity": "sha512-mFYVwBF5ENt96DAdYzNrFTvdNv+F57HSjH1KEfKUQlyHEW09F9A767m36wTdXtFErG6LXq6GcyXMNnZCUS2m9w=="
+    },
     "nan": {
       "version": "2.11.1",
       "resolved": "https://registry.npmjs.org/nan/-/nan-2.11.1.tgz",

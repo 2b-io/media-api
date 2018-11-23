@@ -6,18 +6,18 @@ const schema = mongoose.Schema({
     required: true,
     index: true
   },
-  headers: [ {
-    name: String,
-    value: String
-  } ],
-  pullURL: {
-    type: String,
+  account: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
     index: true
   },
-  allowedOrigins: [ String ]
+  privilege: {
+    type: String,
+    required: true
+  }
 }, {
-  collection: 'pullSettings',
   timestamps: true
 })
 
-export default () => register('PullSetting', schema)
+export default () => register('Collaborator', schema)
+

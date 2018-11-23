@@ -55,4 +55,4 @@ export const hashPassword = (plain) => {
   return bcrypt.hashSync(plain, 12)
 }
 
-export default async () => register('Account', schema)
+export default () => register('Account', schema)

@@ -32,4 +32,4 @@ schema.pre('save', function(next) {
   next()
 })
 
-export default async () => register('ResetToken', schema)
+export default () => register('ResetToken', schema)
