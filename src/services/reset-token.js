@@ -11,10 +11,19 @@ const create = async (data) => {
   const ResetToken = await createResetTokenModel()
 
   return await new ResetToken({
-    email: data.email
+    accountIdentifier: account.identifier
   }).save()
 }
 
+const get = async (token) => {
+  const ResetToken = await createResetTokenModel()
+
+  return await ResetToken.findOne({
+    token
+  })
+}
+
 export default {
-  create
+  create,
+  get
 }

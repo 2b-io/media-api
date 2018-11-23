@@ -24,4 +24,4 @@ const schema = mongoose.Schema({
   timestamps: true
 })
 
-export default async () => register('Project', schema)
+export default () => register('Project', schema)

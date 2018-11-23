@@ -1,6 +1,7 @@
 import uuid from 'uuid'
 
 import createAccountModel from 'models/account'
+import resetTokenService from 'services/reset-token'
 
 const create = async (data) => {
   const Account = await createAccountModel()
@@ -13,8 +14,14 @@ const create = async (data) => {
 
   const newAccount = await new Account({
     email: data.email,
-    password: uuid.v4()
+    password: uuid.v4(),
+    isActive: false
   }).save()
+
+  // create reset-password
+  const resetToken = await resetTokenService.create({
+    email: data.email
+  })
 
   // send email
 
@@ -26,7 +33,7 @@ const get = async (identifier) => {
 
   return await Account.findOne({
     identifier
-  }).lean()
+  })
 }
 
 const getByEmail = async (email) => {
@@ -34,13 +41,13 @@ const getByEmail = async (email) => {
 
   return await Account.findOne({
     email
-  }).lean()
+  })
 }
 
 const list = async (condition) => {
   const Account = await createAccountModel()
 
-  return await Account.find(condition).lean()
+  return await Account.find(condition)
 }
 
 const update = async (identifier, data) => {

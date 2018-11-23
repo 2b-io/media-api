@@ -4,7 +4,7 @@ import uuid from 'uuid'
 import mongoose, { register } from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({
-  email: {
+  accountIdentifier: {
     type: String,
     required: true
   },
@@ -32,4 +32,4 @@ schema.pre('save', function(next) {
   next()
 })
 
-export default async () => register('ResetToken', schema)
+export default () => register('ResetToken', schema)

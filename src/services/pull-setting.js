@@ -1,18 +1,29 @@
 import createPullSettingModel from 'models/pull-setting'
 import projectService from 'services/project'
 
-export default {
-  async get(projectIdentifier) {
-    const project = await projectService.get(projectIdentifier)
+const create = async (data) => {
+  const PullSetting = await createPullSettingModel()
 
-    if (!project) {
-      return null
-    }
+  return await new PullSetting({
+    project: data.projectId
+  }).save()
+}
 
-    const PullSetting = await createPullSettingModel()
+const get = async (projectIdentifier) => {
+  const project = await projectService.get(projectIdentifier)
 
-    return await PullSetting.findOne({
-      project: project._id
-    }).lean()
+  if (!project) {
+    return null
   }
+
+  const PullSetting = await createPullSettingModel()
+
+  return await PullSetting.findOne({
+    project: project._id
+  })
+}
+
+export default {
+  create,
+  get
 }
