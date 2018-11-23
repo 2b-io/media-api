@@ -1,12 +1,11 @@
 import createPullSettingModel from 'models/pull-setting'
-import projectServices from 'services/project'
+import projectService from 'services/project'
 
 export default {
   async get(projectIdentifier) {
+    const project = await projectService.get(projectIdentifier)
 
-    const project = await projectServices.get(projectIdentifier)
-
-    if (!project._id) {
+    if (!project) {
       return null
     }
 
