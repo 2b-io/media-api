@@ -29,7 +29,7 @@ const replaceByToken = async (identifier, token, newPassword) => {
     return null
   }
 
-  const account = await accountService.getByEmail(resetToken.email)
+  const account = await accountService.get(resetToken.accountIdentifier)
 
   if (!account || account.identifier !== identifier) {
     return null

@@ -4,7 +4,7 @@ import uuid from 'uuid'
 import mongoose, { register } from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({
-  email: {
+  accountIdentifier: {
     type: String,
     required: true
   },

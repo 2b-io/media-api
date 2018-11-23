@@ -3,7 +3,7 @@ import { BAD_REQUEST, FORBIDDEN, NO_CONTENT } from 'http-status-codes'
 import resource from 'rest/resource'
 import passwordService from 'services/password'
 
-export default resource('PASSWORD')(
+export default resource('ACCOUNT__PASSWORD')(
   async (req, session) => {
     const { accountIdentifier } = req.pathParameters
     const {
