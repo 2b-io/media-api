@@ -32,7 +32,7 @@ export { default as PROJECT__INFRASTRUCTURE___replace } from './functions/projec
 export { default as PROJECT__INVALIDATION___create } from './functions/project/invalidation/create'
 export { default as PROJECT__INVALIDATION___get } from './functions/project/invalidation/get'
 export { default as PROJECT__INVALIDATION___list } from './functions/project/invalidation/list'
-export { default as PROJECT__INVALIDATION___replace } from './functions/project/invalidation/replace'
+export { default as PROJECT__INVALIDATION___update } from './functions/project/invalidation/update'
 
 export { default as PROJECT__METRIC__DATAPOINT___list } from './functions/project/metric/datapoint/list'
 export { default as PROJECT__METRIC__DATAPOINT___update } from './functions/project/metric/datapoint/update'

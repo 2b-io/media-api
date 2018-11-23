@@ -8,6 +8,10 @@ const schema = mongoose.Schema({
     unique: true,
     index: true
   },
+  cdnInvalidationRef: {
+    type: String,
+    index: true
+  },
   project: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,

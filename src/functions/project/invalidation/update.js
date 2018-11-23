@@ -6,10 +6,12 @@ import invadidationService from 'services/invalidation'
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier, invalidationIdentifier } = req.pathParameters
+    const data = JSON.parse(req.body) || {}
     // TODO: validate
-    const invalidations = await invadidationService.get(
+    const invalidations = await invadidationService.update(
       projectIdentifier,
-      invalidationIdentifier
+      invalidationIdentifier,
+      data
     )
 
     if (!invalidations) {

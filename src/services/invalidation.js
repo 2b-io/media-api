@@ -37,5 +37,27 @@ export default {
     }
 
     return newInvadidation
+  },
+  async get(projectIdentifier, invalidationIdentifier) {
+    const Invalidation = await createInvalidationModel()
+
+    const project = await projectService.get(projectIdentifier)
+
+    return await Invalidation.findOne({
+      identifier: invalidationIdentifier,
+      project: project._id
+    }).lean()
+  },
+  async update(projectIdentifier, invalidationIdentifier, data) {
+    const Invalidation = await createInvalidationModel()
+
+    const project = await projectService.get(projectIdentifier)
+
+    return await Invalidation.findOneAndUpdate({
+      identifier: invalidationIdentifier,
+      project: project._id
+    }, data, {
+      new: true
+    })
   }
 }

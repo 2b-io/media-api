@@ -325,12 +325,12 @@ functions:
           path: /projects/{projectIdentifier}/invalidations
           method: post
 
-  PROJECT__INVALIDATION___replace:
-    handler: src/handler.PROJECT__INVALIDATION___replace
+  PROJECT__INVALIDATION___update:
+    handler: src/handler.PROJECT__INVALIDATION___update
     events:
       - http:
           path: /projects/{projectIdentifier}/invalidations/{invalidationIdentifier}
-          method: put
+          method: patch
 
   # PROJECT > INVALIDATION --- END
 
