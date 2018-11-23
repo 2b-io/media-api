@@ -333,3 +333,13 @@ functions:
           method: put
 
   # PROJECT > INVALIDATION --- END
+
+  # JOB
+  JOB___create:
+    handler: src/handler.JOB___create
+    events:
+      - http:
+          path: /jobs
+          method: post
+
+  # JOB --- END

@@ -31,6 +31,7 @@
     "webpack-node-externals": "1.7.2"
   },
   "dependencies": {
+    "amqplib": "0.5.2",
     "bcrypt": "3.0.2",
     "http-status-codes": "1.3.0",
     "isarray": "2.0.4",
@@ -41,6 +42,7 @@
     "uuid": "3.3.2"
   },
   "scripts": {
-    "start": "run.env serverless offline start"
+    "start": "run.env serverless offline",
+    "simulate": "run.env serverless offline --skipCacheInvalidation"
   }
 }
