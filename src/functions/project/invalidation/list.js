@@ -1,11 +1,23 @@
-import { NOT_IMPLEMENTED } from 'http-status-codes'
+import { NOT_FOUND, OK } from 'http-status-codes'
 
 import resource from 'rest/resource'
+import invalidationService from 'services/invalidation'
 
-export default resource(
+export default resource('INVALIDATION')(
   async (req) => {
+    const { projectIdentifier } = req.pathParameters
+
+    const invalidations = await invalidationService.list(projectIdentifier)
+
+    if (!invalidations) {
+      return {
+        statusCode: NOT_FOUND
+      }
+    }
+
     return {
-      statusCode: NOT_IMPLEMENTED
+      statusCode: OK,
+      resource: invalidations
     }
   }
 )

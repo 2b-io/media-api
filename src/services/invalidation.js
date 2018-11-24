@@ -4,60 +4,86 @@ import createInvalidationModel from 'models/invalidation'
 import jobService from 'services/job'
 import projectService from 'services/project'
 
-export default {
-  async create(projectIdentifier, { patterns, options }) {
-    const project = await projectService.get(projectIdentifier)
+const create = async (projectIdentifier, { patterns }) => {
+  const project = await projectService.get(projectIdentifier)
 
-    if (!project) {
-      return null
-    }
+  if (!project) {
+    return null
+  }
 
-    const Invalidation = await createInvalidationModel()
+  const Invalidation = await createInvalidationModel()
 
-    const newInvadidation = await new Invalidation({
-      project: project._id,
-      patterns,
-      status:'INPROGRESS'
-    }).save()
+  const invadidation = await new Invalidation({
+    project: project._id,
+    patterns,
+    status:'INPROGRESS'
+  }).save()
 
-    if (newInvadidation) {
-      const identifier = uuid.v4()
-
-      await jobService.create({
-        name: 'INVALIDATE_CACHE',
-        when: Date.now(),
-        payload: {
-          projectIdentifier,
-          patterns,
-          options
-        }
-      }, {
-        messageId: identifier
-      })
-    }
-
-    return newInvadidation
-  },
-  async get(projectIdentifier, invalidationIdentifier) {
-    const Invalidation = await createInvalidationModel()
-
-    const project = await projectService.get(projectIdentifier)
-
-    return await Invalidation.findOne({
-      identifier: invalidationIdentifier,
-      project: project._id
-    }).lean()
-  },
-  async update(projectIdentifier, invalidationIdentifier, data) {
-    const Invalidation = await createInvalidationModel()
-
-    const project = await projectService.get(projectIdentifier)
-
-    return await Invalidation.findOneAndUpdate({
-      identifier: invalidationIdentifier,
-      project: project._id
-    }, data, {
-      new: true
+  if (invadidation) {
+    await jobService.create({
+      name: 'INVALIDATE_CACHE',
+      when: Date.now(),
+      payload: {
+        invalidationIdentifier: invadidation.identifier
+      }
+    }, {
+      messageId: uuid.v4()
     })
   }
+
+  return invadidation
+}
+
+const get = async (projectIdentifier, invalidationIdentifier) => {
+  const project = await projectService.get(projectIdentifier)
+
+  if (!project) {
+    return null
+  }
+
+  const Invalidation = await createInvalidationModel()
+
+  return await Invalidation.findOne({
+    identifier: invalidationIdentifier,
+    project: project._id
+  })
+}
+
+const list = async (projectIdentifier, condition = {}) => {
+  const project = await projectService.get(projectIdentifier)
+
+  if (!project) {
+    return null
+  }
+
+  const Invalidation = await createInvalidationModel()
+
+  return await Invalidation.find({
+    project: project._id,
+    ...condition
+  })
+}
+
+const update = async (projectIdentifier, invalidationIdentifier, data) => {
+  const project = await projectService.get(projectIdentifier)
+
+  if (!project) {
+    return null
+  }
+
+  const Invalidation = await createInvalidationModel()
+
+  return await Invalidation.findOneAndUpdate({
+    identifier: invalidationIdentifier,
+    project: project._id
+  }, data, {
+    new: true
+  })
+}
+
+export default {
+  create,
+  get,
+  list,
+  update
 }

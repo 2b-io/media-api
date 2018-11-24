@@ -1,4 +1,4 @@
-import { CREATED, FORBIDDEN, BAD_REQUEST } from 'http-status-codes'
+import { BAD_REQUEST, CREATED, FORBIDDEN } from 'http-status-codes'
 
 import resource from 'rest/resource'
 import invalidationService from 'services/invalidation'
@@ -6,7 +6,8 @@ import invalidationService from 'services/invalidation'
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
-    const { patterns, options } = JSON.parse(req.body) || {}
+    const { patterns } = JSON.parse(req.body) || {}
+
     // TODO: validate
     if (!patterns || !Array.isArray(patterns)) {
       return {
@@ -14,15 +15,11 @@ export default resource('INVALIDATION')(
       }
     }
 
-    const newInvadidation = await invalidationService.create(
-      projectIdentifier,
-      {
-        patterns,
-        options
-      }
-    )
+    const invadidation = await invalidationService.create(projectIdentifier, {
+      patterns
+    })
 
-    if (!newInvadidation) {
+    if (!invadidation) {
       return {
         statusCode: FORBIDDEN
       }
@@ -30,7 +27,7 @@ export default resource('INVALIDATION')(
 
     return {
       statusCode: CREATED,
-      resource: newInvadidation
+      resource: invadidation
     }
   }
 )

@@ -1,18 +1,15 @@
-import { OK, NOT_FOUND } from 'http-status-codes'
+import { NOT_FOUND, OK } from 'http-status-codes'
 
 import resource from 'rest/resource'
-import invadidationService from 'services/invalidation'
+import invalidationService from 'services/invalidation'
 
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier, invalidationIdentifier } = req.pathParameters
     // TODO: validate
-    const invalidations = await invadidationService.get(
-      projectIdentifier,
-      invalidationIdentifier
-    )
+    const invalidation = await invalidationService.get(projectIdentifier, invalidationIdentifier)
 
-    if (!invalidations) {
+    if (!invalidation) {
       return {
         statusCode: NOT_FOUND
       }
@@ -20,7 +17,7 @@ export default resource('INVALIDATION')(
 
     return {
       statusCode: OK,
-      resource: invalidations
+      resource: invalidation
     }
   }
 )

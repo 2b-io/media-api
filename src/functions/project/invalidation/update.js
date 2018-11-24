@@ -1,28 +1,33 @@
-import { OK, NOT_FOUND } from 'http-status-codes'
+import { BAD_REQUEST, FORBIDDEN, OK } from 'http-status-codes'
 
 import resource from 'rest/resource'
-import invadidationService from 'services/invalidation'
+import invalidationService from 'services/invalidation'
 
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier, invalidationIdentifier } = req.pathParameters
-    const data = JSON.parse(req.body) || {}
-    // TODO: validate
-    const invalidations = await invadidationService.update(
-      projectIdentifier,
-      invalidationIdentifier,
-      data
-    )
+    const { status } = JSON.parse(req.body) || {}
 
-    if (!invalidations) {
+    if (!status) {
       return {
-        statusCode: NOT_FOUND
+        status: BAD_REQUEST
+      }
+    }
+
+    // TODO: validate
+    const invalidation = await invalidationService.update(projectIdentifier, invalidationIdentifier, {
+      status
+    })
+
+    if (!invalidation) {
+      return {
+        statusCode: FORBIDDEN
       }
     }
 
     return {
       statusCode: OK,
-      resource: invalidations
+      resource: invalidation
     }
   }
 )
