@@ -2,6 +2,7 @@ import uuid from 'uuid'
 
 import createInfrastructureModel from 'models/infrastructure'
 import jobService from 'services/job'
+import projectService from 'services/project'
 
 const create = async (data) => {
   const Infrastructure = await createInfrastructureModel()
@@ -15,7 +16,9 @@ const create = async (data) => {
     name: 'CREATE_INFRASTRUCTURE',
     when: Date.now(),
     payload: {
-      infrastructureIdentifier: infrastructure.identifier
+      infrastructureIdentifier: infrastructure.identifier,
+      projectIdentifier: data.projectIdentifier,
+      provider: data.provider
     }
   }, {
     messageId: uuid.v4()
@@ -24,6 +27,38 @@ const create = async (data) => {
   return infrastructure
 }
 
+const get = async (projectIdentifier) => {
+  const project = await projectService.get(projectIdentifier)
+
+  if (!project) {
+    return null
+  }
+
+  const Infrastructure = await createInfrastructureModel()
+
+  return await Infrastructure.findOne({
+    project: project._id
+  })
+}
+
+const update = async (projectIdentifier, data) => {
+  const project = await projectService.get(projectIdentifier)
+
+  if (!project) {
+    return null
+  }
+
+  const Infrastructure = await createInfrastructureModel()
+
+  return await Infrastructure.findOneAndUpdate({
+    project: project._id
+  }, data, {
+    new: true
+  })
+}
+
 export default {
-  create
+  create,
+  get,
+  update
 }

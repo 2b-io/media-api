@@ -27,7 +27,7 @@ export { default as PROJECT__COLLABORATOR___replace } from './functions/project/
 export { default as PROJECT__COLLABORATOR___update } from './functions/project/collaborator/update'
 
 export { default as PROJECT__INFRASTRUCTURE___get } from './functions/project/infrastructure/get'
-export { default as PROJECT__INFRASTRUCTURE___replace } from './functions/project/infrastructure/replace'
+export { default as PROJECT__INFRASTRUCTURE___update } from './functions/project/infrastructure/update'
 
 export { default as PROJECT__INVALIDATION___create } from './functions/project/invalidation/create'
 export { default as PROJECT__INVALIDATION___get } from './functions/project/invalidation/get'

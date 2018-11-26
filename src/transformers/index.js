@@ -1,4 +1,5 @@
 export { default as ACCOUNT } from './account'
+export { default as INFRASTRUCTURE } from './infrastructure'
 export { default as INVALIDATION } from './invalidation'
 export { default as PROJECT } from './project'
 export { default as PULL_SETTING } from './pull-setting'

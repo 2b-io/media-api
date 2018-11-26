@@ -136,12 +136,12 @@ functions:
           path: /projects/{projectIdentifier}/infrastructure
           method: get
 
-  PROJECT__INFRASTRUCTURE___replace:
-    handler: src/handler.PROJECT__INFRASTRUCTURE___replace
+  PROJECT__INFRASTRUCTURE___update:
+    handler: src/handler.PROJECT__INFRASTRUCTURE___update
     events:
       - http:
           path: /projects/{projectIdentifier}/infrastructure
-          method: put
+          method: patch
 
   # PROJECT > INFRASTRUCTURE --- END
 

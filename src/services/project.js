@@ -58,6 +58,7 @@ const create = async ({ name, provider, owner }) => {
 
     await infrastructureService.create({
       projectId: project._id,
+      projectIdentifier: project.identifier,
       provider
     })
 

@@ -4,7 +4,7 @@ import joi from 'joi'
 import resource from 'rest/resource'
 import projectService from 'services/project'
 
-const schema = joi.object().keys({
+const SCHEMA = joi.object().keys({
   name: joi.string().max(50).trim().required(),
   provider: joi.any().valid('cloudfront').required()
 })
@@ -14,7 +14,7 @@ export default resource('PROJECT')(
     const body = JSON.parse(req.body) || {}
 
     // validation
-    const values = await joi.validate(body, schema)
+    const values = await joi.validate(body, SCHEMA)
 
     if (!session.account) {
       throw {
@@ -22,14 +22,8 @@ export default resource('PROJECT')(
       }
     }
 
-    return {
-      statusCode: CREATED,
-      resource: values
-    }
-
     const project = await projectService.create({
-      name,
-      provider,
+      ...values,
       owner: session.account._id
     })
 
