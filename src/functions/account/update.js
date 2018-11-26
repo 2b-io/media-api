@@ -1,7 +1,12 @@
 import { BAD_REQUEST, FORBIDDEN, NOT_FOUND, OK } from 'http-status-codes'
+import joi from 'joi'
 
 import resource from 'rest/resource'
 import accountService from 'services/account'
+
+const SCHEMA = joi.object().keys({
+  name: joi.string().max(50).trim().required()
+})
 
 export default resource('ACCOUNT')(
   async (req, session) => {
@@ -10,28 +15,21 @@ export default resource('ACCOUNT')(
     const account = await accountService.get(accountIdentifier)
 
     if (!account) {
-      return {
+      throw {
         statusCode: NOT_FOUND
       }
     }
 
     if (!session.account || session.account.identifier !== account.identifier) {
-      return {
+      throw {
         statusCode: FORBIDDEN
       }
     }
 
-    const { name } = JSON.parse(req.body) || {}
+    const body = JSON.parse(req.body)
+    const values = await joi.validate(body, SCHEMA)
 
-    if (!name) {
-      return {
-        statusCode: BAD_REQUEST
-      }
-    }
-
-    const updatedAccount = await accountService.update(accountIdentifier, {
-      name
-    })
+    const updatedAccount = await accountService.update(accountIdentifier, value)
 
     return {
       statusCode: OK,
