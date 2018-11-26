@@ -16,12 +16,8 @@ const create = async (data) => {
     name: 'CREATE_INFRASTRUCTURE',
     when: Date.now(),
     payload: {
-      infrastructureIdentifier: infrastructure.identifier,
       projectIdentifier: data.projectIdentifier,
-      provider: data.provider
     }
-  }, {
-    messageId: uuid.v4()
   })
 
   return infrastructure

@@ -3,6 +3,7 @@ import namor from 'namor'
 import createProjectModel from 'models/project'
 import cacheSettingService from 'services/cache-setting'
 import collaboratorService from 'services/collaborator'
+import jobService from 'services/job'
 import infrastructureService from 'services/infrastructure'
 import pullSettingService from 'services/pull-setting'
 
@@ -108,8 +109,42 @@ const list = async (condition = {}, collaboratorId) => {
   return projects
 }
 
+const update = async (projectIdentifier, data, collaboratorId) => {
+  const current = await get(projectIdentifier, collaboratorId)
+
+  if (!current) {
+    return null
+  }
+
+  const Project = await createProjectModel()
+
+  const updated = await Project.findOneAndUpdate({
+    identifier: projectIdentifier
+  }, {
+    ...data,
+    status: current.isActive !== data.isActive ?
+      'UPDATING' : current.status
+  }, {
+    new: true
+  })
+
+  if (current.isActive !== updated.isActive) {
+    await jobService.create({
+      name: 'UPDATE_INFRASTRUCTURE',
+      when: Date.now(),
+      payload: {
+        projectIdentifier,
+        isActive: updated.isActive
+      }
+    })
+  }
+
+  return updated
+}
+
 export default {
   create,
   get,
-  list
+  list,
+  update
 }

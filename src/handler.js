@@ -16,7 +16,7 @@ export { default as PROJECT___create } from './functions/project/create'
 export { default as PROJECT___delete } from './functions/project/delete'
 export { default as PROJECT___get } from './functions/project/get'
 export { default as PROJECT___list } from './functions/project/list'
-export { default as PROJECT___replace } from './functions/project/replace'
+export { default as PROJECT___update } from './functions/project/update'
 
 export { default as PROJECT__CACHE_SETTING___get } from './functions/project/cache-setting/get'
 export { default as PROJECT__CACHE_SETTING___replace } from './functions/project/cache-setting/replace'

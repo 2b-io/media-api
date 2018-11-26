@@ -1,0 +1,35 @@
+import { FORBIDDEN, OK } from 'http-status-codes'
+import joi from 'joi'
+
+import resource from 'rest/resource'
+import projectService from 'services/project'
+
+const SCHEMA = joi.object().keys({
+  name: joi.string().max(50).trim(),
+  status: joi.any().valid('DEPLOYED', 'DISABLED'),
+  isActive: joi.boolean()
+})
+
+export default resource('PROJECT')(
+  async (req, session) => {
+    const { projectIdentifier } = req.pathParameters
+    const collaboratorId = session.account ?
+      session.account._id : null
+    const body = JSON.parse(req.body)
+
+    const values = await joi.validate(body, SCHEMA)
+
+    const project = await projectService.update(projectIdentifier, values, collaboratorId)
+
+    if (!project) {
+      throw {
+        status: FORBIDDEN
+      }
+    }
+
+    return {
+      statusCode: OK,
+      resource: project
+    }
+  }
+)

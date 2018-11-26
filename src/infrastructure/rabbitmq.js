@@ -1,5 +1,6 @@
 import amqp from 'amqplib'
 import ms from 'ms'
+import uuid from 'uuid'
 import config from 'infrastructure/config'
 
 const state = {
@@ -40,13 +41,13 @@ const connect = async () => {
   return state
 }
 
-export const send = async (msg, options) => {
+export const send = async (msg, options = {}) => {
   const { connection, channel, queue } = await connect()
 
   await channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)), {
     contentType: 'application/json',
     contentEncoding: 'utf-8',
-    messageId: options.messageId,
+    messageId: options.messageId || uuid.v4(),
     appId: options.appId,
     persistent: true
   })
