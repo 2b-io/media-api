@@ -122,8 +122,10 @@ const update = async (projectIdentifier, data, collaboratorId) => {
     identifier: projectIdentifier
   }, {
     ...data,
-    status: current.isActive !== data.isActive ?
-      'UPDATING' : current.status
+    status: data.status || (
+      current.isActive !== data.isActive ?
+        'UPDATING' : current.status
+    )
   }, {
     new: true
   })

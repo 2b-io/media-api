@@ -4,11 +4,15 @@ import joi from 'joi'
 import resource from 'rest/resource'
 import projectService from 'services/project'
 
-const SCHEMA = joi.object().keys({
-  name: joi.string().max(50).trim(),
-  status: joi.any().valid('DEPLOYED', 'DISABLED'),
-  isActive: joi.boolean()
-})
+const SCHEMA = joi.alternatives().try([
+  joi.object().keys({
+    name: joi.string().max(50).trim().required(),
+    isActive: joi.boolean().required()
+  }),
+  joi.object().keys({
+    status: joi.any().valid('DEPLOYED', 'DISABLED').required(),
+  })
+])
 
 export default resource('PROJECT')(
   async (req, session) => {
