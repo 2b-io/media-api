@@ -4713,6 +4713,19 @@
           "requires": {
             "hoek": "4.2.1"
           }
+        },
+        "joi": {
+          "version": "9.2.0",
+          "resolved": "http://registry.npmjs.org/joi/-/joi-9.2.0.tgz",
+          "integrity": "sha1-M4WseQGSEwy+Iw6ALsAskhW7/to=",
+          "dev": true,
+          "requires": {
+            "hoek": "4.2.1",
+            "isemail": "2.2.1",
+            "items": "2.1.2",
+            "moment": "2.22.2",
+            "topo": "2.0.2"
+          }
         }
       }
     },
@@ -4770,6 +4783,19 @@
                 "hoek": "4.2.1"
               }
             }
+          }
+        },
+        "joi": {
+          "version": "9.2.0",
+          "resolved": "http://registry.npmjs.org/joi/-/joi-9.2.0.tgz",
+          "integrity": "sha1-M4WseQGSEwy+Iw6ALsAskhW7/to=",
+          "dev": true,
+          "requires": {
+            "hoek": "4.2.1",
+            "isemail": "2.2.1",
+            "items": "2.1.2",
+            "moment": "2.22.2",
+            "topo": "2.0.2"
           }
         }
       }
@@ -5476,16 +5502,36 @@
       "dev": true
     },
     "joi": {
-      "version": "9.2.0",
-      "resolved": "http://registry.npmjs.org/joi/-/joi-9.2.0.tgz",
-      "integrity": "sha1-M4WseQGSEwy+Iw6ALsAskhW7/to=",
-      "dev": true,
+      "version": "14.3.0",
+      "resolved": "https://registry.npmjs.org/joi/-/joi-14.3.0.tgz",
+      "integrity": "sha512-0HKd1z8MWogez4GaU0LkY1FgW30vR2Kwy414GISfCU41OYgUC2GWpNe5amsvBZtDqPtt7DohykfOOMIw1Z5hvQ==",
       "requires": {
-        "hoek": "4.2.1",
-        "isemail": "2.2.1",
-        "items": "2.1.2",
-        "moment": "2.22.2",
-        "topo": "2.0.2"
+        "hoek": "6.0.4",
+        "isemail": "3.2.0",
+        "topo": "3.0.3"
+      },
+      "dependencies": {
+        "hoek": {
+          "version": "6.0.4",
+          "resolved": "https://registry.npmjs.org/hoek/-/hoek-6.0.4.tgz",
+          "integrity": "sha512-9D47elppcwrTx2x9B6TrovxnUtlTBYFcHGgo0+LRA1+YfUkCecT//41ovdh6zbl7whB9Hc2whRO1c6lzPoTgww=="
+        },
+        "isemail": {
+          "version": "3.2.0",
+          "resolved": "https://registry.npmjs.org/isemail/-/isemail-3.2.0.tgz",
+          "integrity": "sha512-zKqkK+O+dGqevc93KNsbZ/TqTUFd46MwWjYOoMrjIMZ51eU7DtQG3Wmd9SQQT7i7RVnuTPEiYEWHU3MSbxC1Tg==",
+          "requires": {
+            "punycode": "2.1.1"
+          }
+        },
+        "topo": {
+          "version": "3.0.3",
+          "resolved": "https://registry.npmjs.org/topo/-/topo-3.0.3.tgz",
+          "integrity": "sha512-IgpPtvD4kjrJ7CRA3ov2FhWQADwv+Tdqbsf1ZnPUSAtCJ9e1Z44MmoSGDXGk4IppoZA7jd/QRkNddlLJWlUZsQ==",
+          "requires": {
+            "hoek": "6.0.4"
+          }
+        }
       }
     },
     "js-levenshtein": {
@@ -6830,8 +6876,7 @@
     "punycode": {
       "version": "2.1.1",
       "resolved": "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz",
-      "integrity": "sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==",
-      "dev": true
+      "integrity": "sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A=="
     },
     "qs": {
       "version": "6.5.2",
@@ -7837,6 +7882,19 @@
                 "hoek": "4.2.1"
               }
             }
+          }
+        },
+        "joi": {
+          "version": "9.2.0",
+          "resolved": "http://registry.npmjs.org/joi/-/joi-9.2.0.tgz",
+          "integrity": "sha1-M4WseQGSEwy+Iw6ALsAskhW7/to=",
+          "dev": true,
+          "requires": {
+            "hoek": "4.2.1",
+            "isemail": "2.2.1",
+            "items": "2.1.2",
+            "moment": "2.22.2",
+            "topo": "2.0.2"
           }
         }
       }

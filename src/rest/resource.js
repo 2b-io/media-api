@@ -1,4 +1,8 @@
-import { INTERNAL_SERVER_ERROR, UNAUTHORIZED } from 'http-status-codes'
+import {
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED
+} from 'http-status-codes'
 import isArray from 'isarray'
 import serializeError from 'serialize-error'
 
@@ -37,7 +41,9 @@ const authorize = async (req) => {
   const { authorization } = normalizeHttpHeaders(req.headers)
 
   if (!authorization) {
-    throw UNAUTHORIZED
+    throw {
+      statusCode: UNAUTHORIZED
+    }
   }
 
   const {
@@ -47,7 +53,9 @@ const authorize = async (req) => {
   } = parseAuthorizationHeader(authorization)
 
   if (type !== 'MEDIA_CDN') {
-    throw UNAUTHORIZED
+    throw {
+      statusCode: UNAUTHORIZED
+    }
   }
 
   // TODO: verify app
@@ -83,8 +91,8 @@ export default (resourceType) => (handler) => async (req, context) => {
     const session = await authorize(req)
 
     const {
-      statusCode,
-      resource
+      resource,
+      statusCode
     } = await handler(req, session)
 
     return {
@@ -93,17 +101,21 @@ export default (resourceType) => (handler) => async (req, context) => {
         JSON.stringify(transform(resourceType, resource)) :
         null
     }
-  } catch (e) {
-    if (e === UNAUTHORIZED) {
+  } catch (error) {
+    // validation error
+    if (error.isJoi) {
       return {
-        statusCode: UNAUTHORIZED
+        statusCode: BAD_REQUEST,
+        body: JSON.stringify({
+          reason: error.details
+        })
       }
     }
 
     return {
-      statusCode: INTERNAL_SERVER_ERROR,
+      statusCode: error.statusCode || INTERNAL_SERVER_ERROR,
       body: JSON.stringify({
-        reason: serializeError(e)
+        reason: serializeError(error.reason || error)
       })
     }
   }
