@@ -6,9 +6,9 @@ import invalidationService from 'services/invalidation'
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier, invalidationIdentifier } = req.pathParameters
-    const { status, cdnInvalidationRef } = JSON.parse(req.body) || {}
+    const invalidationData = JSON.parse(req.body) || {}
 
-    if (!status) {
+    if (!invalidationData.status) {
       return {
         status: BAD_REQUEST
       }
@@ -16,8 +16,7 @@ export default resource('INVALIDATION')(
 
     // TODO: validate
     const invalidation = await invalidationService.update(projectIdentifier, invalidationIdentifier, {
-      status,
-      cdnInvalidationRef
+      ...invalidationData
     })
 
     if (!invalidation) {
