@@ -5,11 +5,11 @@ import resource from 'rest/resource'
 import passwordService from 'services/password'
 
 const SCHEMA = joi.alternatives().try([
-  joi.objects.key({
+  joi.object().keys({
     token: joi.string().trim().required(),
     newPassword: joi.string().required()
   }),
-  joi.objects.key({
+  joi.object().keys({
     currentPassword: joi.string().required(),
     newPassword: joi.string().required()
   })
