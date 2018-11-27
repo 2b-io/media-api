@@ -5,7 +5,7 @@ import resource from 'rest/resource'
 import invalidationService from 'services/invalidation'
 
 const SCHEMA = joi.object().keys({
-  patterns: joi.array().items(joi.string().required()).required()
+  patterns: joi.array().items(joi.string().trim().required()).required()
 })
 
 export default resource('INVALIDATION')(
@@ -15,10 +15,7 @@ export default resource('INVALIDATION')(
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
 
-    const invadidation = await invalidationService.create(
-      projectIdentifier,
-      { ...values }
-    )
+    const invadidation = await invalidationService.create(projectIdentifier, values)
 
     if (!invadidation) {
       return {

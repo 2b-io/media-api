@@ -4,10 +4,17 @@ import joi from 'joi'
 import resource from 'rest/resource'
 import invalidationService from 'services/invalidation'
 
-const SCHEMA = joi.object().keys({
-  status: joi.string().trim().required(),
-  cdnInvalidationRef: joi.string().trim()
-})
+const SCHEMA = joi.alternatives().try([
+  joi.object().keys({
+    status: joi.any().valid([
+      'INPROGRESS',
+      'COMPLETED'
+    ]).required()
+  }),
+  joi.object().keys({
+    cdnInvalidationRef: joi.string().trim()
+  })
+])
 
 export default resource('INVALIDATION')(
   async (req) => {
