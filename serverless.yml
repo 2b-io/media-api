@@ -334,6 +334,44 @@ functions:
 
   # PROJECT > INVALIDATION --- END
 
+  # PROJECT > FILE --- END
+  PROJECT__FILE___create:
+    handler: src/handler.PROJECT__FILE___create
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/files
+          method: post
+
+  PROJECT__FILE___list:
+    handler: src/handler.PROJECT__FILE___list
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/files
+          method: get
+
+  PROJECT__FILE___get:
+    handler: src/handler.PROJECT__FILE___get
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/files/{fileIdentifier}
+          method: get
+
+  PROJECT__FILE___replace:
+    handler: src/handler.PROJECT__FILE___replace
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/files/{fileIdentifier}
+          method: put
+
+  PROJECT__FILE___delete:
+    handler: src/handler.PROJECT__FILE___delete
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/files/{fileIdentifier}
+          method: delete
+
+  # PROJECT > FILE --- END
+
   # JOB
   JOB___create:
     handler: src/handler.JOB___create

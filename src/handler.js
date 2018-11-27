@@ -26,6 +26,12 @@ export { default as PROJECT__COLLABORATOR___list } from './functions/project/col
 export { default as PROJECT__COLLABORATOR___replace } from './functions/project/collaborator/replace'
 export { default as PROJECT__COLLABORATOR___update } from './functions/project/collaborator/update'
 
+export { default as PROJECT__FILE___create } from './functions/project/file/create'
+export { default as PROJECT__FILE___delete } from './functions/project/file/delete'
+export { default as PROJECT__FILE___get } from './functions/project/file/get'
+export { default as PROJECT__FILE___list } from './functions/project/file/list'
+export { default as PROJECT__FILE___replace } from './functions/project/file/replace'
+
 export { default as PROJECT__INFRASTRUCTURE___get } from './functions/project/infrastructure/get'
 export { default as PROJECT__INFRASTRUCTURE___update } from './functions/project/infrastructure/update'
 
