@@ -29,7 +29,7 @@ export default resource('ACCOUNT')(
     const body = JSON.parse(req.body)
     const values = await joi.validate(body, SCHEMA)
 
-    const updatedAccount = await accountService.update(accountIdentifier, value)
+    const updatedAccount = await accountService.update(accountIdentifier, values)
 
     return {
       statusCode: OK,
