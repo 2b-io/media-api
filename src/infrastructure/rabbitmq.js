@@ -41,7 +41,7 @@ const connect = async () => {
   return state
 }
 
-export const send = async (msg, options) => {
+export const send = async (msg, options = {}) => {
   const { connection, channel, queue } = await connect()
 
   await channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)), {

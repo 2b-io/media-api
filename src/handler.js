@@ -16,7 +16,7 @@ export { default as PROJECT___create } from './functions/project/create'
 export { default as PROJECT___delete } from './functions/project/delete'
 export { default as PROJECT___get } from './functions/project/get'
 export { default as PROJECT___list } from './functions/project/list'
-export { default as PROJECT___replace } from './functions/project/replace'
+export { default as PROJECT___update } from './functions/project/update'
 
 export { default as PROJECT__CACHE_SETTING___get } from './functions/project/cache-setting/get'
 export { default as PROJECT__CACHE_SETTING___replace } from './functions/project/cache-setting/replace'
@@ -27,7 +27,7 @@ export { default as PROJECT__COLLABORATOR___replace } from './functions/project/
 export { default as PROJECT__COLLABORATOR___update } from './functions/project/collaborator/update'
 
 export { default as PROJECT__INFRASTRUCTURE___get } from './functions/project/infrastructure/get'
-export { default as PROJECT__INFRASTRUCTURE___replace } from './functions/project/infrastructure/replace'
+export { default as PROJECT__INFRASTRUCTURE___update } from './functions/project/infrastructure/update'
 
 export { default as PROJECT__INVALIDATION___create } from './functions/project/invalidation/create'
 export { default as PROJECT__INVALIDATION___get } from './functions/project/invalidation/get'

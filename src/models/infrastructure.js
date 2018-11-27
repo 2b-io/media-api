@@ -13,6 +13,10 @@ const schema = mongoose.Schema({
     required: true,
     index: true
   },
+  ref: {
+    type: String,
+    index: true
+  },
   provider: {
     type: String,
     required: true

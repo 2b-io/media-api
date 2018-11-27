@@ -1,35 +1,45 @@
 import { BAD_REQUEST, FORBIDDEN, NO_CONTENT } from 'http-status-codes'
+import joi from 'joi'
 
 import resource from 'rest/resource'
 import passwordService from 'services/password'
 
+const SCHEMA = joi.alternatives().try([
+  joi.object().keys({
+    token: joi.string().trim().required(),
+    newPassword: joi.string().required()
+  }),
+  joi.object().keys({
+    currentPassword: joi.string().required(),
+    newPassword: joi.string().required()
+  })
+])
+
 export default resource('ACCOUNT__PASSWORD')(
   async (req, session) => {
     const { accountIdentifier } = req.pathParameters
-    const {
-      currentPassword,
-      newPassword,
-      token
-    } = JSON.parse(req.body) || {}
+    const body = JSON.parse(req.body)
 
-    if (!newPassword || !(currentPassword || token)) {
-      return {
-        statusCode: BAD_REQUEST
-      }
-    }
+    const values = await joi.validate(body, SCHEMA)
 
     if (!session.account || session.account.identifier !== accountIdentifier) {
-      return {
+      throw {
         statusCode: FORBIDDEN
       }
     }
+
+    const {
+      token,
+      currentPassword,
+      newPassword
+    } = values
 
     const result = currentPassword ?
       await passwordService.replaceByCurrentPassword(accountIdentifier, currentPassword, newPassword) :
       await passwordService.replaceByToken(accountIdentifier, token, newPassword)
 
     if (!result) {
-      return {
+      throw {
         statusCode: FORBIDDEN
       }
     }
