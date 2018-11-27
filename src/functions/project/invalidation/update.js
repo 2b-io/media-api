@@ -6,17 +6,16 @@ import invalidationService from 'services/invalidation'
 
 const SCHEMA = joi.object().keys({
   status: joi.string().trim().required(),
-  cdnInvalidationRef: joi.string().trim(),
+  cdnInvalidationRef: joi.string().trim()
 })
 
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier, invalidationIdentifier } = req.pathParameters
     const body = JSON.parse(req.body) || {}
-
+    // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
 
-    // TODO: validate
     const invalidation = await invalidationService.update(
       projectIdentifier,
       invalidationIdentifier,
