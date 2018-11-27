@@ -12,7 +12,7 @@ const SCHEMA = joi.alternatives().try([
     ]).required()
   }),
   joi.object().keys({
-    cdnInvalidationRef: joi.string().trim()
+    cdnInvalidationRef: joi.string().trim().required()
   })
 ])
 
