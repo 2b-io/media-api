@@ -1,23 +1,33 @@
-import { BAD_REQUEST, FORBIDDEN, OK } from 'http-status-codes'
+import { FORBIDDEN, OK } from 'http-status-codes'
+import joi from 'joi'
 
 import resource from 'rest/resource'
 import invalidationService from 'services/invalidation'
 
+const SCHEMA = joi.alternatives().try([
+  joi.object().keys({
+    status: joi.any().valid([
+      'INPROGRESS',
+      'COMPLETED'
+    ]).required()
+  }),
+  joi.object().keys({
+    cdnInvalidationRef: joi.string().trim().required()
+  })
+])
+
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier, invalidationIdentifier } = req.pathParameters
-    const { status } = JSON.parse(req.body) || {}
+    const body = JSON.parse(req.body) || {}
+    // TODO: Authorization
+    const values = await joi.validate(body, SCHEMA)
 
-    if (!status) {
-      return {
-        status: BAD_REQUEST
-      }
-    }
-
-    // TODO: validate
-    const invalidation = await invalidationService.update(projectIdentifier, invalidationIdentifier, {
-      status
-    })
+    const invalidation = await invalidationService.update(
+      projectIdentifier,
+      invalidationIdentifier,
+      values
+    )
 
     if (!invalidation) {
       return {

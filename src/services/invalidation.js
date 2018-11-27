@@ -24,6 +24,7 @@ const create = async (projectIdentifier, { patterns }) => {
       name: 'INVALIDATE_CACHE',
       when: Date.now(),
       payload: {
+        projectIdentifier,
         invalidationIdentifier: invadidation.identifier
       }
     }, {

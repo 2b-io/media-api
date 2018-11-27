@@ -6,7 +6,7 @@ import invalidationService from 'services/invalidation'
 export default resource('INVALIDATION')(
   async (req) => {
     const { projectIdentifier, invalidationIdentifier } = req.pathParameters
-    // TODO: validate
+    // TODO: Authorization
     const invalidation = await invalidationService.get(projectIdentifier, invalidationIdentifier)
 
     if (!invalidation) {
