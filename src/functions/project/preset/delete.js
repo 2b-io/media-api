@@ -10,7 +10,7 @@ export default resource('PRESET')(
       projectIdentifier
     } = req.pathParameters
 
-    const result = await projectService.preset.del(projectIdentifier, contentType.replace('_', '/'))
+    const result = await projectService.preset.del(projectIdentifier, decodeURIComponent(contentType))
 
     if (!result) {
       throw {

@@ -59,7 +59,7 @@ export default resource('PRESET')(
 
     const values = await joi.validate(body, SCHEMA)
 
-    const preset = await projectService.preset.replace(projectIdentifier, contentType.replace('_', '/'), values)
+    const preset = await projectService.preset.replace(projectIdentifier, decodeURIComponent(contentType), values)
 
     if (!preset) {
       throw {

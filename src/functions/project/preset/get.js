@@ -10,7 +10,7 @@ export default resource('PRESET')(
       projectIdentifier
     } = req.pathParameters
 
-    const preset = await projectService.preset.get(projectIdentifier, contentType.replace('_', '/'))
+    const preset = await projectService.preset.get(projectIdentifier, decodeURIComponent(contentType))
 
     if (!preset) {
       throw {
