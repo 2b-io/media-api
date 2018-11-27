@@ -10,7 +10,7 @@ export default resource('PULL_SETTING')(
     const pullSetting = await pullSettingService.get(projectIdentifier)
 
     if (!pullSetting) {
-      return {
+      throw {
         statusCode: NOT_FOUND
       }
     }

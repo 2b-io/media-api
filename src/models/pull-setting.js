@@ -10,9 +10,8 @@ const schema = mongoose.Schema({
     name: String,
     value: String
   } ],
-  pullURL: {
-    type: String,
-    index: true
+  pullUrl: {
+    type: String
   },
   allowedOrigins: [ String ]
 }, {

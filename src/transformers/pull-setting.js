@@ -1,5 +1,10 @@
 export default (pullSetting) => ({
-  pullUrl: pullSetting.pullURL,
+  pullUrl: pullSetting.pullUrl,
   allowedOrigins: pullSetting.allowedOrigins,
-  headers: pullSetting.headers
+  headers: pullSetting.headers.map(
+    (header) => ({
+      name: header.name,
+      value: header.value
+    })
+  )
 })

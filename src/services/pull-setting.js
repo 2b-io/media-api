@@ -23,7 +23,24 @@ const get = async (projectIdentifier) => {
   })
 }
 
+const replace = async (projectIdentifier, data) => {
+  const project = await projectService.get(projectIdentifier)
+
+  if (!project) {
+    return null
+  }
+
+  const PullSetting = await createPullSettingModel()
+
+  return await PullSetting.findOneAndUpdate({
+    project: project._id
+  }, data, {
+    new: true
+  })
+}
+
 export default {
   create,
-  get
+  get,
+  replace
 }
