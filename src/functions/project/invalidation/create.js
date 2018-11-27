@@ -5,7 +5,9 @@ import resource from 'rest/resource'
 import invalidationService from 'services/invalidation'
 
 const SCHEMA = joi.object().keys({
-  patterns: joi.array().items(joi.string().trim().required()).required()
+  patterns: joi.array().items(
+    joi.string().trim().required()
+  ).required()
 })
 
 export default resource('INVALIDATION')(
@@ -18,7 +20,7 @@ export default resource('INVALIDATION')(
     const invadidation = await invalidationService.create(projectIdentifier, values)
 
     if (!invadidation) {
-      return {
+      throw {
         statusCode: FORBIDDEN
       }
     }

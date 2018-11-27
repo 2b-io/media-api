@@ -10,7 +10,7 @@ export default resource('INVALIDATION')(
     const invalidation = await invalidationService.get(projectIdentifier, invalidationIdentifier)
 
     if (!invalidation) {
-      return {
+      throw {
         statusCode: NOT_FOUND
       }
     }

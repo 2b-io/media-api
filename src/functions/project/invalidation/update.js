@@ -30,7 +30,7 @@ export default resource('INVALIDATION')(
     )
 
     if (!invalidation) {
-      return {
+      throw {
         statusCode: FORBIDDEN
       }
     }
