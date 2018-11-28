@@ -88,6 +88,13 @@ functions:
           path: /reset-tokens
           method: post
 
+  RESET_TOKEN___get:
+    handler: src/handler.RESET_TOKEN___get
+    events:
+      - http:
+          path: /reset-tokens/{token}
+          method: get
+
   # RESET_TOKEN --- END
 
   # PROJECT

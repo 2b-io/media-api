@@ -62,6 +62,8 @@ export { default as PROJECT__RULE___replace } from './functions/project/rule/rep
 
 export { default as RESET_TOKEN___create } from './functions/reset-token/create'
 
+export { default as RESET_TOKEN___get } from './functions/reset-token/get'
+
 /* ====================================================================================================== */
 
 export { default as JOB___create } from './functions/job/create'
