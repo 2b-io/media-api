@@ -21,7 +21,7 @@ const create = async (projectIdentifier, { patterns }) => {
 
   if (invadidation) {
     await jobService.create({
-      name: 'INVALIDATE_CACHE',
+      name: 'CREATE_INVALIDATION',
       when: Date.now(),
       payload: {
         projectIdentifier,
