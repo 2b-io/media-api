@@ -4,6 +4,7 @@ provider:
   name: aws
   runtime: nodejs8.10
   timeout: 30
+  memorySize: 128
 
 plugins:
   - serverless-webpack
