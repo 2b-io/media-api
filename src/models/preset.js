@@ -4,7 +4,8 @@ const schema = mongoose.Schema({
   project: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    index: true
+    index: true,
+    ref: 'Project'
   },
   contentType: {
     type: String,
