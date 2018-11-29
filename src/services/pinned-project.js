@@ -10,7 +10,7 @@ const list = async (accountIdentifier) => {
 
   const PinnedProject = await createPinnedProjectModel()
 
-  return await PinnedProject.find({
+  return await PinnedProject.findOne({
     account: account._id
   })
 }
