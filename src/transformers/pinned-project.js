@@ -1,3 +1,3 @@
 export default (pinnedProject) => ({
-  identifier: pinnedProject.projects
+  projectIdentifiers: pinnedProject.projectIdentifiers
 })

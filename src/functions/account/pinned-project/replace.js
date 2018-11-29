@@ -5,7 +5,7 @@ import resource from 'rest/resource'
 import pinnedProjectService from 'services/pinned-project'
 
 const SCHEMA = joi.object().keys({
-  projects: joi.array().items(
+  projectIdentifiers: joi.array().items(
     joi.string().trim().required()
   ).required()
 })

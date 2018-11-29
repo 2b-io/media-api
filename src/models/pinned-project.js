@@ -6,7 +6,7 @@ const schema = mongoose.Schema({
     required: true,
     index: true
   },
-  projects: [ {
+  projectIdentifiers: [ {
     type: String
   } ]
 }, {
