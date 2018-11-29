@@ -77,10 +77,10 @@ const remove = async (projectIdentifier, accountIdentifier) => {
 
   const Collaborator = await createCollaboratorModel()
 
-  return await Collaborator.findOneAndRemove(
-    { project: project._id },
-    { account: account._id
-  )
+  return await Collaborator.findOneAndRemove({
+    project: project._id,
+    account: account._id
+  })
 }
 
 
