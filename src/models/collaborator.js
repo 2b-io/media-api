@@ -4,12 +4,14 @@ const schema = mongoose.Schema({
   project: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    index: true
+    index: true,
+    ref: 'Project'
   },
   account: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    index: true
+    index: true,
+    ref: 'Account'
   },
   privilege: {
     type: String,
@@ -20,4 +22,3 @@ const schema = mongoose.Schema({
 })
 
 export default () => register('Collaborator', schema)
-
