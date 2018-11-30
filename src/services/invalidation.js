@@ -4,7 +4,12 @@ import createInvalidationModel from 'models/invalidation'
 import jobService from 'services/job'
 import projectService from 'services/project'
 
-const create = async (projectIdentifier, { patterns }) => {
+const TYPE_INVALIDATION = {
+  BY_PROJECT: 'CREATE_INVALIDATION_BY_PROJECT',
+  BY_PATTERNS: 'CREATE_INVALIDATION_BY_PATTERNS'
+}
+
+const create = async (projectIdentifier, typeInvalidation, patterns = []) => {
   const project = await projectService.get(projectIdentifier)
 
   if (!project) {
@@ -21,7 +26,7 @@ const create = async (projectIdentifier, { patterns }) => {
 
   if (invadidation) {
     await jobService.create({
-      name: 'CREATE_INVALIDATION',
+      name: TYPE_INVALIDATION[ typeInvalidation ],
       when: Date.now(),
       payload: {
         projectIdentifier,
