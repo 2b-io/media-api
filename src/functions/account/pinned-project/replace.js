@@ -6,7 +6,7 @@ import pinnedProjectService from 'services/pinned-project'
 
 const SCHEMA = joi.object().keys({
   projectIdentifiers: joi.array().items(
-    joi.string().trim().required()
+    joi.string().trim()
   ).required()
 })
 
