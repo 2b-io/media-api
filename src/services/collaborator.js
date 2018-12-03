@@ -21,27 +21,50 @@ const get = async (projectId, accountId) => {
   })
 }
 
-const replace = async (projectIdentifier, accountIdentifier, data) => {
-  const account = await accountService.get(accountIdentifier)
+const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) => {
+  const newOwnerAccount = await accountService.get(newOwner)
 
   const project = await projectService.get(projectIdentifier)
 
-  if (!account || !project) {
+  if (!newOwnerAccount || !project) {
     return null
   }
 
   const Collaborator = await createCollaboratorModel()
 
-  const collaborator = await Collaborator.findOneAndUpdate({ project: project._id,
-    account: account._id
-  }, data, {
-    upsert: true,
-    new: true
+  const currentOwnerCollaborator = await Collaborator.findOne({
+    project: project._id,
+    account: currentAccountOwner._id
   }).lean()
 
-  return {
-    ...collaborator,
-    accountIdentifier: account.identifier
+  if (!currentOwnerCollaborator || currentOwnerCollaborator.privilege !== 'owner') {
+    return null
+  }
+
+  // change currentOwner to admin
+  await Collaborator.findOneAndUpdate({
+    project: project._id,
+    account: currentAccountOwner._id
+  }, { privilege: 'admin' })
+
+  try {
+    // change newOwner to owner
+    const collaborator = await Collaborator.findOneAndUpdate({
+      project: project._id,
+      account: newOwnerAccount._id
+    }, data, {new: true}).lean()
+
+    return {
+      ...collaborator,
+      accountIdentifier: newOwnerAccount.identifier
+    }
+  } catch (error) {
+    await Collaborator.findOneAndUpdate({
+      project: project._id,
+      account: newOwnerAccount._id
+    }, { privilege: 'owner' })
+
+    return null
   }
 }
 
