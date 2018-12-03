@@ -44,6 +44,12 @@ const getByEmail = async (email) => {
   })
 }
 
+const getById = async (id) => {
+  const Account = await createAccountModel()
+
+  return await Account.findById(id)
+}
+
 const list = async (condition) => {
   const Account = await createAccountModel()
 
@@ -64,6 +70,7 @@ export default {
   create,
   get,
   getByEmail,
+  getById,
   list,
   update
 }
