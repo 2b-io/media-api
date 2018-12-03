@@ -48,12 +48,6 @@ const replace = async (projectIdentifier, accountIdentifier, data) => {
 const update = async (projectIdentifier, { emails }) => {
   const project = await projectService.get(projectIdentifier)
 
-  if (!project) {
-    return null
-  }
-
-  const Collaborator = await createCollaboratorModel()
-
   const accounts = await Promise.all(
     emails.map(async (email) => {
       const account = await accountService.getByEmail(email)
@@ -65,13 +59,27 @@ const update = async (projectIdentifier, { emails }) => {
     })
   )
 
-  if (!accounts) {
+  if (!project || !accounts) {
     return null
   }
 
+  const Collaborator = await createCollaboratorModel()
+
   return await Promise.all(
     accounts.map(async (account) => {
-      const collaborator = await Collaborator.findOneAndUpdate({
+      const collaborator = await Collaborator.findOne({
+        project: project._id,
+        account: account._id,
+      }).lean()
+
+      if (collaborator) {
+        return {
+          ...collaborator,
+          accountIdentifier: account.identifier
+        }
+      }
+
+      const newCollaborator = await Collaborator.findOneAndUpdate({
         project: project._id,
         account: account._id,
       }, {
@@ -82,7 +90,7 @@ const update = async (projectIdentifier, { emails }) => {
       }).lean()
 
       return {
-        ...collaborator,
+        ...newCollaborator,
         accountIdentifier: account.identifier
       }
     })
