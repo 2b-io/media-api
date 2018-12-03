@@ -23,7 +23,7 @@ const create = async (data) => {
     email: data.email
   })
 
-  // send email
+  // send email content : data.message
 
   return newAccount
 }

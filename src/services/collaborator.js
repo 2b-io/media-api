@@ -52,7 +52,7 @@ const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) =
     const collaborator = await Collaborator.findOneAndUpdate({
       project: project._id,
       account: newOwnerAccount._id
-    }, data, {new: true}).lean()
+    }, data, { new: true }).lean()
 
     return {
       ...collaborator,
@@ -68,14 +68,14 @@ const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) =
   }
 }
 
-const update = async (projectIdentifier, { emails }) => {
+const update = async (projectIdentifier, { emails, message }) => {
   const project = await projectService.get(projectIdentifier)
 
   const accounts = await Promise.all(
     emails.map(async (email) => {
       const account = await accountService.getByEmail(email)
       if (!account) {
-        return await accountService.create({ email })
+        return await accountService.create({ email, message })
       } else {
         return account
       }
