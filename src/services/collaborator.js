@@ -58,8 +58,8 @@ const update = async (projectIdentifier, { emails }) => {
   return await await Promise.all(
     accounts.map(async (account) => {
       return await Collaborator.findOneAndUpdate(
-        { project: project._id },
-        { account: account._id },
+        { project: project._id, account: account._id },
+        {},
         { upsert: true, new: true }
       )
     })
