@@ -1,10 +1,19 @@
 import namor from 'namor'
 
+import createCacheSettingModel from 'models/cache-setting'
+import createCollaboratorModel from 'models/collaborator'
+import createInfrastructureModel from 'models/infrastructure'
+import createInvalidationModel from 'models/invalidation'
 import createProjectModel from 'models/project'
+import createPresetModel from 'models/preset'
+import createPullSettingModel from 'models/pull-setting'
+
 import cacheSettingService from 'services/cache-setting'
 import collaboratorService from 'services/collaborator'
 import jobService from 'services/job'
+import invalidationService from 'services/invalidation'
 import infrastructureService from 'services/infrastructure'
+import pinnedProjectService from 'services/pinned-project'
 import pullSettingService from 'services/pull-setting'
 
 const generateUniqueIdentifier = async (retry) => {
@@ -109,6 +118,39 @@ const list = async (condition = {}, collaboratorId) => {
   return projects
 }
 
+const remove = async (projectIdentifier) => {
+  const Project = await createProjectModel()
+
+  const project = await Project.findOne({
+    identifier: projectIdentifier
+  })
+
+  if (!project || project.isActive) {
+    return null
+  }
+
+  const Preset = await createPresetModel()
+  const PullSetting = await createPullSettingModel()
+  const Collaborator = await createCollaboratorModel()
+  const CacheSetting = await createCacheSettingModel()
+  const Infrastructure = await createInfrastructureModel()
+  const Invalidation = await createInvalidationModel()
+
+  await invalidationService.create(project.identifier, 'BY_PROJECT')
+
+  return await Promise.all([
+    Preset.deleteMany({ project: project._id }),
+    PullSetting.deleteMany({ project: project._id }),
+    Collaborator.deleteMany({ project: project._id }),
+    CacheSetting.deleteMany({ project: project._id }),
+    pinnedProjectService.remove(project._id),
+    Invalidation.deleteMany({ project: project._id }),
+    Infrastructure.deleteMany({ project: project._id }),
+    Project.findOneAndRemove({ _id: project._id })
+    // TODO: Remove Report metric
+  ])
+}
+
 const update = async (projectIdentifier, data, collaboratorId) => {
   const current = await get(projectIdentifier, collaboratorId)
 
@@ -148,5 +190,6 @@ export default {
   create,
   get,
   list,
+  remove,
   update
 }
