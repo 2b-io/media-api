@@ -7,7 +7,8 @@ import collaboratorService from 'services/collaborator'
 const SCHEMA = joi.object().keys({
   emails: joi.array().items(
     joi.string().trim().required()
-  ).required()
+  ).required(),
+  message: joi.string().trim()
 })
 
 export default resource('COLLABORATOR')(
