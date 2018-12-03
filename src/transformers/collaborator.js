@@ -1,5 +1,5 @@
 export default (collaborator) => ({
-  accountIdentifier: collaborator.account,
+  accountIdentifier: collaborator.accountIdentifier,
   privilege: collaborator.privilege,
   createdAt: collaborator.createdAt
 })
