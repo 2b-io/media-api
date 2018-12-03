@@ -30,7 +30,17 @@ const update = async (accountIdentifier, data) => {
     new: true
   })
 }
+
+const remove = async (projectId) => {
+  const PinnedProject = await createPinnedProjectModel()
+
+  return await PinnedProject.findOneAndRemove({
+    project: projectId
+  })
+}
+
 export default {
   list,
+  remove,
   update
 }

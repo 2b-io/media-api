@@ -32,36 +32,59 @@ const replace = async (projectIdentifier, accountIdentifier, data) => {
 
   const Collaborator = await createCollaboratorModel()
 
-  return await Collaborator.findOneAndUpdate(
-    { project: project._id },
-    { account: account._id, ...data },
-    { upsert: true, new: true }
-  )
+  const collaborator = await Collaborator.findOneAndUpdate({ project: project._id,
+    account: account._id
+  }, data, {
+    upsert: true,
+    new: true
+  }).lean()
+
+  return {
+    ...collaborator,
+    accountIdentifier: account.identifier
+  }
 }
 
 const update = async (projectIdentifier, { emails }) => {
-
   const project = await projectService.get(projectIdentifier)
 
-  const accounts = await Promise.all(
-    emails.map(async (email) => {
-      return await accountService.getByEmail(email)
-    })
-  )
-
-  if (!project || !accounts) {
+  if (!project) {
     return null
   }
 
   const Collaborator = await createCollaboratorModel()
 
-  return await await Promise.all(
+  const accounts = await Promise.all(
+    emails.map(async (email) => {
+      const account = await accountService.getByEmail(email)
+      if (!account) {
+        return await accountService.create({ email })
+      } else {
+        return account
+      }
+    })
+  )
+
+  if (!accounts) {
+    return null
+  }
+
+  return await Promise.all(
     accounts.map(async (account) => {
-      return await Collaborator.findOneAndUpdate(
-        { project: project._id, account: account._id },
-        {},
-        { upsert: true, new: true }
-      )
+      const collaborator = await Collaborator.findOneAndUpdate({
+        project: project._id,
+        account: account._id,
+      }, {
+        privilege: 'admin'
+      }, {
+        upsert: true,
+        new: true
+      }).lean()
+
+      return {
+        ...collaborator,
+        accountIdentifier: account.identifier
+      }
     })
   )
 }
@@ -93,17 +116,43 @@ const listByProjectIdentifier = async (projectIdentifier) => {
 
   const Collaborator = await createCollaboratorModel()
 
-  return await Collaborator.find({
+  const collaborators = await Collaborator.find({
     project: project._id
-  })
+  }).lean()
+
+  return await Promise.all(
+    collaborators.map(
+      async (collaborator) => {
+        const account = await accountService.getById(collaborator.account)
+
+        return {
+          ...collaborator,
+          accountIdentifier: account.identifier
+        }
+      }
+    )
+  )
 }
 
 const listByAccountId = async (accountId) => {
   const Collaborator = await createCollaboratorModel()
 
-  return await Collaborator.find({
+  const collaborators = await Collaborator.find({
     account: accountId
-  })
+  }).lean()
+
+  return await Promise.all(
+    collaborators.map(
+      async (collaborator) => {
+        const account = await accountService.getById(collaborator.account)
+
+        return {
+          ...collaborator,
+          accountIdentifier: account.identifier
+        }
+      }
+    )
+  )
 }
 
 export default {
