@@ -27,6 +27,7 @@ const update = async (accountIdentifier, data) => {
   return await PinnedProject.findOneAndUpdate({
     account: account._id
   }, data, {
+    upsert: true,
     new: true
   })
 }
