@@ -40,6 +40,7 @@
     "mongoose": "5.3.13",
     "ms": "2.1.1",
     "namor": "1.1.1",
+    "querystring": "0.2.0",
     "serialize-error": "3.0.0",
     "shorthash": "0.0.2",
     "uuid": "3.3.2"

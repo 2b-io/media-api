@@ -2,14 +2,14 @@ import { CREATED, FORBIDDEN } from 'http-status-codes'
 import joi from 'joi'
 
 import resource from 'rest/resource'
-import fileService from 'services/file'
+import projectService from 'services/project'
 
 const SCHEMA = joi.object().keys({
   key: joi.string().trim().required(),
   contentType: joi.string().trim().required(),
   contentLength: joi.number().required(),
   originUrl: joi.string().trim(),
-  preset: joi.string().trim().required(),
+  preset: joi.string().trim(),
   expires: joi.date(),
   isOrigin: joi.boolean(),
   lastModified: joi.date(),
@@ -22,7 +22,12 @@ export default resource('FILE')(
     const body = JSON.parse(req.body) || {}
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
-    const file = await fileService.create(projectIdentifier, values.key, values)
+
+    const file = await projectService.file.createOrReplace(
+      projectIdentifier,
+      values.key,
+      values
+    )
 
     if (!file) {
       throw {
