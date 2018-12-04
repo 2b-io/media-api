@@ -21,36 +21,64 @@ const get = async (projectId, accountId) => {
   })
 }
 
-const replace = async (projectIdentifier, accountIdentifier, data) => {
-  const account = await accountService.get(accountIdentifier)
+const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) => {
+  const newOwnerAccount = await accountService.get(newOwner)
 
   const project = await projectService.get(projectIdentifier)
 
-  if (!account || !project) {
+  if (!newOwnerAccount || !project) {
     return null
   }
 
   const Collaborator = await createCollaboratorModel()
 
-  const collaborator = await Collaborator.findOneAndUpdate({ project: project._id,
-    account: account._id
-  }, data, {
-    upsert: true,
-    new: true
+  const currentOwnerCollaborator = await Collaborator.findOne({
+    project: project._id,
+    account: currentAccountOwner._id
   }).lean()
 
-  return {
-    ...collaborator,
-    accountIdentifier: account.identifier
+  if (!currentOwnerCollaborator || currentOwnerCollaborator.privilege !== 'owner') {
+    return null
+  }
+
+  // change currentOwner to admin
+  await Collaborator.findOneAndUpdate({
+    project: project._id,
+    account: currentAccountOwner._id
+  }, { privilege: 'admin' })
+
+  try {
+    // change newOwner to owner
+    const collaborator = await Collaborator.findOneAndUpdate({
+      project: project._id,
+      account: newOwnerAccount._id
+    }, data, { new: true }).lean()
+
+    return {
+      ...collaborator,
+      accountIdentifier: newOwnerAccount.identifier
+    }
+  } catch (error) {
+    await Collaborator.findOneAndUpdate({
+      project: project._id,
+      account: currentAccountOwner._id
+    }, { privilege: 'owner' })
+
+    return null
   }
 }
 
-const update = async (projectIdentifier, { emails }) => {
+const update = async (projectIdentifier, { emails, message }) => {
   const project = await projectService.get(projectIdentifier)
 
   const accounts = await Promise.all(
     emails.map(async (email) => {
-      return await accountService.getByEmail(email)
+      const account = await accountService.getByEmail(email)
+      if (!account) {
+        return await accountService.create({ email, message })
+      } else {
+        return account
+      }
     })
   )
 
@@ -62,7 +90,19 @@ const update = async (projectIdentifier, { emails }) => {
 
   return await Promise.all(
     accounts.map(async (account) => {
-      const collaborator = await Collaborator.findOneAndUpdate({
+      const collaborator = await Collaborator.findOne({
+        project: project._id,
+        account: account._id
+      }).lean()
+
+      if (collaborator) {
+        return {
+          ...collaborator,
+          accountIdentifier: account.identifier
+        }
+      }
+
+      const newCollaborator = await Collaborator.findOneAndUpdate({
         project: project._id,
         account: account._id
       }, {
@@ -73,7 +113,7 @@ const update = async (projectIdentifier, { emails }) => {
       }).lean()
 
       return {
-        ...collaborator,
+        ...newCollaborator,
         accountIdentifier: account.identifier
       }
     })

@@ -9,15 +9,28 @@ const SCHEMA = joi.object().keys({
 })
 
 export default resource('COLLABORATOR')(
-  async (req) => {
-    const { projectIdentifier, accountIdentifier } = req.pathParameters
+  async (req, session) => {
+    const {
+      projectIdentifier,
+      accountIdentifier: newOwner
+    } = req.pathParameters
+
+    const { account: currentOwner } = session
+
+    if (!currentOwner) {
+      throw {
+        statusCode: FORBIDDEN
+      }
+    }
+
     const body = JSON.parse(req.body) || {}
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
 
     const collaborators = await collaboratorService.replace(
       projectIdentifier,
-      accountIdentifier,
+      currentOwner,
+      newOwner,
       values
     )
 
