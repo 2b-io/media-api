@@ -10,8 +10,11 @@ export default resource('PINNED_PROJECT')(
     const pinnedProjects = await pinnedProjectService.list(accountIdentifier)
 
     if (!pinnedProjects) {
-      throw {
-        statusCode: NOT_FOUND
+      return {
+        statusCode: OK,
+        resource: {
+          projectIdentifiers: []
+        }
       }
     }
 
