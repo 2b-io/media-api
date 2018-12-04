@@ -61,7 +61,7 @@ const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) =
   } catch (error) {
     await Collaborator.findOneAndUpdate({
       project: project._id,
-      account: newOwnerAccount._id
+      account: currentAccountOwner._id
     }, { privilege: 'owner' })
 
     return null
@@ -92,7 +92,7 @@ const update = async (projectIdentifier, { emails, message }) => {
     accounts.map(async (account) => {
       const collaborator = await Collaborator.findOne({
         project: project._id,
-        account: account._id,
+        account: account._id
       }).lean()
 
       if (collaborator) {
@@ -104,7 +104,7 @@ const update = async (projectIdentifier, { emails, message }) => {
 
       const newCollaborator = await Collaborator.findOneAndUpdate({
         project: project._id,
-        account: account._id,
+        account: account._id
       }, {
         privilege: 'admin'
       }, {
