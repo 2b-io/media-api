@@ -3,5 +3,6 @@ export default (project) => ({
   name: project.name,
   status: project.status,
   isActive: project.isActive,
+  isDeleted: project.isDeleted,
   createdAt: project.createdAt
 })
