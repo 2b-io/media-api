@@ -1,6 +1,6 @@
 export default {
   key: {
-    type: 'keyword',
+    type: 'keyword'
   },
   contentType: {
     type: 'keyword'
@@ -12,7 +12,7 @@ export default {
     type: 'date'
   },
   isOrigin: {
-    type: 'boolean',
+    type: 'boolean'
   },
   lastModified: {
     type: 'date'
@@ -21,7 +21,7 @@ export default {
     type: 'date'
   },
   originUrl: {
-    type: 'keyword',
+    type: 'keyword'
   },
   preset:{
     type: 'keyword'
