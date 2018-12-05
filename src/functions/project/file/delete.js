@@ -6,7 +6,6 @@ import projectService from 'services/project'
 export default resource('FILE')(
   async (req) => {
     const { projectIdentifier, fileIdentifier } = req.pathParameters
-    const body = JSON.parse(req.body) || {}
     // TODO: Authorization
     const result = await projectService.file.remove(
       projectIdentifier,
