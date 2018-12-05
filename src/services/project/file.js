@@ -7,28 +7,23 @@ const PREFIX = config.aws.elasticsearch.prefix
 const TYPE_NAME = `${ PREFIX }-media`
 
 const searchByProject = async (projectIdentifier) => {
-  return await searchService.searchAllObjects({
+  const allObjects = await searchService.searchAllObjects(
     projectIdentifier
-  })
+  )
+
+  return allObjects || []
 }
 
-const searchByPatterns = async (projectIdentifier, patterns) => {
-  const originObjects = await patterns.reduce(
-    async (previousJob, pattern) => {
-      const prevObjects = await previousJob || []
-      const nextObjects = await searchService.searchAllObjects({
-        projectIdentifier,
-        params: {
-          regexp: {
-            originUrl: pattern.endsWith('*') ?
-              `${ escape(pattern.substring(0, pattern.length - 1)) }.*` :
-              `${ escape(pattern) }.*`
-          }
-        }
-      })
-
-      return [ ...prevObjects, ...nextObjects ]
-    }, Promise.resolve()
+const searchByPattern = async (projectIdentifier, pattern) => {
+  const originObjects = await searchService.searchAllObjects(
+    projectIdentifier,
+    {
+      regexp: {
+        originUrl: pattern.endsWith('*') ?
+          `${ escape(pattern.substring(0, pattern.length - 1)) }.*` :
+          `${ escape(pattern) }.*`
+      }
+    }
   )
 
   if (!originObjects.length) {
@@ -38,14 +33,14 @@ const searchByPatterns = async (projectIdentifier, patterns) => {
   const allObjects = await originObjects.reduce(
     async (previousJob, { key: originKey }) => {
       const prevObjects = await previousJob || []
-      const nextObjects = await searchService.searchAllObjects({
+      const nextObjects = await searchService.searchAllObjects(
         projectIdentifier,
-        params: {
+        {
           regexp: {
             key: `${ escape(originKey) }.*`
           }
         }
-      })
+      )
 
       return [ ...prevObjects, ...nextObjects ]
     }, Promise.resolve()
@@ -55,14 +50,16 @@ const searchByPatterns = async (projectIdentifier, patterns) => {
 }
 
 const searchByPresetHash = async (projectIdentifier, presetHash) => {
-  return await searchService.searchAllObjects({
+  const allObjects = await searchService.searchAllObjects(
     projectIdentifier,
-    params: {
+    {
       term: {
         preset: presetHash
       }
     }
-  })
+  )
+
+  return allObjects || []
 }
 
 const initMapping = async (index) => {
@@ -88,7 +85,7 @@ const initMapping = async (index) => {
 }
 
 const list = async (projectIdentifier, params) => {
-  const { patterns, presetHash } = params
+  const { pattern, presetHash } = params
 
   if (!projectIdentifier) {
     return null
@@ -98,8 +95,8 @@ const list = async (projectIdentifier, params) => {
     return await searchByPresetHash(projectIdentifier, presetHash)
   }
 
-  if (patterns) {
-    return await searchByPatterns(projectIdentifier, patterns)
+  if (pattern) {
+    return await searchByPattern(projectIdentifier, pattern)
   }
 
   return await searchByProject(projectIdentifier)

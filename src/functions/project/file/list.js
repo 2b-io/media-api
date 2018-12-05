@@ -6,20 +6,17 @@ import projectService from 'services/project'
 
 const SCHEMA = joi.alternatives().try([
   joi.object().keys({
-    patterns: joi.array().items(
-      joi.string().trim().required()
-    ).required()
+    pattern: joi.string().trim()
   }),
   joi.object().keys({
-    preset: joi.string().trim().required()
+    preset: joi.string().trim()
   })
 ])
 
 export default resource('FILE')(
   async (req) => {
-
     const { projectIdentifier } = req.pathParameters
-    const { patterns, preset } = req.queryStringParameters || {}
+    const params = req.queryStringParameters || {}
     // TODO: Authorization
     const values = await joi.validate(params, SCHEMA)
 
