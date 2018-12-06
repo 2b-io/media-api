@@ -23,7 +23,7 @@ export default resource('FILE')(
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
 
-    const file = await projectService.file.createOrReplace(
+    const file = await projectService.file.create(
       projectIdentifier,
       values.key,
       values
