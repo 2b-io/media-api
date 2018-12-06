@@ -21,17 +21,11 @@ const searchAllObjects = async (projectIdentifier, pageSize = 10, params) => {
       await elasticsearch.searchWithParams(
         projectIdentifier,
         params,
-        {
-          from: totalHits,
-          size: pageSize
-        }
+        { from: totalHits, size: pageSize }
       ) :
       await elasticsearch.searchWithoutParams(
         projectIdentifier,
-        {
-          from: totalHits,
-          size: pageSize
-        }
+        { from: totalHits, size: pageSize }
       )
 
     totalHits = totalHits + hits.length
@@ -73,8 +67,7 @@ const searchByProject = async (projectIdentifier) => {
 const searchByPattern = async (projectIdentifier, pattern) => {
   const originObjects = await searchAllObjects(
     projectIdentifier,
-    {
-      regexp: {
+    { regexp: {
         originUrl: pattern.endsWith('*') ?
           `${ escape(pattern.substring(0, pattern.length - 1)) }.*` :
           `${ escape(pattern) }.*`
@@ -91,11 +84,7 @@ const searchByPattern = async (projectIdentifier, pattern) => {
       const prevObjects = await previousJob || []
       const nextObjects = await searchAllObjects(
         projectIdentifier,
-        {
-          regexp: {
-            key: `${ escape(originKey) }.*`
-          }
-        }
+        { regexp: { key: `${ escape(originKey) }.*` } }
       )
 
       return [ ...prevObjects, ...nextObjects ]
@@ -108,11 +97,7 @@ const searchByPattern = async (projectIdentifier, pattern) => {
 const searchByPresetHash = async (projectIdentifier, presetHash) => {
   const allObjects = await searchAllObjects(
     projectIdentifier,
-    {
-      term: {
-        preset: presetHash
-      }
-    }
+    { term: { preset: presetHash } }
   )
 
   return allObjects || []
