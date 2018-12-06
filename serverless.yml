@@ -364,6 +364,13 @@ functions:
           path: /projects/{projectIdentifier}/files/{fileIdentifier}
           method: get
 
+  PROJECT__FILE___head:
+    handler: src/handler.PROJECT__FILE___head
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/files/{fileIdentifier}
+          method: head
+
   PROJECT__FILE___replace:
     handler: src/handler.PROJECT__FILE___replace
     events:
