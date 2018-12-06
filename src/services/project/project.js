@@ -1,19 +1,12 @@
 import namor from 'namor'
 
-import createCacheSettingModel from 'models/cache-setting'
-import createCollaboratorModel from 'models/collaborator'
-import createInfrastructureModel from 'models/infrastructure'
-import createInvalidationModel from 'models/invalidation'
 import createProjectModel from 'models/project'
-import createPresetModel from 'models/preset'
-import createPullSettingModel from 'models/pull-setting'
 
 import cacheSettingService from 'services/cache-setting'
 import collaboratorService from 'services/collaborator'
 import jobService from 'services/job'
 import invalidationService from 'services/invalidation'
 import infrastructureService from 'services/infrastructure'
-import pinnedProjectService from 'services/pinned-project'
 import pullSettingService from 'services/pull-setting'
 
 const generateUniqueIdentifier = async (retry) => {
@@ -85,7 +78,8 @@ const get = async (identifier, collaboratorId) => {
   const Project = await createProjectModel()
 
   const project = await Project.findOne({
-    identifier
+    identifier,
+    isDeleted: false
   })
 
   if (!project) {
@@ -112,6 +106,7 @@ const list = async (condition = {}, collaboratorId) => {
     _id: {
       $in: collaborators.map((c) => c.project)
     },
+    isDeleted: false,
     ...condition
   })
 
@@ -129,26 +124,15 @@ const remove = async (projectIdentifier) => {
     return null
   }
 
-  const Preset = await createPresetModel()
-  const PullSetting = await createPullSettingModel()
-  const Collaborator = await createCollaboratorModel()
-  const CacheSetting = await createCacheSettingModel()
-  const Infrastructure = await createInfrastructureModel()
-  const Invalidation = await createInvalidationModel()
-
   await invalidationService.create(project.identifier, 'BY_PROJECT')
 
-  return await Promise.all([
-    Preset.deleteMany({ project: project._id }),
-    PullSetting.deleteMany({ project: project._id }),
-    Collaborator.deleteMany({ project: project._id }),
-    CacheSetting.deleteMany({ project: project._id }),
-    pinnedProjectService.remove(project._id),
-    Invalidation.deleteMany({ project: project._id }),
-    Infrastructure.deleteMany({ project: project._id }),
-    Project.findOneAndRemove({ _id: project._id })
-    // TODO: Remove Report metric
-  ])
+  return await Project.findOneAndUpdate({
+    _id: project._id
+  }, {
+    isDeleted: true
+  }, {
+    new: true
+  })
 }
 
 const update = async (projectIdentifier, data, collaboratorId) => {
