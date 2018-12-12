@@ -58,7 +58,7 @@ paths:
   /accounts:
     get:
       summary: List accounts.
-      description: Returns the list of accounts.
+      description: Return the list of accounts.
       security:
         - contentType: []
           authorization: []
@@ -75,7 +75,7 @@ paths:
           description: NOT_FOUND
     post:
       summary: Create account.
-      description: Returns created account info.
+      description: Return created account info.
       security:
         - contentType: []
           authorization: []
@@ -122,7 +122,7 @@ paths:
           description: NOT_FOUND
     patch:
       summary: Update account.
-      description: Returns updated account info.
+      description: Return updated account info.
       security:
         - contentType: []
           accountAuthorization: []
@@ -188,7 +188,7 @@ paths:
   '/reset-tokens':
     post:
       summary: Create token.
-      description: Returns created token info.
+      description: Return created token info.
       security:
         - contentType: []
           authorization: []
