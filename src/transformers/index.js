@@ -1,6 +1,7 @@
 export { default as ACCOUNT } from './account'
 export { default as CACHE_SETTING } from './cache-setting'
 export { default as COLLABORATOR } from './collaborator'
+export { default as FILE } from './file'
 export { default as INFRASTRUCTURE } from './infrastructure'
 export { default as INVALIDATION } from './invalidation'
 export { default as PINNED_PROJECT } from './pinned-project'
