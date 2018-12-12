@@ -1,0 +1,224 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost servers
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Project
+  version: '1.0.0'
+  title: Media-network project api
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    accountAuthorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Project:
+      type: object
+      properties:
+        identifier:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+paths:
+  /projects:
+    get:
+      summary: List projects.
+      description: Return the list of project.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create project.
+      description: Return created project info.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                provider:
+                  type: string
+                  example: cloudfront
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '409':
+          description: CONFLICT
+  /projects/{projectIdentifier}:
+    get:
+      summary: Get project.
+      description: Return the project info.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'delay-smoke-94'
+          required: true
+          description: 'Parameter description in CommonMark or HTML.'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: NOT_FOUND
+  #   patch:
+  #     summary: Update account.
+  #     description: Return updated account info.
+  #     security:
+  #       - contentType: []
+  #         accountAuthorization: []
+  #     parameters:
+  #       - name: accountIdentifier
+  #         in: path
+  #         example: Z2hdALx
+  #         required: true
+  #         description: Parameter description in CommonMark or HTML.
+  #         schema:
+  #           type: string
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               name:
+  #                 type: string
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Project'
+  #       '403':
+  #         description: FORBIDDEN
+  #       '404':
+  #         description: NOT_FOUND
+  # /accounts/{accountIdentifier}/password:
+  #   put:
+  #     summary: Change password.
+  #     description: Change password with current password or use token.
+  #     security:
+  #       - contentType: []
+  #         accountAuthorization: []
+  #     parameters:
+  #       - name: accountIdentifier
+  #         in: path
+  #         example: Z2hdALx
+  #         required: true
+  #         description: Parameter description in CommonMark or HTML.
+  #         schema:
+  #           type: string
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               currentPassword:
+  #                 type: string
+  #               token:
+  #                 type: string
+  #               newPassword:
+  #                 type: string
+  #     responses:
+  #       '204':
+  #         description: NO_CONTENT
+  #       '403':
+  #         description: FORBIDDEN
+  # '/reset-tokens':
+  #   post:
+  #     summary: Create token.
+  #     description: Return created account info.
+  #     security:
+  #       - contentType: []
+  #         authorization: []
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               email:
+  #                 type: string
+  #     responses:
+  #       '201':
+  #         description: CREATED
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Project'
+  #       '409':
+  #         description: CONFLICT
+  # '/reset-tokens/{token}':
+  #   get:
+  #     summary: List accounts.
+  #     description: Return the list of accounts.
+  #     security:
+  #       - contentType: []
+  #         authorization: []
+  #     parameters:
+  #       - name: token
+  #         in: path
+  #         required: true
+  #         description: Parameter description in CommonMark or HTML.
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Token'
+  #       '404':
+  #         description: NOT_FOUND
