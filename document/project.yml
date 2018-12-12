@@ -98,7 +98,7 @@ paths:
           in: path
           example: 'delay-smoke-94'
           required: true
-          description: 'Parameter description in CommonMark or HTML.'
+          description: 'The identifier of the project to return.'
           schema:
             type: string
       responses:
@@ -110,40 +110,67 @@ paths:
                 $ref: '#/components/schemas/Project'
         '404':
           description: NOT_FOUND
-  #   patch:
-  #     summary: Update account.
-  #     description: Return updated account info.
-  #     security:
-  #       - contentType: []
-  #         accountAuthorization: []
-  #     parameters:
-  #       - name: accountIdentifier
-  #         in: path
-  #         example: Z2hdALx
-  #         required: true
-  #         description: Parameter description in CommonMark or HTML.
-  #         schema:
-  #           type: string
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               name:
-  #                 type: string
-  #     responses:
-  #       '200':
-  #         description: OK
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Project'
-  #       '403':
-  #         description: FORBIDDEN
-  #       '404':
-  #         description: NOT_FOUND
-  # /accounts/{accountIdentifier}/password:
+    patch:
+      summary: Update project.
+      description: Return updated project info.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'delay-smoke-94'
+          required: true
+          description: 'The identifier of the project to return.'
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'update project with isActive'
+                isActive:
+                  type: boolean
+                  description: 'update project with isActive'
+                status:
+                  type: string
+                  example: 'DEPLOYED, DISABLED'
+                  description: 'update project status only'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '403':
+          description: FORBIDDEN
+        '404':
+          description: NOT_FOUND
+    delete:
+      summary: Delete proejct.
+      description: Delete the project with identifier. Project must be DISABLED & is not active.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  # /projects/{projectIdentifier}/password:
   #   put:
   #     summary: Change password.
   #     description: Change password with current password or use token.
@@ -151,7 +178,7 @@ paths:
   #       - contentType: []
   #         accountAuthorization: []
   #     parameters:
-  #       - name: accountIdentifier
+  #       - name: projectIdentifier
   #         in: path
   #         example: Z2hdALx
   #         required: true
@@ -201,8 +228,8 @@ paths:
   #         description: CONFLICT
   # '/reset-tokens/{token}':
   #   get:
-  #     summary: List accounts.
-  #     description: Return the list of accounts.
+  #     summary: List projects.
+  #     description: Return the list of projects.
   #     security:
   #       - contentType: []
   #         authorization: []
