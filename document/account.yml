@@ -1,0 +1,234 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost servers
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Account
+  version: '1.0.0'
+  title: Media-network account api
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    accountAuthorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Account:
+      type: object
+      properties:
+        identifier:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    Token:
+      type: object
+      properties:
+        accountIdentifier:
+          type: string
+        token:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiredAt:
+          type: string
+          format: date-time
+paths:
+  /accounts:
+    get:
+      summary: List accounts.
+      description: Returns the list of accounts.
+      security:
+        - contentType: []
+          authorization: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create account.
+      description: Returns created account info.
+      security:
+        - contentType: []
+          authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: CONFLICT
+  /accounts/{accountIdentifier}:
+    get:
+      summary: Get account.
+      description: Return account info.
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update account.
+      description: Returns updated account info.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          description: FORBIDDEN
+        '404':
+          description: NOT_FOUND
+  /accounts/{accountIdentifier}/password:
+    put:
+      summary: Change password.
+      description: Change password with current password or use token.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                token:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  '/reset-tokens':
+    post:
+      summary: Create token.
+      description: Returns created token info.
+      security:
+        - contentType: []
+          authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: CONFLICT
+  '/reset-tokens/{token}':
+    get:
+      summary: Get token.
+      description: Return token info.
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '404':
+          description: NOT_FOUND
