@@ -57,6 +57,8 @@ paths:
     get:
       summary: List accounts.
       description: Return the list of accounts.
+      tags:
+        - Account
       security:
         - contentType: []
           authorization: []
@@ -74,6 +76,8 @@ paths:
     post:
       summary: Create account.
       description: Return created account info.
+      tags:
+        - Account
       security:
         - contentType: []
           authorization: []
@@ -99,6 +103,8 @@ paths:
     get:
       summary: Get account.
       description: Return account info.
+      tags:
+        - Account
       security:
         - contentType: []
           authorization: []
@@ -122,6 +128,8 @@ paths:
     patch:
       summary: Update account.
       description: Return updated account info.
+      tags:
+        - Account
       security:
         - contentType: []
           accountAuthorization: []
@@ -156,6 +164,8 @@ paths:
     put:
       summary: Change password.
       description: Change password with current password or use token.
+      tags:
+        - Account
       security:
         - contentType: []
           accountAuthorization: []
@@ -188,6 +198,8 @@ paths:
     post:
       summary: Create token.
       description: Return created token info.
+      tags:
+        - Token
       security:
         - contentType: []
           authorization: []
@@ -213,6 +225,8 @@ paths:
     get:
       summary: Get token.
       description: Return token info.
+      tags:
+        - Token
       security:
         - contentType: []
           authorization: []

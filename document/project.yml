@@ -54,6 +54,8 @@ paths:
     get:
       summary: List projects.
       description: Return the list of project.
+      tags:
+        - Project
       security:
         - contentType: []
           accountAuthorization: []
@@ -71,6 +73,8 @@ paths:
     post:
       summary: Create project.
       description: Return created project info.
+      tags:
+        - Project
       security:
         - contentType: []
           accountAuthorization: []
@@ -98,6 +102,8 @@ paths:
     get:
       summary: Get project.
       description: Return the project info.
+      tags:
+        - Project
       security:
         - contentType: []
           accountAuthorization: []
@@ -121,6 +127,8 @@ paths:
     patch:
       summary: Update project.
       description: Return updated project info.
+      tags:
+        - Project
       security:
         - contentType: []
           accountAuthorization: []
@@ -140,10 +148,10 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'update project with isActive'
+                  description: 'update project with isActive & name.'
                 isActive:
                   type: boolean
-                  description: 'update project with isActive'
+                  description: 'update project with isActive & name.'
                 status:
                   type: string
                   example: 'DEPLOYED, DISABLED'
@@ -162,6 +170,8 @@ paths:
     delete:
       summary: Delete project.
       description: Delete the project with identifier.
+      tags:
+        - Project
       security:
         - contentType: []
           accountAuthorization: []
@@ -182,6 +192,8 @@ paths:
     get:
       summary: Get cache setting
       description: Get the cache setting from project
+      tags:
+        - Cache-setting
       security:
         - contentType: []
           accountAuthorization: []
@@ -208,6 +220,8 @@ paths:
     put:
       summary: Update cache setting
       description: Update the cache setting.
+      tags:
+        - Cache-setting
       security:
         - contentType: []
           accountAuthorization: []
@@ -243,7 +257,9 @@ paths:
   /projects/{projectIdentifier}/collaborators:
     get:
       summary: List collaborators
-      description: Return the list collaborator of project.
+      description: Return the project's collaborator list.
+      tags:
+        - Collaborators
       security:
         - contentType: []
           accountAuthorization: []
@@ -269,6 +285,8 @@ paths:
     patch:
       summary: Create collaborator
       description: Update the collaborators, add new collaborator & sent email to invite.
+      tags:
+        - Collaborators
       security:
         - contentType: []
           accountAuthorization: []
@@ -306,6 +324,8 @@ paths:
     delete:
       summary: Remove collaborator
       description: Remove the collaborator from project.
+      tags:
+        - Collaborators
       security:
         - contentType: []
           accountAuthorization: []
@@ -314,7 +334,7 @@ paths:
           in: path
           example: 'badass-victory-82'
           required: true
-          description: The identifier of project
+          description: The project identifier
           schema:
             type: string
         - name: accountIdentifier
@@ -332,6 +352,8 @@ paths:
     put:
       summary: Update permission
       description: Update collaborator permission in project.
+      tags:
+        - Collaborators
       security:
         - contentType: []
           accountAuthorization: []
@@ -340,7 +362,7 @@ paths:
           in: path
           example: 'badass-victory-82'
           required: true
-          description: The identifier of project
+          description: The project identifier
           schema:
             type: string
         - name: accountIdentifier
@@ -368,4 +390,3 @@ paths:
                 $ref: '#/components/schemas/Collaborator'
         '403':
           description: FORBIDDEN
-
