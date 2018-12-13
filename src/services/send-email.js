@@ -27,12 +27,14 @@ const passwordRecovery = async () => {
   })
 }
 
-const welcome = async () => {
+const welcome = async (email, resetToken) => {
   await jobService.create({
     name: 'SEND_EMAIL',
     when: Date.now(),
     payload: {
-      type: 'WELCOME'
+      type: 'WELCOME',
+      email,
+      resetToken
     }
   }, {
     messageId: uuid.v4()
