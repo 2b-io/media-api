@@ -82,7 +82,7 @@ paths:
           description: NOT_FOUND
     post:
       summary: Create project.
-      description: Return created project info.
+      description: Return created project.
       tags:
         - Project
       security:
@@ -111,7 +111,7 @@ paths:
   /projects/{projectIdentifier}:
     get:
       summary: Get project.
-      description: Return the project info.
+      description: Return the project.
       tags:
         - Project
       security:
@@ -136,7 +136,7 @@ paths:
           description: NOT_FOUND
     patch:
       summary: Update project.
-      description: Return updated project info.
+      description: Return updated project.
       tags:
         - Project
       security:
@@ -407,7 +407,7 @@ paths:
       tags:
         - Preset
       security:
-        - contenType: []
+        - contentType: []
           accountAuthorization: []
       parameters:
         - name: projectIdentifier
@@ -430,11 +430,11 @@ paths:
           description: NOT_FOUND
     post:
       summary: Create preset.
-      description: Return created preset info.
+      description: Return created preset.
       tags:
         - Preset
       security:
-        - contenType: []
+        - contentType: []
           accountAuthorization: []
       parameters:
         - name: projectIdentifier
@@ -463,5 +463,111 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Preset'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/presets/{contentType}:
+    get:
+      summary: Get preset.
+      description: Return the preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preset'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update preset.
+      description: Return updated preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+                parameters:
+                  type: object
+                  properties: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '403':
+          description: FORBIDDEN
+    delete:
+      summary: Remove preset.
+      description: Remove the preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
         '403':
           description: FORBIDDEN
