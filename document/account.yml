@@ -11,9 +11,6 @@ info:
   title: Media-network account api
 components:
   securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
     contentType:
       type: apiKey
       in: header

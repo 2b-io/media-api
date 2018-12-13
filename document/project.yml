@@ -11,9 +11,6 @@ info:
   title: Media-network project api
 components:
   securitySchemes:
-    BasicAuth:
-      type: http
-      scheme: basic
     contentType:
       type: apiKey
       in: header
@@ -121,7 +118,7 @@ paths:
           in: path
           example: 'delay-smoke-94'
           required: true
-          description: 'The identifier of the project to return.'
+          description: 'The identifier of the project to update.'
           schema:
             type: string
       requestBody:
@@ -152,8 +149,8 @@ paths:
         '404':
           description: NOT_FOUND
     delete:
-      summary: Delete proejct.
-      description: Delete the project with identifier. Project must be DISABLED & is not active.
+      summary: Delete project.
+      description: Delete the project with identifier.
       security:
         - contentType: []
           accountAuthorization: []
@@ -166,7 +163,69 @@ paths:
           schema:
             type: string
       responses:
+        '403':
+          description: FORBIDDEN
         '204':
           description: NO_CONTENT
+  /projects/{projectIdentifier}/cache-setting:
+    get:
+      summary: Get cache setting
+      description: Get the cache setting from project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ttl:
+                    type: string
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update cache setting
+      description: Update the cache setting.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ttl:
+                  type: string
+                  description: 'Unit of ttl is milliseconds'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ttl:
+                    type: string
         '403':
           description: FORBIDDEN
