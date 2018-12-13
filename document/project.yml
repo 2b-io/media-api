@@ -49,6 +49,16 @@ components:
         createdAt:
           type: string
           format: date-time
+    Preset:
+      type: object
+      properties:
+        contentType:
+          type: string
+        isActive:
+          type: boolean
+        parameters:
+          type: object
+          properties: {}
 paths:
   /projects:
     get:
@@ -388,5 +398,70 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Collaborator'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/presets:
+    get:
+      summary: List preset.
+      description: Return the project's preset list.
+      tags:
+        - Preset
+      security:
+        - contenType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create preset.
+      description: Return created preset info.
+      tags:
+        - Preset
+      security:
+        - contenType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                  example: 'image/png'
+                  description: Content type must be one of image/jpeg, image/gif, image/png or image/svg+xml.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
         '403':
           description: FORBIDDEN
