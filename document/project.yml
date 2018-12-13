@@ -31,10 +31,21 @@ components:
           type: string
         email:
           type: string
+          format: email
         name:
           type: string
         isActive:
           type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    Collaborator:
+      type: object
+      properties:
+        accountIdentifier:
+          type: string
+        privilege:
+          type: string
         createdAt:
           type: string
           format: date-time
@@ -229,3 +240,66 @@ paths:
                     type: string
         '403':
           description: FORBIDDEN
+  /projects/{projectIdentifier}/collaborators:
+    get:
+      summary: List collaborators
+      description: Return the list collaborator of project.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collaborator'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Create collaborator
+      description: Update the collaborators, add new collaborator & sent email to invite.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emails:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                message:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '403':
+          description: FORBIDDEN
+
