@@ -37,7 +37,7 @@ const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) =
     account: currentAccountOwner._id
   }).lean()
 
-  if (!currentOwnerCollaborator || currentOwnerCollaborator.privilege !== 'owner') {
+  if (!currentOwnerCollaborator || currentOwnerCollaborator.privilege !== 'OWNER') {
     return null
   }
 
@@ -45,7 +45,7 @@ const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) =
   await Collaborator.findOneAndUpdate({
     project: project._id,
     account: currentAccountOwner._id
-  }, { privilege: 'admin' })
+  }, { privilege: 'ADMIN' })
 
   try {
     // change newOwner to owner
@@ -62,7 +62,7 @@ const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) =
     await Collaborator.findOneAndUpdate({
       project: project._id,
       account: currentAccountOwner._id
-    }, { privilege: 'owner' })
+    }, { privilege: 'OWNER' })
 
     return null
   }
@@ -106,7 +106,7 @@ const update = async (projectIdentifier, { emails, message }) => {
         project: project._id,
         account: account._id
       }, {
-        privilege: 'admin'
+        privilege: 'ADMIN'
       }, {
         upsert: true,
         new: true
