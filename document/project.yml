@@ -302,4 +302,70 @@ paths:
                 $ref: '#/components/schemas/Collaborator'
         '403':
           description: FORBIDDEN
+  /projects/{projectIdentifier}/collaborators/{accountIdentifier}:
+    delete:
+      summary: Remove collaborator
+      description: Remove the collaborator from project.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+        - name: accountIdentifier
+          in: path
+          example: Z2hMpes
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+      responses:
+        '403':
+          description: FORBIDDEN
+        '204':
+          description: NO_CONTENT
+    put:
+      summary: Update permission
+      description: Update collaborator permission in project.
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+        - name: accountIdentifier
+          in: path
+          example: ZzNM6a
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                privilege:
+                  type: string
+                  example: OWNER
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '403':
+          description: FORBIDDEN
 
