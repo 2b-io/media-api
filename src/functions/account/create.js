@@ -3,6 +3,7 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import accountService from 'services/account'
+import sendEmailService from 'services/send-email'
 
 const SCHEMA = joi.object().keys({
   email: joi.string().email().required()
@@ -20,6 +21,8 @@ export default resource('ACCOUNT')(
         statusCode: CONFLICT
       }
     }
+
+    await sendEmailService.welcome(newAccount.identifier)
 
     return {
       statusCode: CREATED,

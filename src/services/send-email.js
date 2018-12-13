@@ -2,39 +2,41 @@ import uuid from 'uuid'
 
 import jobService from 'services/job'
 
-const invite = async (userName) => {
+const invite = async (collaborators) => {
+  const accountIdentifiers = collaborators.map(({ accountIdentifier }) => accountIdentifier)
+
   await jobService.create({
     name: 'SEND_EMAIL',
     when: Date.now(),
     payload: {
       type: 'INVITATION',
-      userName
+      accountIdentifiers
     }
   }, {
     messageId: uuid.v4()
   })
 }
 
-const passwordRecovery = async () => {
+const passwordRecovery = async (accountIdentifier) => {
   await jobService.create({
     name: 'SEND_EMAIL',
     when: Date.now(),
     payload: {
-      type: 'PASSWORD_RECOVERY'
+      type: 'PASSWORD_RECOVERY',
+      accountIdentifier
     }
   }, {
     messageId: uuid.v4()
   })
 }
 
-const welcome = async (email, resetToken) => {
+const welcome = async (accountIdentifier) => {
   await jobService.create({
     name: 'SEND_EMAIL',
     when: Date.now(),
     payload: {
       type: 'WELCOME',
-      email,
-      resetToken
+      accountIdentifier
     }
   }, {
     messageId: uuid.v4()

@@ -24,15 +24,13 @@ export default resource('COLLABORATOR')(
       values
     )
 
-    const account = await accountService.get(accountIdentifier)
-
-    await sendEmailService.invite(account.name)
-
     if (!collaborators) {
       throw {
         statusCode: FORBIDDEN
       }
     }
+
+    await sendEmailService.invite(collaborators)
 
     return {
       statusCode: OK,

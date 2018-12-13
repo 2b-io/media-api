@@ -2,7 +2,6 @@ import uuid from 'uuid'
 
 import createAccountModel from 'models/account'
 import resetTokenService from 'services/reset-token'
-import sendEmailService from 'services/send-email'
 
 const create = async (data) => {
   const Account = await createAccountModel()
@@ -18,13 +17,6 @@ const create = async (data) => {
     password: uuid.v4(),
     isActive: false
   }).save()
-
-  // create reset-password
-  const resetToken = await resetTokenService.create({
-    email: data.email
-  })
-  // send email content : data.message
-  await sendEmailService.welcome(data.email, resetToken.token)
 
   return newAccount
 }
