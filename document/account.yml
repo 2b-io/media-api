@@ -52,6 +52,13 @@ components:
         expiredAt:
           type: string
           format: date-time
+    PinnedProject:
+      type: object
+      properties:
+        projectIdentifiers:
+          type: array
+          items:
+            type: string
 paths:
   /accounts:
     get:
@@ -113,7 +120,7 @@ paths:
           in: path
           example: Z2hdALx
           required: true
-          description: Parameter description in CommonMark or HTML.
+          description: The account identifier in path.
           schema:
             type: string
       responses:
@@ -138,7 +145,7 @@ paths:
           in: path
           example: Z2hdALx
           required: true
-          description: Parameter description in CommonMark or HTML.
+          description: The account identifier in path.
           schema:
             type: string
       requestBody:
@@ -174,7 +181,7 @@ paths:
           in: path
           example: Z2hdALx
           required: true
-          description: Parameter description in CommonMark or HTML.
+          description: The account identifier in path.
           schema:
             type: string
       requestBody:
@@ -194,7 +201,7 @@ paths:
           description: NO_CONTENT
         '403':
           description: FORBIDDEN
-  '/reset-tokens':
+  /reset-tokens:
     post:
       summary: Create token.
       description: Return created token info.
@@ -221,7 +228,7 @@ paths:
                 $ref: '#/components/schemas/Account'
         '409':
           description: CONFLICT
-  '/reset-tokens/{token}':
+  /reset-tokens/{token}:
     get:
       summary: Get token.
       description: Return token info.
@@ -234,7 +241,7 @@ paths:
         - name: token
           in: path
           required: true
-          description: Parameter description in CommonMark or HTML.
+          description: The token string in path.
           schema:
             type: string
       responses:
@@ -246,3 +253,59 @@ paths:
                 $ref: '#/components/schemas/Token'
         '404':
           description: NOT_FOUND
+  /accounts/{accountIdentifier}/pinned-projects:
+    get:
+      summary: Get pinned project.
+      description: Return the pinned project.
+      tags:
+        - Pinned Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedProject'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update pinned project.
+      description: Return updated pinned project.
+      tags:
+        - Pinned Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinnedProject'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedProject'
+        '403':
+          description: FORBIDDEN
