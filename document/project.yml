@@ -59,6 +59,26 @@ components:
         parameters:
           type: object
           properties: {}
+    PullSetting:
+      type: object
+      properties:
+        pullUrl:
+          type: string
+          example: 'https://demo.com'
+        allowedOrigins:
+          type: array
+          items:
+            type: string
+            example: 'demo.com.vn'
+        headers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
 paths:
   /projects:
     get:
@@ -569,5 +589,61 @@ paths:
       responses:
         '204':
           description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/pull-setting:
+    get:
+      summary: List pull setting
+      description: Return the project's pull setting.
+      tags:
+        - Pull Setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullSetting'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: List pull setting
+      description: Return the project's pull setting.
+      tags:
+        - Pull Setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PullSetting'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullSetting'
         '403':
           description: FORBIDDEN
