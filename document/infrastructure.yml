@@ -1,0 +1,104 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost servers
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Project infrastructure
+  version: '1.0.0'
+  title: Media-network project api
+components:
+  securitySchemes:
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Infras:
+      type: object
+      properties:
+        identifier:
+          type: string
+        ref:
+          type: string
+        cname:
+          type: string
+        domain:
+          type: string
+        provider:
+          type: string
+    InfrasRequest:
+      type: object
+      properties:
+        ref:
+          type: string
+          example: E1PHT60V4BUOCB
+        cname:
+          type: string
+          example: badass-victory-82.media-cdn-test.net
+        domain:
+          type: string
+          example: d3ucka7ysibyl1.cloudfront.net
+paths:
+  /projects/{projectIdentifier}/infrastructure:
+    get:
+      summary: Get infrastructure
+      description: Return the infrastructure of the project.
+      tags:
+        - Infrastructure
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Infras'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update infrastructure
+      description: Update the project's infrastructure.
+      tags:
+        - Infrastructure
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfrasRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Infras'
+        '403':
+          description: FORBIDDEN
