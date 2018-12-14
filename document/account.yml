@@ -59,6 +59,34 @@ components:
           type: array
           items:
             type: string
+    Job:
+      type: object
+      properties:
+        identifier:
+          type: string
+        name:
+          type: string
+        when:
+          type: string
+          format: date-time
+          example: '2018-12-14T04:38:48.560Z'
+        payload:
+          type: object
+          parameters: {}
+    JobRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+        when:
+          type: string
+          required: true
+          format: date-time
+          example: '2018-12-14T04:38:48.560Z'
+        payload:
+          type: object
+          parameters: {}
 paths:
   /accounts:
     get:
@@ -307,5 +335,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PinnedProject'
+        '403':
+          description: FORBIDDEN
+  /jobs:
+    post:
+      summary: Create job
+      description: Return created job.
+      tags:
+        - Jobs
+      security:
+        - contentType: []
+          accountAuthorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
         '403':
           description: FORBIDDEN
