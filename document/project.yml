@@ -214,10 +214,10 @@ paths:
           schema:
             type: string
       responses:
-        '403':
-          description: FORBIDDEN
         '204':
           description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
   /projects/{projectIdentifier}/cache-setting:
     get:
       summary: Get cache setting

@@ -1,0 +1,222 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost servers
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Project files
+  version: '1.0.0'
+  title: Media-network project api
+components:
+  securitySchemes:
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    accountAuthorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    File:
+      type: object
+      properties:
+        key:
+          type: string
+        contentType:
+          type: string
+        contentLength:
+          type: number
+        preset:
+          type: string
+        expires:
+          type: string
+          format: date-time
+        isOrigin:
+          type: boolean
+        lastModified:
+          type: string
+          format: date-time
+        lastSynchronized:
+          type: string
+          format: date-time
+      required:
+        - key
+        - contentType
+        - contentLength
+    FileRequest:
+      type: object
+      properties:
+        originUrl:
+          type: string
+        expires:
+          type: string
+          format: date-time
+        isOrigin:
+          type: boolean
+        lastModified:
+          type: string
+          format: date-time
+        lastSynchronized:
+          type: string
+          format: date-time
+paths:
+  /projects/{projectIdentifier}/files:
+    get:
+      summary: List files
+      description: Return the list files of the project.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create file
+      description: Return created file info.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/files/{fileIdentifier}:
+    get:
+      summary: Get files
+      description: Return a file of the project.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: fileIdentifier
+          in: path
+          required: true
+          description: The file identifier is key.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '404':
+          description: NOT_FOUND
+    delete:
+      summary: Remove files
+      description: Remove a files of the project.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: fileIdentifier
+          in: path
+          required: true
+          description: The file identifier is key.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+    put:
+      summary: Update file
+      description: Return updated file info.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: fileIdentifier
+          in: path
+          required: true
+          description: The file identifier is key.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '403':
+          description: FORBIDDEN
