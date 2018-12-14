@@ -72,21 +72,22 @@ components:
           example: '2018-12-14T04:38:48.560Z'
         payload:
           type: object
-          parameters: {}
+          properties: {}
     JobRequest:
       type: object
       properties:
         name:
           type: string
-          required: true
         when:
           type: string
-          required: true
           format: date-time
           example: '2018-12-14T04:38:48.560Z'
         payload:
           type: object
-          parameters: {}
+          properties: {}
+      required:
+        - name
+        - when
 paths:
   /accounts:
     get:
