@@ -13,8 +13,10 @@ const SCHEMA = joi.object().keys({
 })
 
 export default resource('COLLABORATOR')(
-  async (req) => {
-    const { accountIdentifier, projectIdentifier } = req.pathParameters
+  async (req, session) => {
+    const { projectIdentifier } = req.pathParameters
+    const { account: inviterAccount } = session
+
     const body = JSON.parse(req.body) || {}
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
@@ -30,7 +32,7 @@ export default resource('COLLABORATOR')(
       }
     }
 
-    await sendEmailService.invite(collaborators)
+    await sendEmailService.invite(collaborators, inviterAccount.name, values.message)
 
     return {
       statusCode: OK,

@@ -1,7 +1,6 @@
 import createCollaboratorModel from 'models/collaborator'
 import accountService from 'services/account'
 import projectService from 'services/project'
-import sendEmailService from 'services/send-email'
 
 const create = async (data) => {
   const Collaborator = await createCollaboratorModel()
