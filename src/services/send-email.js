@@ -16,7 +16,7 @@ const invite = async (collaborators, inviterName, message) => {
         accountIdentifier,
         inviterName,
         message,
-        activateLink: `${ config.serverBind }:${ config.serverPort }/reset-password/${ token }`
+        activateLink: `${ config.webappUrl }/reset-password/${ token }`
       }
     }, {
       messageId: uuid.v4()
@@ -31,7 +31,7 @@ const passwordRecovery = async (accountIdentifier, token) => {
     payload: {
       type: 'PASSWORD_RECOVERY',
       accountIdentifier,
-      resetLink: `${ config.serverBind }:${ config.serverPort }/reset-password/${ token }`
+      resetLink: `${ config.webappUrl }/reset-password/${ token }`
     }
   }, {
     messageId: uuid.v4()
@@ -45,7 +45,7 @@ const welcome = async (accountIdentifier, token) => {
     payload: {
       type: 'WELCOME',
       accountIdentifier,
-      activateLink: `${ config.serverBind }:${ config.serverPort }/reset-password/${ token }`
+      activateLink: `${ config.webappUrl }/reset-password/${ token }`
     }
   }, {
     messageId: uuid.v4()
