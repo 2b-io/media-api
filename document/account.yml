@@ -1,0 +1,363 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost servers
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Account
+  version: '1.0.0'
+  title: Media-network account api
+components:
+  securitySchemes:
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    accountAuthorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Account:
+      type: object
+      properties:
+        identifier:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    Token:
+      type: object
+      properties:
+        accountIdentifier:
+          type: string
+        token:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiredAt:
+          type: string
+          format: date-time
+    PinnedProject:
+      type: object
+      properties:
+        projectIdentifiers:
+          type: array
+          items:
+            type: string
+    Job:
+      type: object
+      properties:
+        identifier:
+          type: string
+        name:
+          type: string
+        when:
+          type: string
+          format: date-time
+          example: '2018-12-14T04:38:48.560Z'
+        payload:
+          type: object
+          properties: {}
+    JobRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        when:
+          type: string
+          format: date-time
+          example: '2018-12-14T04:38:48.560Z'
+        payload:
+          type: object
+          properties: {}
+      required:
+        - name
+        - when
+paths:
+  /accounts:
+    get:
+      summary: List accounts.
+      description: Return the list of accounts.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          authorization: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create account.
+      description: Return created account info.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: CONFLICT
+  /accounts/{accountIdentifier}:
+    get:
+      summary: Get account.
+      description: Return account info.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update account.
+      description: Return updated account info.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          description: FORBIDDEN
+        '404':
+          description: NOT_FOUND
+  /accounts/{accountIdentifier}/password:
+    put:
+      summary: Change password.
+      description: Change password with current password or use token.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                token:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  /reset-tokens:
+    post:
+      summary: Create token.
+      description: Return created token info.
+      tags:
+        - Token
+      security:
+        - contentType: []
+          authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: CONFLICT
+  /reset-tokens/{token}:
+    get:
+      summary: Get token.
+      description: Return token info.
+      tags:
+        - Token
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: The token string in path.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '404':
+          description: NOT_FOUND
+  /accounts/{accountIdentifier}/pinned-projects:
+    get:
+      summary: Get pinned project.
+      description: Return the pinned project.
+      tags:
+        - Pinned Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedProject'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update pinned project.
+      description: Return updated pinned project.
+      tags:
+        - Pinned Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinnedProject'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedProject'
+        '403':
+          description: FORBIDDEN
+  /jobs:
+    post:
+      summary: Create job
+      description: Return created job.
+      tags:
+        - Jobs
+      security:
+        - contentType: []
+          accountAuthorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '403':
+          description: FORBIDDEN

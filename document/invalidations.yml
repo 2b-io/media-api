@@ -1,0 +1,176 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost servers
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Project invalidations
+  version: '1.0.0'
+  title: Media-network project api
+components:
+  securitySchemes:
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Invalidations:
+      type: object
+      properties:
+        identifier:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        patterns:
+          type: array
+          items: {}
+paths:
+  /projects/{projectIdentifier}/invalidations:
+    get:
+      summary: List invalidations
+      description: Return the list invalidations of the project.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invalidations'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create invalidations
+      description: Return the invalidations info.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patterns:
+                  type: array
+                  items: {}
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invalidations'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/invalidations/{invalidationIdentifier}:
+    get:
+      summary: Get invalidations
+      description: Return an invalidations of the project.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: invalidationIdentifier
+          in: path
+          example: 'CUWPj'
+          required: true
+          description: The invalidation identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invalidations'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update invalidations
+      description: Return updated invalidations.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: invalidationIdentifier
+          in: path
+          example: 'CUWPj'
+          required: true
+          description: The invalidation identifier
+          schema:
+            type: string
+      requestBody:
+        description: Request body use only one of 'status' or 'cdnInvalidationRef' parameter
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: 'COMPLETED'
+                  description: status must be one of ['INPROGRESS', 'COMPLETED']
+                cdnInvalidationRef:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invalidations'
+        '403':
+          description: FORBIDDEN
