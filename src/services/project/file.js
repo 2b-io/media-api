@@ -50,9 +50,18 @@ const remove = async (projectIdentifier, fileIdentifier) => {
   return await elasticsearchService.remove(projectIdentifier, fileIdentifier)
 }
 
+const head = async (projectIdentifier, fileIdentifier) => {
+  if (!projectIdentifier || !fileIdentifier) {
+    return null
+  }
+
+  return await elasticsearchService.head(projectIdentifier, fileIdentifier)
+}
+
 export default {
   create,
   get,
+  head,
   list,
   remove,
   replace

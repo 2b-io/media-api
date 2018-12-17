@@ -56,6 +56,10 @@ const remove = async (projectIdentifier, fileIdentifier) => {
   return await elasticsearch.remove(projectIdentifier, fileIdentifier)
 }
 
+const head = async (projectIdentifier, fileIdentifier) => {
+  return await elasticsearch.checkExistsObject(projectIdentifier, fileIdentifier)
+}
+
 const searchByProject = async (projectIdentifier) => {
   const allObjects = await searchAllObjects(
     projectIdentifier

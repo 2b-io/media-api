@@ -101,11 +101,19 @@ const checkExistsIndex = async (index) => {
    index: `${ PREFIX }-${ index }`
  })
 }
+const checkExistsObject = async (index, id) => {
+  return await client.exists({
+    index,
+    type: TYPE_NAME,
+    id
+  })
+}
 
 export default {
   create,
   createMapping,
   checkExistsIndex,
+  checkExistsObject,
   get,
   remove,
   replace,
