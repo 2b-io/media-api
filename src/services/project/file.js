@@ -39,7 +39,7 @@ const replace = async (projectIdentifier, fileIdentifier, params) => {
     return null
   }
 
-  return await elasticsearchService.create(projectIdentifier, fileIdentifier, params)
+  return await elasticsearchService.replace(projectIdentifier, fileIdentifier, params)
 }
 
 const remove = async (projectIdentifier, fileIdentifier) => {
