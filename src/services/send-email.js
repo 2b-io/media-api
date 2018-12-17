@@ -1,16 +1,19 @@
 import uuid from 'uuid'
 
 import jobService from 'services/job'
+import resetTokenService from 'services/reset-token'
 
 const invite = async (collaborators, inviterName, message) => {
-  console.log('aaaaaaa');
   const accountIdentifiers = collaborators.map(async ({ accountIdentifier }) => {
+    const { token } = await resetTokenService.getByAccountIdentifier(accountIdentifier)
+
     await jobService.create({
       name: 'SEND_EMAIL',
       when: Date.now(),
       payload: {
         type: 'INVITATION',
         accountIdentifier,
+        token,
         inviterName,
         message
       }
@@ -34,13 +37,14 @@ const passwordRecovery = async (accountIdentifier, token) => {
   })
 }
 
-const welcome = async (accountIdentifier) => {
+const welcome = async (accountIdentifier, token) => {
   await jobService.create({
     name: 'SEND_EMAIL',
     when: Date.now(),
     payload: {
       type: 'WELCOME',
-      accountIdentifier
+      accountIdentifier,
+      token
     }
   }, {
     messageId: uuid.v4()
