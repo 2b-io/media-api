@@ -1,5 +1,6 @@
 import uuid from 'uuid'
 
+import config from 'infrastructure/config'
 import jobService from 'services/job'
 import resetTokenService from 'services/reset-token'
 
@@ -13,9 +14,9 @@ const invite = async (collaborators, inviterName, message) => {
       payload: {
         type: 'INVITATION',
         accountIdentifier,
-        token,
         inviterName,
-        message
+        message,
+        activateLink: `${ config.serverBind }:${ config.serverPort }/reset-password/${ token }`
       }
     }, {
       messageId: uuid.v4()
@@ -30,7 +31,7 @@ const passwordRecovery = async (accountIdentifier, token) => {
     payload: {
       type: 'PASSWORD_RECOVERY',
       accountIdentifier,
-      token
+      resetLink: `${ config.serverBind }:${ config.serverPort }/reset-password/${ token }`
     }
   }, {
     messageId: uuid.v4()
@@ -44,7 +45,7 @@ const welcome = async (accountIdentifier, token) => {
     payload: {
       type: 'WELCOME',
       accountIdentifier,
-      token
+      activateLink: `${ config.serverBind }:${ config.serverPort }/reset-password/${ token }`
     }
   }, {
     messageId: uuid.v4()

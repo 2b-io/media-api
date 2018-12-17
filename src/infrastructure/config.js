@@ -1,4 +1,6 @@
 export default {
+  serverBind: process.env.SERVER_BIND,
+  serverPort: process.env.SERVER_PORT,
   mongo: {
     uri: process.env.MONGODB_URI,
     ttl: process.env.MONGODB_TTL
