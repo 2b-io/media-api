@@ -1,0 +1,1419 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost.
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+  - description: Media-network api servers.
+    url: http://0.0.0.0:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Project
+  version: '1.0.0'
+  title: Media-network project api
+components:
+  securitySchemes:
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    accountAuthorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Account:
+      type: object
+      properties:
+        identifier:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    Token:
+      type: object
+      properties:
+        accountIdentifier:
+          type: string
+        token:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiredAt:
+          type: string
+          format: date-time
+    PinnedProject:
+      type: object
+      properties:
+        projectIdentifiers:
+          type: array
+          items:
+            type: string
+    Job:
+      type: object
+      properties:
+        identifier:
+          type: string
+        name:
+          type: string
+        when:
+          type: string
+          format: date-time
+          example: '2018-12-14T04:38:48.560Z'
+        payload:
+          type: object
+          properties: {}
+    JobRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        when:
+          type: string
+          format: date-time
+          example: '2018-12-14T04:38:48.560Z'
+        payload:
+          type: object
+          properties: {}
+      required:
+        - name
+        - when
+    Collaborator:
+      type: object
+      properties:
+        accountIdentifier:
+          type: string
+        privilege:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Invalidations:
+      type: object
+      properties:
+        identifier:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        patterns:
+          type: array
+          items: {}
+    Infras:
+      type: object
+      properties:
+        identifier:
+          type: string
+        ref:
+          type: string
+        cname:
+          type: string
+        domain:
+          type: string
+        provider:
+          type: string
+    InfrasRequest:
+      type: object
+      properties:
+        ref:
+          type: string
+          example: E1PHT60V4BUOCB
+        cname:
+          type: string
+          example: badass-victory-82.media-cdn-test.net
+        domain:
+          type: string
+          example: d3ucka7ysibyl1.cloudfront.net
+    File:
+      type: object
+      properties:
+        key:
+          type: string
+        contentType:
+          type: string
+        contentLength:
+          type: number
+        preset:
+          type: string
+        expires:
+          type: string
+          format: date-time
+        isOrigin:
+          type: boolean
+        lastModified:
+          type: string
+          format: date-time
+        lastSynchronized:
+          type: string
+          format: date-time
+      required:
+        - key
+        - contentType
+        - contentLength
+    FileRequest:
+      type: object
+      properties:
+        originUrl:
+          type: string
+        expires:
+          type: string
+          format: date-time
+        isOrigin:
+          type: boolean
+        lastModified:
+          type: string
+          format: date-time
+        lastSynchronized:
+          type: string
+          format: date-time
+    Project:
+      type: object
+      properties:
+        identifier:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    Preset:
+      type: object
+      properties:
+        contentType:
+          type: string
+        isActive:
+          type: boolean
+        parameters:
+          type: object
+          properties: {}
+    PullSetting:
+      type: object
+      properties:
+        pullUrl:
+          type: string
+          example: 'https://demo.com'
+        allowedOrigins:
+          type: array
+          items:
+            type: string
+            example: 'demo.com.vn'
+        headers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+paths:
+  /accounts:
+    get:
+      summary: List accounts.
+      description: Return the list of accounts.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          authorization: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create account.
+      description: Return created account info.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: CONFLICT
+  /accounts/{accountIdentifier}:
+    get:
+      summary: Get account.
+      description: Return account info.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update account.
+      description: Return updated account info.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          description: FORBIDDEN
+        '404':
+          description: NOT_FOUND
+  /accounts/{accountIdentifier}/password:
+    put:
+      summary: Change password.
+      description: Change password with current password or use token.
+      tags:
+        - Account
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                token:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  /reset-tokens:
+    post:
+      summary: Create token.
+      description: Return created token info.
+      tags:
+        - Token
+      security:
+        - contentType: []
+          authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: CONFLICT
+  /reset-tokens/{token}:
+    get:
+      summary: Get token.
+      description: Return token info.
+      tags:
+        - Token
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: The token string in path.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '404':
+          description: NOT_FOUND
+  /accounts/{accountIdentifier}/pinned-projects:
+    get:
+      summary: Get pinned project.
+      description: Return the pinned project.
+      tags:
+        - Pinned Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedProject'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update pinned project.
+      description: Return updated pinned project.
+      tags:
+        - Pinned Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: accountIdentifier
+          in: path
+          example: Z2hdALx
+          required: true
+          description: The account identifier in path.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinnedProject'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedProject'
+        '403':
+          description: FORBIDDEN
+  /jobs:
+    post:
+      summary: Create job
+      description: Return created job.
+      tags:
+        - Jobs
+      security:
+        - contentType: []
+          accountAuthorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '403':
+          description: FORBIDDEN
+  /projects:
+    get:
+      summary: List projects.
+      description: Return the list of project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create project.
+      description: Return created project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                provider:
+                  type: string
+                  example: cloudfront
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '409':
+          description: CONFLICT
+  /projects/{projectIdentifier}:
+    get:
+      summary: Get project.
+      description: Return the project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'delay-smoke-94'
+          required: true
+          description: 'The identifier of the project to return.'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update project.
+      description: Return updated project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'delay-smoke-94'
+          required: true
+          description: 'The identifier of the project to update.'
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'update project with isActive & name.'
+                isActive:
+                  type: boolean
+                  description: 'update project with isActive & name.'
+                status:
+                  type: string
+                  example: 'DEPLOYED, DISABLED'
+                  description: 'update project status only'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '403':
+          description: FORBIDDEN
+        '404':
+          description: NOT_FOUND
+    delete:
+      summary: Delete project.
+      description: Delete the project with identifier.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/cache-setting:
+    get:
+      summary: Get cache setting
+      description: Get the cache setting from project
+      tags:
+        - Cache-setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ttl:
+                    type: string
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update cache setting
+      description: Update the cache setting.
+      tags:
+        - Cache-setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ttl:
+                  type: string
+                  description: 'Unit of ttl is milliseconds'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ttl:
+                    type: string
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/collaborators:
+    get:
+      summary: List collaborators
+      description: Return the project's collaborator list.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collaborator'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Create collaborator
+      description: Update the collaborators, add new collaborator & sent email to invite.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emails:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                message:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/collaborators/{accountIdentifier}:
+    delete:
+      summary: Remove collaborator
+      description: Remove the collaborator from project.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: accountIdentifier
+          in: path
+          example: Z2hMpes
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+      responses:
+        '403':
+          description: FORBIDDEN
+        '204':
+          description: NO_CONTENT
+    put:
+      summary: Update permission
+      description: Update collaborator permission in project.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: accountIdentifier
+          in: path
+          example: ZzNM6a
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                privilege:
+                  type: string
+                  example: OWNER
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/presets:
+    get:
+      summary: List preset.
+      description: Return the project's preset list.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create preset.
+      description: Return created preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                  example: 'image/png'
+                  description: Content type must be one of image/jpeg, image/gif, image/png or image/svg+xml.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/presets/{contentType}:
+    get:
+      summary: Get preset.
+      description: Return the preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preset'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update preset.
+      description: Return updated preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+                parameters:
+                  type: object
+                  properties: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '403':
+          description: FORBIDDEN
+    delete:
+      summary: Remove preset.
+      description: Remove the preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/pull-setting:
+    get:
+      summary: List pull setting
+      description: Return the project's pull setting.
+      tags:
+        - Pull Setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullSetting'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: List pull setting
+      description: Return the project's pull setting.
+      tags:
+        - Pull Setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PullSetting'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullSetting'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/invalidations:
+    get:
+      summary: List invalidations
+      description: Return the list invalidations of the project.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invalidations'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create invalidations
+      description: Return the invalidations info.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                patterns:
+                  type: array
+                  items: {}
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invalidations'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/invalidations/{invalidationIdentifier}:
+    get:
+      summary: Get invalidations
+      description: Return an invalidations of the project.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: invalidationIdentifier
+          in: path
+          example: 'CUWPj'
+          required: true
+          description: The invalidation identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invalidations'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update invalidations
+      description: Return updated invalidations.
+      tags:
+        - Invalidations
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: invalidationIdentifier
+          in: path
+          example: 'CUWPj'
+          required: true
+          description: The invalidation identifier
+          schema:
+            type: string
+      requestBody:
+        description: Request body use only one of 'status' or 'cdnInvalidationRef' parameter
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: 'COMPLETED'
+                  description: status must be one of ['INPROGRESS', 'COMPLETED']
+                cdnInvalidationRef:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invalidations'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/infrastructure:
+    get:
+      summary: Get infrastructure
+      description: Return the infrastructure of the project.
+      tags:
+        - Infrastructure
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Infras'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update infrastructure
+      description: Update the project's infrastructure.
+      tags:
+        - Infrastructure
+      security:
+        - contentType: []
+          authorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InfrasRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Infras'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/files:
+    get:
+      summary: List files
+      description: Return the list files of the project.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create file
+      description: Return created file info.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/files/{fileIdentifier}:
+    get:
+      summary: Get files
+      description: Return a file of the project.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: fileIdentifier
+          in: path
+          required: true
+          description: The file identifier is key.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '404':
+          description: NOT_FOUND
+    delete:
+      summary: Remove files
+      description: Remove a files of the project.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: fileIdentifier
+          in: path
+          required: true
+          description: The file identifier is key.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+    put:
+      summary: Update file
+      description: Return updated file info.
+      tags:
+        - Files
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: fileIdentifier
+          in: path
+          required: true
+          description: The file identifier is key.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '403':
+          description: FORBIDDEN
