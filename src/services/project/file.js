@@ -1,4 +1,9 @@
 import elasticsearchService from 'services/elasticsearch'
+import config from 'infrastructure/config'
+import mapping from 'mapping/file'
+
+const PREFIX = config.elasticsearch.prefix
+const TYPE_NAME = `${ PREFIX }-media`
 
 const list = async (projectIdentifier, params) => {
   const { pattern, presetHash } = params
@@ -8,14 +13,14 @@ const list = async (projectIdentifier, params) => {
   }
 
   if (presetHash) {
-    return await elasticsearchService.searchByPresetHash(projectIdentifier, presetHash)
+    return await elasticsearchService.searchByPresetHash(`${ PREFIX }-${ projectIdentifier }`, TYPE_NAME, presetHash)
   }
 
   if (pattern) {
-    return await elasticsearchService.searchByPattern(projectIdentifier, pattern)
+    return await elasticsearchService.searchByPattern(`${ PREFIX }-${ projectIdentifier }`, TYPE_NAME, pattern)
   }
 
-  return await elasticsearchService.searchByProject(projectIdentifier)
+  return await elasticsearchService.searchByProject(`${ PREFIX }-${ projectIdentifier }`, TYPE_NAME)
 }
 
 const get = async (projectIdentifier, fileIdentifier) => {
@@ -23,7 +28,11 @@ const get = async (projectIdentifier, fileIdentifier) => {
     return null
   }
 
-  return await elasticsearchService.get(projectIdentifier, fileIdentifier)
+  return await elasticsearchService.get(
+    `${ PREFIX }-${ projectIdentifier }`,
+    TYPE_NAME,
+    fileIdentifier
+  )
 }
 
 const create = async (projectIdentifier, fileIdentifier, params) => {
@@ -31,7 +40,13 @@ const create = async (projectIdentifier, fileIdentifier, params) => {
     return null
   }
 
-  return await elasticsearchService.create(projectIdentifier, fileIdentifier, params)
+  return await elasticsearchService.create(
+    `${ PREFIX }-${ projectIdentifier }`,
+    TYPE_NAME,
+    fileIdentifier,
+    mapping,
+    params
+  )
 }
 
 const replace = async (projectIdentifier, fileIdentifier, params) => {
@@ -39,7 +54,12 @@ const replace = async (projectIdentifier, fileIdentifier, params) => {
     return null
   }
 
-  return await elasticsearchService.replace(projectIdentifier, fileIdentifier, params)
+  return await elasticsearchService.replace(
+    `${ PREFIX }-${ projectIdentifier }`,
+    TYPE_NAME,
+    fileIdentifier,
+    params
+  )
 }
 
 const remove = async (projectIdentifier, fileIdentifier) => {
@@ -47,7 +67,11 @@ const remove = async (projectIdentifier, fileIdentifier) => {
     return null
   }
 
-  return await elasticsearchService.remove(projectIdentifier, fileIdentifier)
+  return await elasticsearchService.remove(
+    `${ PREFIX }-${ projectIdentifier }`,
+    TYPE_NAME,
+    fileIdentifier
+  )
 }
 
 const head = async (projectIdentifier, fileIdentifier) => {
@@ -55,7 +79,11 @@ const head = async (projectIdentifier, fileIdentifier) => {
     return null
   }
 
-  return await elasticsearchService.head(projectIdentifier, fileIdentifier)
+  return await elasticsearchService.head(
+    `${ PREFIX }-${ projectIdentifier }`,
+    TYPE_NAME,
+    fileIdentifier
+  )
 }
 
 export default {

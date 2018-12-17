@@ -1,19 +1,15 @@
 import elasticsearch from 'elasticsearch'
 
 import config from 'infrastructure/config'
-import mapping from 'mapping/file'
-
-const PREFIX = config.elasticsearch.prefix
-const TYPE_NAME = `${ PREFIX }-media`
 
 const client = new elasticsearch.Client({
   host: config.elasticsearch.host,
   log: 'trace'
 })
 
-const createMapping = async (index) => {
+const createMapping = async (index, type, mapping) => {
   const indexExists = await client.indices.exists({
-    index: `${ PREFIX }-${ index }`
+    index
   })
 
   if (indexExists) {
@@ -21,33 +17,33 @@ const createMapping = async (index) => {
   }
 
   await client.indices.create({
-    index: `${ PREFIX }-${ index }`
+    index
   })
 
   return await client.indices.putMapping({
-    index: `${ PREFIX }-${ index }`,
-    type: TYPE_NAME,
+    index,
+    type,
     body: {
       properties: mapping
     }
   })
 }
 
-const create = async (index, id, params) => {
-  await createMapping(index)
+const create = async (index, type, id, mapping, params) => {
+  await createMapping(index, type, mapping)
 
   return await client.create({
-    index: `${ PREFIX }-${ index }`,
-    type: TYPE_NAME,
+    index,
+    type,
     id,
     body: params
   })
 }
 
-const replace = async (index, id, params) => {
+const replace = async (index, type, id, params) => {
   return await client.update({
-    index: `${ PREFIX }-${ index }`,
-    type: TYPE_NAME,
+    index,
+    type,
     id,
     body: {
       doc: params
@@ -55,30 +51,30 @@ const replace = async (index, id, params) => {
   })
 }
 
-const get = async (index, id) => {
+const get = async (index, type, id) => {
   const object = await client.get({
-    index: `${ PREFIX }-${ index }`,
-    type: TYPE_NAME,
+    index,
+    type,
     id
   })
 
   return object._source
 }
 
-const remove = async (index, id) => {
+const remove = async (index, type, id) => {
   return await client.delete({
-    index: `${ PREFIX }-${ index }`,
-    type: TYPE_NAME,
+    index,
+    type,
     id
   })
 }
 
-const searchWithParams = async (index, params, { from, size }) => {
+const searchWithParams = async (index, type, params, { from, size }) => {
   return await client.search({
     from,
     size,
-    index: `${ PREFIX }-${ index }`,
-    type: TYPE_NAME,
+    index,
+    type,
     body: {
       query: {
         ...params
@@ -87,24 +83,24 @@ const searchWithParams = async (index, params, { from, size }) => {
   })
 }
 
-const searchWithoutParams = async (index, { from, size }) => {
+const searchWithoutParams = async (index, type, { from, size }) => {
   return await client.search({
     from,
     size,
-    index: `${ PREFIX }-${ index }`,
-    type: TYPE_NAME
+    index,
+    type
   })
 }
 
 const checkExistsIndex = async (index) => {
   return await client.indices.exists({
-   index: `${ PREFIX }-${ index }`
+   index
  })
 }
-const checkExistsObject = async (index, id) => {
+const checkExistsObject = async (index, type, id) => {
   return await client.exists({
     index,
-    type: TYPE_NAME,
+    type,
     id
   })
 }
