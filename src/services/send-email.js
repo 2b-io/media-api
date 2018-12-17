@@ -15,7 +15,7 @@ const invite = async (collaborators, inviterName, message) => {
       when: Date.now(),
       payload: {
         type: 'INVITATION',
-        receivers: email,
+        email,
         inviterName,
         message,
         activateLink: `${ config.webappUrl }/reset-password/${ token }`
@@ -27,14 +27,15 @@ const invite = async (collaborators, inviterName, message) => {
 }
 
 const passwordRecovery = async (accountIdentifier, token) => {
-  const { email } = await accountService.get(accountIdentifier)
+  const { email, name } = await accountService.get(accountIdentifier)
 
   await jobService.create({
     name: 'SEND_EMAIL',
     when: Date.now(),
     payload: {
       type: 'PASSWORD_RECOVERY',
-      receivers: email,
+      email,
+      accountName: name,
       resetLink: `${ config.webappUrl }/reset-password/${ token }`
     }
   }, {
@@ -50,7 +51,7 @@ const welcome = async (accountIdentifier, token) => {
     when: Date.now(),
     payload: {
       type: 'WELCOME',
-      receivers: email,
+      email,
       activateLink: `${ config.webappUrl }/reset-password/${ token }`
     }
   }, {
