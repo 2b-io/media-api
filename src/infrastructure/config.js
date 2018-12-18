@@ -1,4 +1,5 @@
 export default {
+  webappUrl: process.env.WEBAPP_URL,
   mongo: {
     uri: process.env.MONGODB_URI,
     ttl: process.env.MONGODB_TTL

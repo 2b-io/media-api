@@ -3,6 +3,7 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import collaboratorService from 'services/collaborator'
+import sendEmailService from 'services/send-email'
 
 const SCHEMA = joi.object().keys({
   emails: joi.array().items(
@@ -12,8 +13,10 @@ const SCHEMA = joi.object().keys({
 })
 
 export default resource('COLLABORATOR')(
-  async (req) => {
+  async (req, session) => {
     const { projectIdentifier } = req.pathParameters
+    const { account: inviterAccount } = session
+
     const body = JSON.parse(req.body) || {}
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
@@ -28,6 +31,8 @@ export default resource('COLLABORATOR')(
         statusCode: FORBIDDEN
       }
     }
+
+    await sendEmailService.invite(collaborators, inviterAccount.name, values.message)
 
     return {
       statusCode: OK,

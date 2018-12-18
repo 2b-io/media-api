@@ -23,7 +23,16 @@ const get = async (token) => {
   })
 }
 
+const getByAccountIdentifier = async (accountIdentifier) => {
+  const ResetToken = await createResetTokenModel()
+
+  return await ResetToken.findOne({
+    accountIdentifier
+  })
+}
+
 export default {
   create,
-  get
+  get,
+  getByAccountIdentifier
 }

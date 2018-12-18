@@ -1,0 +1,649 @@
+openapi: 3.0.0
+servers:
+  - description: Media-network api localhost servers
+    url: http://localhost:{port}
+    variables:
+      port:
+        default: '3008'
+info:
+  description: Api for Project
+  version: '1.0.0'
+  title: Media-network project api
+components:
+  securitySchemes:
+    contentType:
+      type: apiKey
+      in: header
+      name: Content-Type
+    authorization:
+      type: apiKey
+      in: header
+      name: Authorization
+    accountAuthorization:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Project:
+      type: object
+      properties:
+        identifier:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    Collaborator:
+      type: object
+      properties:
+        accountIdentifier:
+          type: string
+        privilege:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Preset:
+      type: object
+      properties:
+        contentType:
+          type: string
+        isActive:
+          type: boolean
+        parameters:
+          type: object
+          properties: {}
+    PullSetting:
+      type: object
+      properties:
+        pullUrl:
+          type: string
+          example: 'https://demo.com'
+        allowedOrigins:
+          type: array
+          items:
+            type: string
+            example: 'demo.com.vn'
+        headers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+paths:
+  /projects:
+    get:
+      summary: List projects.
+      description: Return the list of project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create project.
+      description: Return created project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                provider:
+                  type: string
+                  example: cloudfront
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '409':
+          description: CONFLICT
+  /projects/{projectIdentifier}:
+    get:
+      summary: Get project.
+      description: Return the project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'delay-smoke-94'
+          required: true
+          description: 'The identifier of the project to return.'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update project.
+      description: Return updated project.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'delay-smoke-94'
+          required: true
+          description: 'The identifier of the project to update.'
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'update project with isActive & name.'
+                isActive:
+                  type: boolean
+                  description: 'update project with isActive & name.'
+                status:
+                  type: string
+                  example: 'DEPLOYED, DISABLED'
+                  description: 'update project status only'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '403':
+          description: FORBIDDEN
+        '404':
+          description: NOT_FOUND
+    delete:
+      summary: Delete project.
+      description: Delete the project with identifier.
+      tags:
+        - Project
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/cache-setting:
+    get:
+      summary: Get cache setting
+      description: Get the cache setting from project
+      tags:
+        - Cache-setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ttl:
+                    type: string
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update cache setting
+      description: Update the cache setting.
+      tags:
+        - Cache-setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ttl:
+                  type: string
+                  description: 'Unit of ttl is milliseconds'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ttl:
+                    type: string
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/collaborators:
+    get:
+      summary: List collaborators
+      description: Return the project's collaborator list.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collaborator'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Create collaborator
+      description: Update the collaborators, add new collaborator & sent email to invite.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The identifier to delete project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emails:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                message:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/collaborators/{accountIdentifier}:
+    delete:
+      summary: Remove collaborator
+      description: Remove the collaborator from project.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: accountIdentifier
+          in: path
+          example: Z2hMpes
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+      responses:
+        '403':
+          description: FORBIDDEN
+        '204':
+          description: NO_CONTENT
+    put:
+      summary: Update permission
+      description: Update collaborator permission in project.
+      tags:
+        - Collaborators
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: accountIdentifier
+          in: path
+          example: ZzNM6a
+          required: true
+          description: The identifier of project
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                privilege:
+                  type: string
+                  example: OWNER
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/presets:
+    get:
+      summary: List preset.
+      description: Return the project's preset list.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '404':
+          description: NOT_FOUND
+    post:
+      summary: Create preset.
+      description: Return created preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contentType:
+                  type: string
+                  example: 'image/png'
+                  description: Content type must be one of image/jpeg, image/gif, image/png or image/svg+xml.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/presets/{contentType}:
+    get:
+      summary: Get preset.
+      description: Return the preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preset'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: Update preset.
+      description: Return updated preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+                parameters:
+                  type: object
+                  properties: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+        '403':
+          description: FORBIDDEN
+    delete:
+      summary: Remove preset.
+      description: Remove the preset.
+      tags:
+        - Preset
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: contentType
+          in: path
+          example: 'image%2Fpng'
+          required: true
+          description: Use encodeURIComponent to encode contentType first.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: NO_CONTENT
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/pull-setting:
+    get:
+      summary: List pull setting
+      description: Return the project's pull setting.
+      tags:
+        - Pull Setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullSetting'
+        '404':
+          description: NOT_FOUND
+    put:
+      summary: List pull setting
+      description: Return the project's pull setting.
+      tags:
+        - Pull Setting
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PullSetting'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullSetting'
+        '403':
+          description: FORBIDDEN
