@@ -18,10 +18,6 @@ const create = async (data) => {
     isActive: false
   }).save()
 
-  const resetToken = await resetTokenService.create({
-    email: data.email
-  })
-
   return newAccount
 }
 

@@ -8,7 +8,7 @@ import resetTokenService from 'services/reset-token'
 const invite = async (collaborators, inviterName, inviterEmail, message) => {
   const accountIdentifiers = collaborators.map(async ({ accountIdentifier }) => {
     const { email } = await accountService.get(accountIdentifier)
-    const { token } = await resetTokenService.create(email)
+    const { token } = await resetTokenService.create({ email })
 
     await jobService.create({
       name: 'SEND_EMAIL',
@@ -45,7 +45,7 @@ const passwordRecovery = async (accountIdentifier, token) => {
 }
 
 const welcome = async (accountIdentifier, email) => {
-  const { token } = await resetTokenService.create(email)
+  const { token } = await resetTokenService.create({ email })
 
   await jobService.create({
     name: 'SEND_EMAIL',
