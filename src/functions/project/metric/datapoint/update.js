@@ -4,10 +4,12 @@ import joi from 'joi'
 import resource from 'rest/resource'
 import metricService from 'services/metric'
 
-const SCHEMA = joi.object().keys({
-  timestamp: joi.number().required(),
-  value: joi.number().required()
-})
+const SCHEMA = joi.array().items(
+  joi.object().keys({
+    timestamp: joi.number().required(),
+    value: joi.number().required()
+  })
+)
 
 export default resource('METRIC')(
   async (req) => {
@@ -24,8 +26,7 @@ export default resource('METRIC')(
     }
 
     return {
-      statusCode: OK,
-      resource: metricData
+      statusCode: OK
     }
   }
 )

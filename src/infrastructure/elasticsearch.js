@@ -12,13 +12,11 @@ const createMapping = async (index, type, mapping) => {
     index
   })
 
-  if (indexExists) {
-    return
+  if (!indexExists) {
+    await client.indices.create({
+      index
+    })
   }
-
-  await client.indices.create({
-    index
-  })
 
   return await client.indices.putMapping({
     index,
