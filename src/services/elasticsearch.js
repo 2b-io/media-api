@@ -1,6 +1,6 @@
 import elasticsearch from 'infrastructure/elasticsearch'
 
-const searchAllObjects = async (projectIdentifier, type, pageSize = 10, params) => {
+const searchAllObjects = async (projectIdentifier, type, params, pageSize = 10) => {
   const projectExists = await elasticsearch.checkExistsIndex(projectIdentifier)
 
   if (!projectExists) {
@@ -103,7 +103,7 @@ const searchByPattern = async (projectIdentifier, type, pattern) => {
   return allObjects
 }
 
-const searchByPresetHash = async (projectIdentifier, type,presetHash) => {
+const searchByPresetHash = async (projectIdentifier, type, presetHash) => {
   const allObjects = await searchAllObjects(
     projectIdentifier,
     type,
@@ -112,8 +112,6 @@ const searchByPresetHash = async (projectIdentifier, type,presetHash) => {
 
   return allObjects || []
 }
-
-
 
 export default {
   create,

@@ -6,14 +6,14 @@ const PREFIX = config.elasticsearch.prefix
 const TYPE_NAME = `${ PREFIX }-media`
 
 const list = async (projectIdentifier, params) => {
-  const { pattern, presetHash } = params
+  const { pattern, preset } = params
 
   if (!projectIdentifier) {
     return null
   }
 
-  if (presetHash) {
-    return await elasticsearchService.searchByPresetHash(`${ PREFIX }-${ projectIdentifier }`, TYPE_NAME, presetHash)
+  if (preset) {
+    return await elasticsearchService.searchByPresetHash(`${ PREFIX }-${ projectIdentifier }`, TYPE_NAME, preset)
   }
 
   if (pattern) {
