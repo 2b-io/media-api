@@ -2,6 +2,7 @@ import { BAD_REQUEST, CREATED, FORBIDDEN } from 'http-status-codes'
 
 import resource from 'rest/resource'
 import resetTokenService from 'services/reset-token'
+import sendEmailService from 'services/send-email'
 
 export default resource('RESET_TOKEN')(
   async (req) => {
@@ -20,6 +21,8 @@ export default resource('RESET_TOKEN')(
         statusCode: FORBIDDEN
       }
     }
+
+    await sendEmailService.passwordRecovery(resetToken.accountIdentifier, resetToken.token)
 
     return {
       statusCode: CREATED,
