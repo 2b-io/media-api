@@ -17,7 +17,7 @@ export default resource('ACCOUNT')(
 
     if (password && accounts.length === 1) {
       const passwordDecoded = Buffer.from(decodeURIComponent(password), 'base64').toString('ascii')
-      console.log('accounts', accounts);
+
       return {
         statusCode: OK,
         resource: accounts[ 0 ].comparePassword(passwordDecoded) ? accounts : []
