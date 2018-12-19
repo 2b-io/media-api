@@ -5,7 +5,7 @@ import resource from 'rest/resource'
 import pullSettingService from 'services/pull-setting'
 
 const SCHEMA = joi.object().keys({
-  pullUrl: joi.string().trim(),
+  pullUrl: joi.string().allow('').trim(),
   allowedOrigins: joi.array().items(
     joi.string().trim()
   ),
