@@ -4,7 +4,6 @@ import joi from 'joi'
 import resource from 'rest/resource'
 import accountService from 'services/account'
 import sendEmailService from 'services/send-email'
-import resetTokenService from 'services/reset-token'
 
 const SCHEMA = joi.object().keys({
   email: joi.string().email().required()
@@ -23,9 +22,7 @@ export default resource('ACCOUNT')(
       }
     }
 
-    const { token } = await resetTokenService.getByAccountIdentifier(newAccount.identifier)
-
-    await sendEmailService.welcome(newAccount.identifier, token)
+    await sendEmailService.welcome(newAccount.identifier, newAccount.email)
 
     return {
       statusCode: CREATED,

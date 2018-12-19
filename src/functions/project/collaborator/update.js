@@ -32,7 +32,7 @@ export default resource('COLLABORATOR')(
       }
     }
 
-    await sendEmailService.invite(collaborators, inviterAccount.name, values.message)
+    await sendEmailService.invite(collaborators, inviterAccount.name, inviterAccount.email, values.message)
 
     return {
       statusCode: OK,
