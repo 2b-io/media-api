@@ -11,7 +11,8 @@ export default {
     ttl: process.env.RABBITMQ_TTL
   },
   elasticsearch: {
-    host: process.env.AWS_ELASTICSEARCH_HOST,
-    prefix: process.env.AWS_ELASTICSEARCH_PREFIX
+    host: process.env.ELASTICSEARCH_HOST,
+    fileVersion: process.env.ELASTICSEARCH_FILE_VERSION,
+    datapointVersion: process.env.ELASTICSEARCH_DATAPOINT_VERSION
   }
 }
