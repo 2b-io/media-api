@@ -1,3 +1,5 @@
+import sh from 'shorthash'
+
 import createPresetModel from 'models/preset'
 import createProjectModel from 'models/project'
 import jobService from 'services/job'
