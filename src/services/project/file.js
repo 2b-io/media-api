@@ -6,7 +6,7 @@ const FILE_VERSION = config.elasticsearch.fileVersion
 const TYPE_NAME = `${ FILE_VERSION }-media`
 
 const list = async (projectIdentifier, params) => {
-  const { pattern, preset } = params
+  const { pattern, preset, contentType } = params
 
   if (!projectIdentifier) {
     return null
@@ -14,6 +14,10 @@ const list = async (projectIdentifier, params) => {
 
   if (preset) {
     return await elasticsearchService.searchByPresetHash(`${ FILE_VERSION }-${ projectIdentifier }`, TYPE_NAME, preset)
+  }
+
+  if (contentType) {
+    return await elasticsearchService.searchByContentType(`${ FILE_VERSION }-${ projectIdentifier }`, TYPE_NAME, contentType)
   }
 
   if (pattern) {

@@ -1,5 +1,6 @@
 import createPresetModel from 'models/preset'
 import createProjectModel from 'models/project'
+import jobService from 'services/job'
 
 const DEFAULT_PARAMETERS = {
   'image/jpeg': {
@@ -89,6 +90,19 @@ const del = async (projectIdentifier, contentType) => {
     contentType
   })
 
+  if (ok && n === 1) {
+    await jobService.create({
+      name: 'CREATE_INVALIDATION',
+      when: Date.now(),
+      payload: {
+        projectIdentifier,
+        contentType
+      }
+    }, {
+      messageId: uuid.v4()
+    })
+  }
+
   return ok && n === 1
 }
 
@@ -133,6 +147,15 @@ const list = async (projectIdentifier) => {
   return presets
 }
 
+const hashPreset = (parameters) => {
+  return sh.unique(
+    JSON.stringify(
+      parameters,
+      Object.keys(parameters).sort()
+    )
+  )
+}
+
 const replace = async (projectIdentifier, contentType, data) => {
   const Project = await createProjectModel()
 
@@ -146,14 +169,35 @@ const replace = async (projectIdentifier, contentType, data) => {
 
   const Preset = await createPresetModel()
 
-  const preset = await Preset.findOneAndUpdate({
+  const currentPreset = await Preset.findOne({
+    project: project._id,
+    contentType
+  }).lean()
+
+  const newPreset = await Preset.findOneAndUpdate({
     project: project._id,
     contentType
   }, data, {
     new: true
   })
 
-  return preset
+  const currentPresetHash = hashPreset(currentPreset.parameters)
+  const newPresetHash = hashPreset(newPreset.parameters)
+
+  if (currentPresetHash !== newPresetHash || !updatedPreset.isActive) {
+    await jobService.create({
+      name: 'CREATE_INVALIDATION',
+      when: Date.now(),
+      payload: {
+        projectIdentifier,
+        presetHash: currentPresetHash
+      }
+    }, {
+      messageId: uuid.v4()
+    })
+  }
+
+  return newPreset
 }
 
 export default {
