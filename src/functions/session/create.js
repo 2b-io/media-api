@@ -1,4 +1,4 @@
-import { CREATED, BAD_REQUEST } from 'http-status-codes'
+import { CREATED, FORBIDDEN } from 'http-status-codes'
 import joi from 'joi'
 
 import resource from 'rest/resource'
@@ -16,15 +16,16 @@ export default resource('ACCOUNT')(
 
     const accounts = await accountService.list({ email })
 
-    if (accounts.length === 1 && accounts[ 0 ].comparePassword(password)) {
-      return {
-        statusCode: CREATED,
-        resource: accounts[ 0 ]
+    if (accounts.length !== 1 || !accounts[ 0 ].comparePassword(password)) {
+      throw {
+        statusCode: FORBIDDEN
       }
     }
 
-    throw {
-      statusCode: BAD_REQUEST
-    }
+    return {
+        statusCode: CREATED,
+        resource: accounts[ 0 ]
+      }
+
   }
 )
