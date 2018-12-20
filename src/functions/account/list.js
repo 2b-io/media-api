@@ -5,24 +5,15 @@ import accountService from 'services/account'
 
 export default resource('ACCOUNT')(
   async (req) => {
-    const {
-      password,
-      email,
-      ...params
-    } = req.queryStringParameters || {}
-    const accounts = await accountService.list({
-      email: decodeURIComponent(email),
-      ...params
-    })
+    const params = req.queryStringParameters || {}
+    const accounts = await accountService.list(params)
 
-    if (password && accounts.length === 1) {
-      const passwordDecoded = Buffer.from(decodeURIComponent(password), 'base64').toString('ascii')
-
-      return {
-        statusCode: OK,
-        resource: accounts[ 0 ].comparePassword(passwordDecoded) ? accounts : []
+    if (!accounts) {
+      throw {
+        statusCode: NOT_FOUND
       }
     }
+
     return {
       statusCode: OK,
       resource: accounts

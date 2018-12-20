@@ -229,6 +229,35 @@ components:
               value:
                 type: string
 paths:
+  /sessions:
+    post:
+      summary: Create session.
+      description: Return an account.
+      tags:
+        - Sessions
+      security:
+        - contentType: []
+          authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          description: FORBIDDEN
   /accounts:
     get:
       summary: List accounts.
