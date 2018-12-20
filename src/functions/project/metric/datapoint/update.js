@@ -19,14 +19,15 @@ export default resource('METRIC')(
 
     const metricData = await metricService.update(projectIdentifier, metricName, values)
 
-    if (!metricData) {
+    if (!metricData.length) {
       throw {
         statusCode: FORBIDDEN
       }
     }
 
     return {
-      statusCode: OK
+      statusCode: OK,
+      resource: metricData
     }
   }
 )

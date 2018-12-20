@@ -54,6 +54,14 @@ const get = async (projectIdentifier, type, fileIdentifier) => {
   return await elasticsearch.get(projectIdentifier, type, fileIdentifier)
 }
 
+const list = async (projectIdentifier, type, params) => {
+  return await searchAllObjects(
+    projectIdentifier,
+    type,
+    params
+  )
+}
+
 const remove = async (projectIdentifier, type, fileIdentifier) => {
   return await elasticsearch.remove(projectIdentifier, type, fileIdentifier)
 }
@@ -116,6 +124,7 @@ const searchByPresetHash = async (projectIdentifier, type, presetHash) => {
 export default {
   create,
   get,
+  list,
   replace,
   head,
   remove,
