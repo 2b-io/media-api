@@ -23,6 +23,15 @@ custom:
 # ========================= #
 
 functions:
+  # SESSION
+  SESSION___create:
+    handler: src/handler.SESSION___create
+    events:
+      - http:
+          path: /sessions
+          method: post
+  # SESSION --- END
+
   # ACCOUNT
   ACCOUNT___list:
     handler: src/handler.ACCOUNT___list

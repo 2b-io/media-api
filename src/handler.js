@@ -1,5 +1,9 @@
 /* ====================================================================================================== */
 
+export { default as SESSION___create } from './functions/session/create'
+
+/* ====================================================================================================== */
+
 export { default as ACCOUNT___create } from './functions/account/create'
 export { default as ACCOUNT___get } from './functions/account/get'
 export { default as ACCOUNT___list } from './functions/account/list'
