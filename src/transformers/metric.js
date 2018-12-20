@@ -1,4 +1,4 @@
 export default (metric) => ({
-  timestamp: metric.timestamp,
-  value: metric.value
+  metricName: metric.metricName,
+  datapoints: metric.datapoints
 })

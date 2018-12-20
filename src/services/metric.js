@@ -6,13 +6,13 @@ import mapping from 'mapping/metric'
 
 const DATAPOINT_VERSION = config.elasticsearch.datapointVersion
 
-const generateRangeTimes = (startTime, endTime, period) => {
+const generateRangeTimes = (startTime, endTime) => {
   let timePoint = startTime
   let dates = []
 
   while (timePoint < endTime && timePoint < Date.now()) {
     dates.push(timePoint)
-    timePoint += period * 1000
+    timePoint += 60 * 1000
   }
 
   return dates
@@ -29,10 +29,29 @@ const formatResponseData = (metricData, { startTime, endTime, period }) => {
     {}
   )
 
-  const datapoints = originRangeTimes.map((time) => ({
+  const originDatapoints = originRangeTimes.map((time) => ({
     timestamp: time,
     value: indices[ time ] || 0
   }))
+
+  let datapoints = []
+
+  originDatapoints.forEach(
+    (datapoint) => {
+      const { timestamp, value } = datapoint
+
+      const index = Math.floor((timestamp - startTime) / (period * 60 * 1000))
+
+      if (!datapoints[ index ]) {
+        datapoints[ index ] = {
+          timestamp: timestamp,
+          value: 0
+        }
+      }
+
+      datapoints[ index ].value += value
+    }
+  )
 
   return datapoints
 }
@@ -74,6 +93,7 @@ const get = async (projectIdentifier, metricName, data) => {
   if (!projectIdentifier || !metricName) {
     return null
   }
+
   const { startTime, endTime, period } = data
 
   const metricData = await elasticsearchService.list(
@@ -89,7 +109,12 @@ const get = async (projectIdentifier, metricName, data) => {
     }
   )
 
-  return await formatResponseData(metricData, { startTime, endTime, period })
+  const datapoints = await formatResponseData(metricData, { startTime: Date.parse(startTime), endTime: Date.parse(endTime), period })
+
+  return {
+    metricName: metricName.toUpperCase(),
+    datapoints
+  }
 }
 
 export default {
