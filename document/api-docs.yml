@@ -228,6 +228,32 @@ components:
                 type: string
               value:
                 type: string
+    Metric:
+      type: object
+      properties:
+        metricName:
+          type: string
+        datapoints:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: integer
+              value:
+                type: integer
+    MetricRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          timestamp:
+            type: integer
+          value:
+            type: integer
+        required:
+          - timestamp
+          - value
 paths:
   /sessions:
     post:
@@ -1444,5 +1470,98 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/File'
+        '403':
+          description: FORBIDDEN
+  /projects/{projectIdentifier}/metrics/{metricName}/datapoints:
+    get:
+      summary: Get metric datapoints
+      description: Return metric list.
+      tags:
+        - Metric
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: metricName
+          in: path
+          example: requests
+          required: true
+          description: The metricName must be requests or bytes_downloaded.
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          example: '2018-12-01T00:00:00.000Z'
+          required: true
+          description: startTime is ISO date time.
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          required: true
+          example: '2018-12-20T23:59:59.000Z'
+          description: endTime is ISO date time.
+          schema:
+            type: string
+            format: date-time
+        - name: period
+          in: query
+          example: 60
+          required: true
+          description: period is minute. Must be one of 1440 or 60.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metric'
+        '404':
+          description: NOT_FOUND
+    patch:
+      summary: Update metric datapoints
+      description: Return updated metric.
+      tags:
+        - Metric
+      security:
+        - contentType: []
+          accountAuthorization: []
+      parameters:
+        - name: projectIdentifier
+          in: path
+          example: 'badass-victory-82'
+          required: true
+          description: The project identifier
+          schema:
+            type: string
+        - name: metricName
+          in: path
+          example: requests
+          required: true
+          description: The metricName must be requests or bytes_downloaded.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metric'
         '403':
           description: FORBIDDEN
