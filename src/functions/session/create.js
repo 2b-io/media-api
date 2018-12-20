@@ -26,6 +26,5 @@ export default resource('ACCOUNT')(
         statusCode: CREATED,
         resource: accounts[ 0 ]
       }
-
   }
 )
