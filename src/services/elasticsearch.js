@@ -66,6 +66,10 @@ const remove = async (projectIdentifier, type, fileIdentifier) => {
   return await elasticsearch.remove(projectIdentifier, type, fileIdentifier)
 }
 
+const removeWithParams = async (projectIdentifier, type, query) => {
+  return await elasticsearch.removeWithParams(projectIdentifier, type, params, size)
+}
+
 const head = async (projectIdentifier, type, fileIdentifier) => {
   return await elasticsearch.checkExistsObject(projectIdentifier, type, fileIdentifier)
 }
@@ -128,6 +132,8 @@ export default {
   replace,
   head,
   remove,
+  removeWithParams,
+  searchByContentType,
   searchByProject,
   searchByPattern,
   searchByPresetHash
