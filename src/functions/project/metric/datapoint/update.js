@@ -26,8 +26,7 @@ export default resource('METRIC')(
     }
 
     return {
-      statusCode: OK,
-      resource: metricData
+      statusCode: OK
     }
   }
 )
