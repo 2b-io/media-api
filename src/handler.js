@@ -32,6 +32,7 @@ export { default as PROJECT__COLLABORATOR___update } from './functions/project/c
 
 export { default as PROJECT__FILE___create } from './functions/project/file/create'
 export { default as PROJECT__FILE___delete } from './functions/project/file/delete'
+export { default as PROJECT__FILE___prune } from './functions/project/file/prune'
 export { default as PROJECT__FILE___get } from './functions/project/file/get'
 export { default as PROJECT__FILE___head } from './functions/project/file/head'
 export { default as PROJECT__FILE___list } from './functions/project/file/list'

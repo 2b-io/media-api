@@ -1,4 +1,5 @@
 import { FORBIDDEN, NO_CONTENT} from 'http-status-codes'
+import joi from 'joi'
 
 import resource from 'rest/resource'
 import projectService from 'services/project'
