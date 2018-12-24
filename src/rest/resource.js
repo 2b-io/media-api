@@ -62,9 +62,7 @@ const authorize = async (req) => {
   }
 
   // TODO: hardcode into config. Move to database after confirm idea
-  const service = config.services.find({
-    service: app
-  })
+  const service = config.services.find(service => service.app === app)
 
   if (!service || (service && service.secret !== secret)) {
     throw {

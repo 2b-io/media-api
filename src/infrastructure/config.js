@@ -18,7 +18,7 @@ export default {
   // TODO: hardcode into config. Move to database after confirm idea
   services: [
     {
-      service: 'webapp',
+      app: 'webapp',
       secret: 'kh8i9MnwxUKrDYA37akVsa7ainA8jf7LqeZHYGuSnFsQdgk72dxga6osgNBjC6s24pFAPoSw2Ku8bCrwVyp3dLdiVc'
     }
   ]
