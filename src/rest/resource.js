@@ -9,6 +9,8 @@ import serializeError from 'serialize-error'
 import accountService from 'services/account'
 import * as transformers from 'transformers'
 
+import config from 'infrastructure/config'
+
 const normalizeHttpHeaders = (headers) => Object.entries(headers).reduce(
   (headers, [ name, value ]) => ({
     ...headers,
@@ -49,10 +51,22 @@ const authorize = async (req) => {
   const {
     type,
     app,
-    account: accountIdentifier
+    account: accountIdentifier,
+    secret
   } = parseAuthorizationHeader(authorization)
 
   if (type !== 'MEDIA_CDN') {
+    throw {
+      statusCode: UNAUTHORIZED
+    }
+  }
+
+  // TODO: hardcode into config. Move to database after confirm idea
+  const service = config.services.find({
+    service: app
+  })
+
+  if (!service || (service && service.secret !== secret)) {
     throw {
       statusCode: UNAUTHORIZED
     }
