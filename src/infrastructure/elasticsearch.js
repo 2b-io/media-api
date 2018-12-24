@@ -68,9 +68,6 @@ const remove = async (index, type, id) => {
 }
 
 const removeWithParams = async (index, type, params, size) => {
-  console.log('index', index);
-  console.log('type', type);
-  console.log('params', params);
   return await client.deleteByQuery({
     index,
     type,
