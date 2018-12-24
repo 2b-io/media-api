@@ -1,4 +1,5 @@
 import sh from 'shorthash'
+import uuid from 'uuid'
 
 import createPresetModel from 'models/preset'
 import createProjectModel from 'models/project'
@@ -186,7 +187,7 @@ const replace = async (projectIdentifier, contentType, data) => {
   const currentPresetHash = hashPreset(currentPreset.parameters)
   const newPresetHash = hashPreset(newPreset.parameters)
 
-  if (currentPresetHash !== newPresetHash || !updatedPreset.isActive) {
+  if (currentPresetHash !== newPresetHash || !newPreset.isActive) {
     await jobService.create({
       name: 'CREATE_INVALIDATION',
       when: Date.now(),
