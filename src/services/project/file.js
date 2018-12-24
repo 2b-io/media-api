@@ -107,12 +107,29 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
     }
   }
 
-  return await elasticsearchService.removeWithParams(
+  const listFiles = await elasticsearchService.searchAllObjects(
+    `${ FILE_VERSION }-${ projectIdentifier }`,
+    TYPE_NAME,
+    params
+  )
+
+  if (!listFiles) {
+    return null
+  }
+
+  const { deleted } = await elasticsearchService.removeWithParams(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     params,
     maxKeys
   )
+
+  const isTruncated = listFiles.length !== deleted
+
+  return {
+    deleted,
+    isTruncated
+  }
 }
 
 export default {
