@@ -121,6 +121,16 @@ const searchByPresetHash = async (projectIdentifier, type, presetHash) => {
   return allObjects || []
 }
 
+const searchByContentType = async (projectIdentifier, type, contentType) => {
+  const allObjects = await searchAllObjects(
+    projectIdentifier,
+    type,
+    { term: { contentType }, term: { isOrigin: false } }
+  )
+
+  return allObjects || []
+}
+
 export default {
   create,
   get,
@@ -128,6 +138,7 @@ export default {
   replace,
   head,
   remove,
+  searchByContentType,
   searchByProject,
   searchByPattern,
   searchByPresetHash

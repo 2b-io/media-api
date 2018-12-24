@@ -10,6 +10,9 @@ const SCHEMA = joi.alternatives().try([
   }),
   joi.object().keys({
     preset: joi.string().trim()
+  }),
+  joi.object().keys({
+    contentType: joi.string().trim()
   })
 ])
 
