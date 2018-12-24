@@ -90,7 +90,7 @@ const head = async (projectIdentifier, fileIdentifier) => {
   )
 }
 
-const prune = async (projectIdentifier, lastSynchronized) => {
+const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
   if (!projectIdentifier || !lastSynchronized) {
     return null
   }
@@ -110,7 +110,8 @@ const prune = async (projectIdentifier, lastSynchronized) => {
   return await elasticsearchService.removeWithParams(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
-    params
+    params,
+    maxKeys
   )
 }
 

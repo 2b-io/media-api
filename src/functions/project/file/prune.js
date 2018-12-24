@@ -1,11 +1,12 @@
-import { FORBIDDEN, NO_CONTENT} from 'http-status-codes'
+import { FORBIDDEN, OK} from 'http-status-codes'
 import joi from 'joi'
 
 import resource from 'rest/resource'
 import projectService from 'services/project'
 
 const SCHEMA = joi.object().keys({
-  lastSynchronized: joi.string().isoDate().required()
+  lastSynchronized: joi.string().isoDate().required(),
+  maxKeys: joi.number().min(0)
 })
 
 export default resource('FILE')(
@@ -15,19 +16,20 @@ export default resource('FILE')(
     const body = JSON.parse(req.body) || {}
     const values = await joi.validate(body, SCHEMA)
 
-    const result = await projectService.file.prune(
+    const { deleted } = await projectService.file.prune(
       projectIdentifier,
       values
     )
 
-    if (!result) {
+    if (!deleted) {
       throw {
         statusCode: FORBIDDEN
       }
     }
 
     return {
-      statusCode: NO_CONTENT
+      statusCode: OK,
+      resource: deleted
     }
   }
 )
