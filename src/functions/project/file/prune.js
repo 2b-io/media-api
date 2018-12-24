@@ -21,7 +21,7 @@ export default resource('FILE')(
       values
     )
 
-    if (!result) {
+    if (!deleted) {
       throw {
         statusCode: FORBIDDEN
       }
