@@ -394,6 +394,13 @@ functions:
           path: /projects/{projectIdentifier}/files/{fileIdentifier}
           method: delete
 
+  PROJECT__FILE___prune:
+    handler: src/handler.PROJECT__FILE___prune
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/files
+          method: delete
+
   # PROJECT > FILE --- END
 
   # JOB

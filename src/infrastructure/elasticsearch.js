@@ -67,6 +67,19 @@ const remove = async (index, type, id) => {
   })
 }
 
+const removeWithParams = async (index, type, params, size) => {
+  return await client.deleteByQuery({
+    index,
+    type,
+    size,
+    body: {
+      query: {
+       ...params
+      }
+    }
+  })
+}
+
 const searchWithParams = async (index, type, params, { from, size }) => {
   return await client.search({
     from,
@@ -110,6 +123,7 @@ export default {
   checkExistsObject,
   get,
   remove,
+  removeWithParams,
   replace,
   searchWithParams,
   searchWithoutParams

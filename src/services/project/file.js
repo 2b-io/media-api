@@ -90,11 +90,36 @@ const head = async (projectIdentifier, fileIdentifier) => {
   )
 }
 
+const prune = async (projectIdentifier, lastSynchronized) => {
+  if (!projectIdentifier || !lastSynchronized) {
+    return null
+  }
+
+  const params = {
+    bool: {
+      must: [ {
+        range: {
+          lastSynchronized: {
+            lte: new Date(lastSynchronized)
+          }
+        }
+      } ]
+    }
+  }
+
+  return await elasticsearchService.removeWithParams(
+    `${ FILE_VERSION }-${ projectIdentifier }`,
+    TYPE_NAME,
+    params
+  )
+}
+
 export default {
   create,
   get,
   head,
   list,
+  prune,
   remove,
   replace
 }
