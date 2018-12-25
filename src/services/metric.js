@@ -109,12 +109,7 @@ const get = async (projectIdentifier, metricName, data) => {
     }
   )
 
-  const datapoints = await formatResponseData(metricData, { startTime: Date.parse(startTime), endTime: Date.parse(endTime), period })
-
-  return {
-    metricName: metricName.toUpperCase(),
-    datapoints
-  }
+  return await formatResponseData(metricData, { startTime: Date.parse(startTime), endTime: Date.parse(endTime), period })
 }
 
 export default {
