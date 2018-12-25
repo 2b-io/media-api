@@ -60,8 +60,7 @@ const update = async (projectIdentifier, metricName, data) => {
   if (!projectIdentifier || !metricName) {
     return null
   }
-
-  return await Promise.all(
+  const result = await Promise.all(
     data.map(async ({ timestamp, value }) => {
        const checkExistsData = await elasticsearchService.head(
          `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
@@ -87,6 +86,12 @@ const update = async (projectIdentifier, metricName, data) => {
        )
      })
   )
+
+  if (!result) {
+    return null
+  }
+
+  return data
 }
 
 const get = async (projectIdentifier, metricName, data) => {
