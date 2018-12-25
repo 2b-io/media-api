@@ -228,21 +228,16 @@ components:
                 type: string
               value:
                 type: string
-    Metric:
-      type: object
-      properties:
-        metricName:
-          type: string
-        datapoints:
-          type: array
-          items:
-            type: object
-            properties:
-              timestamp:
-                type: integer
-              value:
-                type: integer
-    MetricRequest:
+    Datapoints:
+      type: array
+      items:
+        type: object
+        properties:
+          timestamp:
+            type: integer
+          value:
+            type: integer
+    DatapointsRequest:
       type: array
       items:
         type: object
@@ -1525,7 +1520,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Metric'
+                $ref: '#/components/schemas/Datapoints'
         '404':
           description: NOT_FOUND
     patch:
@@ -1555,13 +1550,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MetricRequest'
+              $ref: '#/components/schemas/DatapointsRequest'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Metric'
+                $ref: '#/components/schemas/Datapoints'
         '403':
           description: FORBIDDEN
