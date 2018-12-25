@@ -234,18 +234,26 @@ components:
         type: object
         properties:
           timestamp:
-            type: integer
+            type: string
+            format: date-time
+            example: '2018-12-20T23:59:59.000Z'
+            description: timestamp is ISO date time.
           value:
             type: integer
+            format: int64
     DatapointsRequest:
       type: array
       items:
         type: object
         properties:
           timestamp:
-            type: integer
+            type: string
+            format: date-time
+            example: '2018-12-20T23:59:59.000Z'
+            description: timestamp is ISO date time.
           value:
             type: integer
+            format: int64
         required:
           - timestamp
           - value
