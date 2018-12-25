@@ -44,7 +44,7 @@ const formatResponseData = (metricData, { startTime, endTime, period }) => {
 
       if (!datapoints[ index ]) {
         datapoints[ index ] = {
-          timestamp: timestamp,
+          timestamp: new Date(timestamp).toISOString(),
           value: 0
         }
       }
