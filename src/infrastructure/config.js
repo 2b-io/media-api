@@ -14,5 +14,9 @@ export default {
     host: process.env.ELASTICSEARCH_HOST,
     fileVersion: process.env.ELASTICSEARCH_FILE_VERSION,
     datapointVersion: process.env.ELASTICSEARCH_DATAPOINT_VERSION
+  },
+  pulling: {
+    shortBreak: process.env.PULLING_SHORT_BREAK,
+    longBreak: process.env.PULLING_LONG_BREAK
   }
 }
