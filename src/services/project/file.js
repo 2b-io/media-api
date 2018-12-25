@@ -44,13 +44,19 @@ const create = async (projectIdentifier, fileIdentifier, params) => {
     return null
   }
 
-  return await elasticsearchService.create(
+  const { result } = await elasticsearchService.create(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     fileIdentifier,
     mapping,
     params
   )
+
+  if (result !== 'created') {
+    return null
+  }
+
+  return params
 }
 
 const replace = async (projectIdentifier, fileIdentifier, params) => {

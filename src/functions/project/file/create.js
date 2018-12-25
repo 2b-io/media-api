@@ -23,13 +23,13 @@ export default resource('FILE')(
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
 
-    const { result } = await projectService.file.create(
+    const file = await projectService.file.create(
       projectIdentifier,
       values.key,
       values
     )
 
-    if (result !== 'created') {
+    if (!file) {
       throw {
         statusCode: FORBIDDEN
       }
@@ -37,7 +37,7 @@ export default resource('FILE')(
 
     return {
       statusCode: CREATED,
-      resource: values
+      resource: file
     }
   }
 )
