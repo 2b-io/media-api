@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import hash from 'shorthash'
 
 import mongoose, { register } from 'infrastructure/mongoose'
