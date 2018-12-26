@@ -1,13 +1,12 @@
 import uuid from 'uuid'
 
 import config from 'infrastructure/config'
-import jobService from 'services/job'
 import accountService from 'services/account'
+import jobService from 'services/job'
 import resetTokenService from 'services/reset-token'
 
-const invite = async (collaborators, inviterName, inviterEmail, message) => {
-  const accountIdentifiers = collaborators.map(async ({ accountIdentifier }) => {
-    const { email } = await accountService.get(accountIdentifier)
+const invite = async (emails, inviterName, inviterEmail, message) => {
+  await emails.map(async (email) => {
     const { token } = await resetTokenService.create({ email })
 
     await jobService.create({
