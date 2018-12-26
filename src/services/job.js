@@ -12,23 +12,15 @@ const create = async (job, meta) => {
 
 const snapshot = async () => {
   const Job = await createJobModel()
-
   console.log('SNAPSHOT_JOBS')
 
   let job = {}
 
-  do {
-    job = await get()
-
-    if (!job) {
-      return true
-    }
-
+  while (job = await get()) {
     await new Job({
       ...job
     }).save()
-
-  } while (job)
+  }
 
   return true
 }
@@ -38,11 +30,9 @@ const recovery = async () => {
 
   const jobs = await Job.find().lean()
 
-  await Promise.all(
-    jobs.map(async (job) => {
-       await create(job)
-     })
-   )
+  await Promise.all(jobs.map(({ message, identifier }) => {
+    create({ ...message }, { messageId: identifier })
+  }))
 
   await Job.remove()
 

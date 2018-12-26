@@ -68,7 +68,7 @@ export const get = async () => {
 
   await channel.ack(msg)
 
-  return { ...messageContent, messageId: msg.properties.messageId }
+  return { message: messageContent, identifier: msg.properties.messageId }
 }
 
 export default amqp

@@ -1,20 +1,13 @@
 import mongoose, { register } from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({
-  messageId: {
+  identifier: {
     type: String,
-    unique: true,
     index: true
   },
-  name: {
-    type: String,
+  message: {
+    type: mongoose.Schema.Types.Mixed,
     required: true
-  },
-  payload: {
-    type: mongoose.Schema.Types.Mixed
-  },
-  when: {
-    type: Date
   }
 }, {
   timestamps: true
