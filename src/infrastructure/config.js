@@ -21,5 +21,9 @@ export default {
       app: 'webapp',
       secret: 'kh8i9MnwxUKrDYA37akVsa7ainA8jf7LqeZHYGuSnFsQdgk72dxga6osgNBjC6s24pFAPoSw2Ku8bCrwVyp3dLdiVc'
     }
-  ]
+  ],
+  apps: {
+    WEBAPP: 'webapp',
+    JOB_LOOP: 'job-loop',
+  }
 }
