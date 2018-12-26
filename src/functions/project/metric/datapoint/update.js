@@ -6,7 +6,7 @@ import metricService from 'services/metric'
 
 const SCHEMA = joi.array().items(
   joi.object().keys({
-    timestamp: joi.number().required(),
+    timestamp: joi.string().isoDate().required(),
     value: joi.number().required()
   })
 )
