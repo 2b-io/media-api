@@ -53,4 +53,22 @@ export const send = async (msg, options = {}) => {
   })
 }
 
+export const get = async () => {
+  const { connection, channel, queue } = await connect()
+
+  const msg = await channel.get(queue, {
+    noAck: false
+  })
+
+  if (!msg) {
+    return null
+  }
+
+  const messageContent = JSON.parse(msg.content.toString())
+
+  await channel.ack(msg)
+
+  return { ...messageContent, messageId: msg.properties.messageId }
+}
+
 export default amqp

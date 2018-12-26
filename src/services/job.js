@@ -1,7 +1,6 @@
 import config from 'infrastructure/config'
-import { send } from 'infrastructure/rabbitmq'
+import { send, get } from 'infrastructure/rabbitmq'
 import createJobModel from 'models/job'
-import { createConsumer } from 'services/work-queue/consumer'
 
 const create = async (job, meta) => {
   console.log('SEND JOB', job, meta)
@@ -16,21 +15,20 @@ const snapshot = async () => {
 
   console.log('SNAPSHOT_JOBS')
 
-  const consumer = createConsumer({
-    host: config.rabbitmq.uri,
-    queue: config.rabbitmq.queue,
-    prefix: config.rabbitmq.prefix,
-    shortBreak: config.pulling.shortBreak,
-    longBreak: config.pulling.longBreak
-  })
+  let job = {}
 
-  await consumer.connect()
+  do {
+    job = await get()
 
-  await consumer.onReceive(async (jobData) => {
-    const job = await new Job({
-      ...jobData
+    if (!job) {
+      return true
+    }
+
+    await new Job({
+      ...job
     }).save()
-  })
+
+  } while (job)
 
   return true
 }
@@ -47,7 +45,7 @@ const recovery = async () => {
    )
 
   await Job.remove()
-  
+
   return true
 }
 
