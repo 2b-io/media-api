@@ -4,7 +4,7 @@ import resource from 'rest/resource'
 import jobService from 'services/job'
 
 export default resource('JOB')(
-  async (req) => {
+  (req) => {
     jobService.recovery()
 
     return {
