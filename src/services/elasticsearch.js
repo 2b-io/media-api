@@ -143,6 +143,7 @@ export default {
   head,
   remove,
   removeWithParams,
+  searchAllObjects,
   searchByContentType,
   searchByProject,
   searchByPattern,

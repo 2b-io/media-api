@@ -1,6 +1,7 @@
 export { default as ACCOUNT } from './account'
 export { default as CACHE_SETTING } from './cache-setting'
 export { default as COLLABORATOR } from './collaborator'
+export { default as DELETE_FILES } from './delete-files'
 export { default as FILE } from './file'
 export { default as INFRASTRUCTURE } from './infrastructure'
 export { default as INVALIDATION } from './invalidation'
