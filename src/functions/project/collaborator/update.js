@@ -22,8 +22,7 @@ export default resource('COLLABORATOR')(
     // TODO: Authorization
     const { emails, message } = await joi.validate(body, SCHEMA)
 
-    // Account list on the system
-    const accounts = await accountService.list()
+    const accounts = await accountService.list({ email: { '$in': emails } })
 
     // Filter the emails do not exist on the system
     const notExistedEmails = emails.filter(
@@ -32,10 +31,7 @@ export default resource('COLLABORATOR')(
       )
     )
 
-    const collaborators = await collaboratorService.update(
-      projectIdentifier,
-      { emails, message }
-    )
+    const collaborators = await collaboratorService.update(projectIdentifier, emails)
 
     if (!collaborators) {
       throw {
