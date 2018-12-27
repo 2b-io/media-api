@@ -5,7 +5,7 @@ const schema = mongoose.Schema({
     type: String,
     index: true
   },
-  message: {
+  content: {
     type: mongoose.Schema.Types.Mixed,
     required: true
   }
