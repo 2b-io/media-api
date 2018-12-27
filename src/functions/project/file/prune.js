@@ -9,19 +9,19 @@ const SCHEMA = joi.object().keys({
   maxKeys: joi.number().min(0)
 })
 
-export default resource('FILE')(
+export default resource('DELETE_FILES')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
     // TODO: Authorization
     const body = JSON.parse(req.body) || {}
     const values = await joi.validate(body, SCHEMA)
 
-    const { deleted } = await projectService.file.prune(
+    const result = await projectService.file.prune(
       projectIdentifier,
       values
     )
 
-    if (!deleted) {
+    if (!result) {
       throw {
         statusCode: FORBIDDEN
       }
@@ -29,7 +29,7 @@ export default resource('FILE')(
 
     return {
       statusCode: OK,
-      resource: deleted
+      resource: result
     }
   }
 )

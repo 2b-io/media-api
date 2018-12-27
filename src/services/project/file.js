@@ -44,13 +44,19 @@ const create = async (projectIdentifier, fileIdentifier, params) => {
     return null
   }
 
-  return await elasticsearchService.create(
+  const { result } = await elasticsearchService.create(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     fileIdentifier,
     mapping,
     params
   )
+
+  if (result !== 'created') {
+    return null
+  }
+
+  return params
 }
 
 const replace = async (projectIdentifier, fileIdentifier, params) => {
@@ -107,12 +113,29 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
     }
   }
 
-  return await elasticsearchService.removeWithParams(
+  const listFiles = await elasticsearchService.searchAllObjects(
+    `${ FILE_VERSION }-${ projectIdentifier }`,
+    TYPE_NAME,
+    params
+  )
+
+  if (!listFiles) {
+    return null
+  }
+
+  const { deleted } = await elasticsearchService.removeWithParams(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     params,
     maxKeys
   )
+
+  const isTruncated = listFiles.length !== deleted
+
+  return {
+    deleted,
+    isTruncated
+  }
 }
 
 export default {
