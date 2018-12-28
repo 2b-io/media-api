@@ -10,41 +10,53 @@ const create = async (job, meta) => {
   return job
 }
 
-const snapshot = async () => {
+const snapshot = async ({ maxJobs }) => {
   const Job = await createJobModel()
-  console.log('START_SNAPSHOT_JOBS')
+  console.log('SNAPSHOT_JOBS')
 
-  let job
+  let job = {}
+  let jobNumber = 0
 
-  while (job = await get()) {
-    console.log('PROGRESS_SNAPSHOT', job)
+  while ((jobNumber < maxJobs) && (job = await get())) {
+    console.log('SNAPSHOT', job)
 
     await new Job({
       ...job
     }).save()
+
+    jobNumber++
   }
 
-  console.log('SNAPSHOT_JOBS_SUCCESS')
+  console.log('SNAPSHOT_JOBS_DONE')
+
+  return {
+    snapshotJobs: jobNumber
+  }
 }
 
-const recovery = async () => {
-  console.log('START_RECOVERY_JOBS')
+const recovery = async ({ maxJobs }) => {
+  console.log('RECOVERY_JOBS')
 
   const Job = await createJobModel()
 
-  const jobs = await Job.find().lean()
+  const jobs = await Job.find().limit(maxJobs).lean()
+  let jobNumber = 0
 
-  await Promise.all(jobs.map(({ content, identifier }) => {
-    console.log('PROGRESS_RECOVERY_JOB')
-
+  await Promise.all(jobs.map(({ content, identifier }, index) => {
     create({ ...content }, { messageId: identifier })
+
+    jobNumber = index + 1
 
     return Job.deleteOne({
       identifier
     })
   }))
 
-  console.log('RECOVERY_JOBS_SUCCESS')
+  console.log('RECOVERY_JOBS_DONE')
+
+  return {
+    recoveryJobs: jobNumber
+  }
 }
 
 export default {
