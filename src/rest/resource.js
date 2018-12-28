@@ -93,7 +93,7 @@ export default (resourceType) => (handler) => async (req, context) => {
     const {
       resource,
       statusCode
-    } = await handler(req, session)
+    } = await handler(req, session, context)
 
     return {
       statusCode,
