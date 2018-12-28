@@ -411,4 +411,17 @@ functions:
           path: /jobs
           method: post
 
+  JOB___snapshot:
+    handler: src/handler.JOB___snapshot
+    events:
+      - http:
+          path: /jobs/snapshot
+          method: post
+
+  JOB___recovery:
+    handler: src/handler.JOB___recovery
+    events:
+      - http:
+          path: /jobs/recovery
+          method: post
   # JOB --- END
