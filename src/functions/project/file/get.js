@@ -6,9 +6,9 @@ import projectService from 'services/project'
 import head from './head'
 
 export default resource('FILE')(
-  async (req, session, context) => {
+  async (req) => {
     if (req.httpMethod === 'HEAD') {
-      return await head(req, context)
+      return await head.logic(req)
     }
 
     const { projectIdentifier, fileIdentifier } = req.pathParameters
