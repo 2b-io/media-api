@@ -2,6 +2,7 @@ import { FORBIDDEN, OK } from 'http-status-codes'
 import joi from 'joi'
 
 import resource from 'rest/resource'
+import accountService from 'services/account'
 import collaboratorService from 'services/collaborator'
 import sendEmailService from 'services/send-email'
 
@@ -19,12 +20,18 @@ export default resource('COLLABORATOR')(
 
     const body = JSON.parse(req.body) || {}
     // TODO: Authorization
-    const values = await joi.validate(body, SCHEMA)
+    const { emails, message } = await joi.validate(body, SCHEMA)
 
-    const collaborators = await collaboratorService.update(
-      projectIdentifier,
-      values
+    const accounts = await accountService.list({ email: { '$in': emails } })
+
+    // Filter the emails do not exist on the system
+    const notExistedEmails = emails.filter(
+      (email) => !accounts.some(
+        (account) => account.email === email
+      )
     )
+
+    const collaborators = await collaboratorService.update(projectIdentifier, emails)
 
     if (!collaborators) {
       throw {
@@ -32,7 +39,8 @@ export default resource('COLLABORATOR')(
       }
     }
 
-    await sendEmailService.invite(collaborators, inviterAccount.name, inviterAccount.email, values.message)
+    //Sent email to invite
+    await sendEmailService.invite(notExistedEmails, inviterAccount.name, inviterAccount.email, message)
 
     return {
       statusCode: OK,

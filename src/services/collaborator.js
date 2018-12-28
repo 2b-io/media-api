@@ -68,14 +68,14 @@ const replace = async (projectIdentifier, currentAccountOwner, newOwner, data) =
   }
 }
 
-const update = async (projectIdentifier, { emails, message }) => {
+const update = async (projectIdentifier, emails) => {
   const project = await projectService.get(projectIdentifier)
 
   const accounts = await Promise.all(
     emails.map(async (email) => {
       const account = await accountService.getByEmail(email)
       if (!account) {
-        return await accountService.create({ email, message })
+        return await accountService.create({ email })
       } else {
         return account
       }
