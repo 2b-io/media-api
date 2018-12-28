@@ -4,7 +4,7 @@ import createInvalidationModel from 'models/invalidation'
 import jobService from 'services/job'
 import projectService from 'services/project'
 
-const create = async (projectIdentifier, typeInvalidation, patterns = []) => {
+const create = async (projectIdentifier, { patterns = [] }) => {
   const project = await projectService.get(projectIdentifier)
 
   if (!project) {

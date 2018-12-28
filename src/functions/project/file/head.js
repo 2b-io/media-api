@@ -13,7 +13,9 @@ export default resource('FILE')(
     )
 
     if (!result) {
-      statusCode: NOT_FOUND
+      throw {
+        statusCode: NOT_FOUND
+      }
     }
 
     return {
