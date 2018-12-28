@@ -15,22 +15,22 @@ const snapshot = async ({ maxJobs }) => {
   console.log('SNAPSHOT_JOBS')
 
   let job = {}
-  let jobNumber = 0
+  let counterJob = 0
 
-  while ((jobNumber < maxJobs) && (job = await get())) {
+  while ((counterJob < maxJobs) && (job = await get())) {
     console.log('SNAPSHOT', job)
 
     await new Job({
       ...job
     }).save()
 
-    jobNumber++
+    counterJob++
   }
 
   console.log('SNAPSHOT_JOBS_DONE')
 
   return {
-    snapshotJobs: jobNumber
+    hits: counterJob
   }
 }
 
@@ -40,22 +40,21 @@ const recovery = async ({ maxJobs }) => {
   const Job = await createJobModel()
 
   const jobs = await Job.find().limit(maxJobs).lean()
-  let jobNumber = 0
 
-  await Promise.all(jobs.map(({ content, identifier }, index) => {
-    create({ ...content }, { messageId: identifier })
+  await Promise.all(
+    jobs.map(({ content, identifier }) => {
+      create({ ...content }, { messageId: identifier })
 
-    jobNumber = index + 1
-
-    return Job.deleteOne({
-      identifier
+      return Job.deleteOne({
+        identifier
+      })
     })
-  }))
+  )
 
   console.log('RECOVERY_JOBS_DONE')
 
   return {
-    recoveryJobs: jobNumber
+    hits: jobs.length
   }
 }
 

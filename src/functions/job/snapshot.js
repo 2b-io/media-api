@@ -1,4 +1,4 @@
-import { OK, NOT_FOUND } from 'http-status-codes'
+import { OK } from 'http-status-codes'
 import joi from 'joi'
 
 import resource from 'rest/resource'
@@ -13,17 +13,11 @@ export default resource('JOB_SNAPSHOT')(
     const body = JSON.parse(req.body) || {}
     const values = await joi.validate(body, SCHEMA)
 
-    const jobs = await jobService.snapshot(values)
-
-    if (!jobs) {
-      throw {
-        statusCode: NOT_FOUND
-      }
-    }
+    const hits = await jobService.snapshot(values)
 
     return {
       statusCode: OK,
-      resource: jobs
+      resource: hits
     }
   }
 )
