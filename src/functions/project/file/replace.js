@@ -5,11 +5,11 @@ import resource from 'rest/resource'
 import projectService from 'services/project'
 
 const SCHEMA = joi.object().keys({
-  originUrl: joi.string().trim(),
-  expires: joi.date(),
+  originUrl: joi.string().allow(null).trim(),
+  expires: joi.string().isoDate(),
   isOrigin: joi.boolean(),
-  lastModified: joi.date(),
-  lastSynchronized: joi.date()
+  lastModified: joi.string().isoDate(),
+  lastSynchronized: joi.string().isoDate()
 })
 
 export default resource('FILE')(

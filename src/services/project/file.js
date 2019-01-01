@@ -106,7 +106,7 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
       must: [ {
         range: {
           lastSynchronized: {
-            lte: new Date(lastSynchronized)
+            lt: new Date(lastSynchronized)
           }
         }
       } ]
