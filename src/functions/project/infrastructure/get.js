@@ -2,8 +2,16 @@ import { NOT_FOUND, OK } from 'http-status-codes'
 
 import resource from 'rest/resource'
 import infrastructureService from 'services/infrastructure'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
-export default resource('INFRASTRUCTURE')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('INFRASTRUCTURE')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
 
@@ -20,4 +28,4 @@ export default resource('INFRASTRUCTURE')(
       resource: infrastructure
     }
   }
-)
+))

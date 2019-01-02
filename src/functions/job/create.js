@@ -4,6 +4,8 @@ import uuid from 'uuid'
 
 import resource from 'rest/resource'
 import jobService from 'services/job'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   name: joi.string().trim().required(),
@@ -11,7 +13,13 @@ const SCHEMA = joi.object().keys({
   payload: joi.object()
 })
 
-export default resource('JOB')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('JOB')(
   async (req, session) => {
     const body = JSON.parse(req.body)
     const values = await joi.validate(body, SCHEMA)
@@ -30,4 +38,4 @@ export default resource('JOB')(
       }
     }
   }
-)
+))

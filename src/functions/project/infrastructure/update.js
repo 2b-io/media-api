@@ -3,6 +3,8 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import infrastructureService from 'services/infrastructure'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   ref: joi.string().trim().required(),
@@ -10,7 +12,13 @@ const SCHEMA = joi.object().keys({
   domain: joi.string().hostname().required()
 })
 
-export default resource('INFRASTRUCTURE')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('INFRASTRUCTURE')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
     const body = JSON.parse(req.body)
@@ -30,4 +38,4 @@ export default resource('INFRASTRUCTURE')(
       resource: infrastructure
     }
   }
-)
+))

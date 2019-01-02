@@ -3,12 +3,20 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import collaboratorService from 'services/collaborator'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   privilege: joi.string().trim().required()
 })
 
-export default resource('COLLABORATOR')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('COLLABORATOR')(
   async (req, session) => {
     const {
       projectIdentifier,
@@ -45,4 +53,4 @@ export default resource('COLLABORATOR')(
       resource: collaborators
     }
   }
-)
+))

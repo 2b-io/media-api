@@ -3,6 +3,8 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import metricService from 'services/metric'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.array().items(
   joi.object().keys({
@@ -11,7 +13,13 @@ const SCHEMA = joi.array().items(
   })
 )
 
-export default resource('METRIC')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('METRIC')(
   async (req) => {
     const { projectIdentifier, metricName } = req.pathParameters
     const body = JSON.parse(req.body) || {}
@@ -30,4 +38,4 @@ export default resource('METRIC')(
       resource: metricData
     }
   }
-)
+))

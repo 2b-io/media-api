@@ -25,5 +25,8 @@ export default {
   apps: {
     WEBAPP: 'webapp',
     JOB_LOOP: 'job-loop',
+    CDN: 'cdn',
+    S3_SYNC: 's3-sync',
+    ADMINAPP: 'adminapp'
   }
 }

@@ -2,8 +2,16 @@ import { NOT_FOUND, OK } from 'http-status-codes'
 
 import resource from 'rest/resource'
 import resetTokenService from 'services/reset-token'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
-export default resource('RESET_TOKEN')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('RESET_TOKEN')(
   async (req) => {
     const { token } = req.pathParameters
 
@@ -20,4 +28,4 @@ export default resource('RESET_TOKEN')(
       resource: resetToken
     }
   }
-)
+))

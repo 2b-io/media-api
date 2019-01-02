@@ -3,6 +3,8 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import passwordService from 'services/password'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.alternatives().try([
   joi.object().keys({
@@ -15,7 +17,13 @@ const SCHEMA = joi.alternatives().try([
   })
 ])
 
-export default resource('ACCOUNT__PASSWORD')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('ACCOUNT__PASSWORD')(
   async (req, session) => {
     const { accountIdentifier } = req.pathParameters
     const body = JSON.parse(req.body)
@@ -48,4 +56,4 @@ export default resource('ACCOUNT__PASSWORD')(
       statusCode: NO_CONTENT
     }
   }
-)
+))
