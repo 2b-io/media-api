@@ -8,7 +8,7 @@ const SCHEMA = joi.object().keys({
   key: joi.string().trim().required(),
   contentType: joi.string().trim().required(),
   contentLength: joi.number().required(),
-  originUrl: joi.string().trim(),
+  originUrl: joi.string().allow(null).trim(),
   preset: joi.string().allow(null).trim(),
   expires: joi.date(),
   isOrigin: joi.boolean(),
