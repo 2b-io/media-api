@@ -412,3 +412,33 @@ functions:
           method: post
 
   # JOB --- END
+
+  # SECRET_KEY
+  SECRET__KEY___create:
+    handler: src/handler.SECRET__KEY___create
+    events:
+      - http:
+          path: /secret-keys
+          method: post
+
+  SECRET__KEY___list:
+    handler: src/handler.SECRET__KEY___list
+    events:
+      - http:
+          path: /secret-keys
+          method: get
+
+  SECRET__KEY___get:
+    handler: src/handler.SECRET__KEY___get
+    events:
+      - http:
+          path: /secret-keys/{key}
+          method: get
+
+  SECRET__KEY___remove:
+    handler: src/handler.SECRET__KEY___remove
+    events:
+      - http:
+          path: /secret-keys/{key}
+          method: delete
+  # SECRET_KEY --- END

@@ -44,7 +44,7 @@ const auth = (allowApps) => {
         }
       }
 
-      return next(accountIdentifier)
+      return next()
     },
   })
 }

@@ -75,3 +75,10 @@ export { default as RESET_TOKEN___get } from './functions/reset-token/get'
 export { default as JOB___create } from './functions/job/create'
 
 /* ====================================================================================================== */
+
+export { default as SECRET__KEY___create } from './functions/secret-key/create'
+export { default as SECRET__KEY___list } from './functions/secret-key/list'
+export { default as SECRET__KEY___get } from './functions/secret-key/get'
+export { default as SECRET__KEY___delete } from './functions/secret-key/delete'
+
+/* ====================================================================================================== */
