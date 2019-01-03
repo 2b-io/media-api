@@ -5,6 +5,8 @@ import projectService from 'services/project'
 import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
+import head from './head'
+
 export default authorize([
   config.apps.WEBAPP,
   config.apps.JOB_LOOP,
@@ -13,6 +15,10 @@ export default authorize([
   config.apps.ADMINAPP,
 ])(resource('FILE')(
   async (req) => {
+    if (req.httpMethod === 'HEAD') {
+      return await head.logic(req)
+    }
+
     const { projectIdentifier, fileIdentifier } = req.pathParameters
     // TODO: Authorization
     const file = await projectService.file.get(

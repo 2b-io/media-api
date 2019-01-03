@@ -7128,6 +7128,16 @@
         }
       }
     },
+    "serverless-nested-stack": {
+      "version": "0.0.7",
+      "resolved": "https://registry.npmjs.org/serverless-nested-stack/-/serverless-nested-stack-0.0.7.tgz",
+      "integrity": "sha1-Tl7C96Sow+f/9Fp2wPjLgoWqlYg=",
+      "dev": true,
+      "requires": {
+        "bluebird": "^3.5.0",
+        "filesize": "^3.5.10"
+      }
+    },
     "serverless-offline": {
       "version": "3.31.3",
       "resolved": "https://registry.npmjs.org/serverless-offline/-/serverless-offline-3.31.3.tgz",

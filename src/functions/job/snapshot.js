@@ -1,14 +1,13 @@
-import { FORBIDDEN, OK} from 'http-status-codes'
+import { OK } from 'http-status-codes'
 import joi from 'joi'
 
 import resource from 'rest/resource'
-import projectService from 'services/project'
+import jobService from 'services/job'
 import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
-  lastSynchronized: joi.string().isoDate().required(),
-  maxKeys: joi.number().min(0)
+  maxJobs: joi.number().min(0).required()
 })
 
 export default authorize([
@@ -17,27 +16,16 @@ export default authorize([
   config.apps.CDN,
   config.apps.S3_SYNC,
   config.apps.ADMINAPP,
-])(resource('DELETE_FILES')(
+])(resource('JOB_SNAPSHOT')(
   async (req) => {
-    const { projectIdentifier } = req.pathParameters
-    // TODO: Authorization
     const body = JSON.parse(req.body) || {}
     const values = await joi.validate(body, SCHEMA)
 
-    const result = await projectService.file.prune(
-      projectIdentifier,
-      values
-    )
-
-    if (!result) {
-      throw {
-        statusCode: FORBIDDEN
-      }
-    }
+    const hits = await jobService.snapshot(values)
 
     return {
       statusCode: OK,
-      resource: result
+      resource: hits
     }
   }
 ))

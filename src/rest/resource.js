@@ -39,41 +39,47 @@ const transform = (type, resource) => {
     transformer(resource)
 }
 
-export default (resourceType) => (handler) => async (req, context) => {
-  // Make sure to add this so you can re-use `connnection` between function calls.
-  // See https://www.mongodb.com/blog/post/serverless-development-with-nodejs-aws-lambda-mongodb-atlas
-  context.callbackWaitsForEmptyEventLoop = false;
+export default (resourceType) => (logic) => {
+  const handler = async (req, context) => {
+    // Make sure to add this so you can re-use `connnection` between function calls.
+    // See https://www.mongodb.com/blog/post/serverless-development-with-nodejs-aws-lambda-mongodb-atlas
+    context.callbackWaitsForEmptyEventLoop = false;
 
-  try {
-    const session = await getSession(req)
+    try {
+      const session = await getSession(req)
 
-    const {
-      resource,
-      statusCode
-    } = await handler(req, session)
+      const {
+        resource,
+        statusCode
+      } = await logic(req, session)
 
-    return {
-      statusCode,
-      body: resource ?
-        JSON.stringify(transform(resourceType, resource)) :
-        null
-    }
-  } catch (error) {
-    // validation error
-    if (error.isJoi) {
       return {
-        statusCode: BAD_REQUEST,
+        statusCode,
+        body: resource ?
+          JSON.stringify(transform(resourceType, resource)) :
+          null
+      }
+    } catch (error) {
+      // validation error
+      if (error.isJoi) {
+        return {
+          statusCode: BAD_REQUEST,
+          body: JSON.stringify({
+            reason: error.details
+          })
+        }
+      }
+
+      return {
+        statusCode: error.statusCode || INTERNAL_SERVER_ERROR,
         body: JSON.stringify({
-          reason: error.details
+          reason: serializeError(error.reason || error)
         })
       }
     }
-
-    return {
-      statusCode: error.statusCode || INTERNAL_SERVER_ERROR,
-      body: JSON.stringify({
-        reason: serializeError(error.reason || error)
-      })
-    }
   }
+
+  handler.logic = logic
+
+  return handler
 }

@@ -1,30 +1,31 @@
 import uuid from 'uuid'
 
 import config from 'infrastructure/config'
-import jobService from 'services/job'
 import accountService from 'services/account'
+import jobService from 'services/job'
 import resetTokenService from 'services/reset-token'
 
-const invite = async (collaborators, inviterName, inviterEmail, message) => {
-  const accountIdentifiers = collaborators.map(async ({ accountIdentifier }) => {
-    const { email } = await accountService.get(accountIdentifier)
-    const { token } = await resetTokenService.create({ email })
+const invite = async (emails, inviterName, inviterEmail, message) => {
+  await Promise.all(
+    emails.map(async (email) => {
+      const { token } = await resetTokenService.create({ email })
 
-    await jobService.create({
-      name: 'SEND_EMAIL',
-      when: Date.now(),
-      payload: {
-        type: 'INVITATION',
-        email,
-        inviterName,
-        inviterEmail,
-        message,
-        activateLink: `${ config.webappUrl }/reset-password/${ token }`
-      }
-    }, {
-      messageId: uuid.v4()
+      return await jobService.create({
+        name: 'SEND_EMAIL',
+        when: Date.now(),
+        payload: {
+          type: 'INVITATION',
+          email,
+          inviterName,
+          inviterEmail,
+          message,
+          activateLink: `${ config.webappUrl }/reset-password/${ token }`
+        }
+      }, {
+        messageId: uuid.v4()
+      })
     })
-  })
+  )
 }
 
 const passwordRecovery = async (accountIdentifier, token) => {

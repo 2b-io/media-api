@@ -5,10 +5,25 @@ provider:
   runtime: nodejs8.10
   timeout: 30
   memorySize: 128
+  versionFunctions: false
+  environment:
+    MONGODB_URI: ${env:MONGODB_URI}
+    RABBITMQ_URI: ${env:RABBITMQ_URI}
+    RABBITMQ_QUEUE: ${env:RABBITMQ_QUEUE}
+    RABBITMQ_PREFIX: ${env:RABBITMQ_PREFIX}
+    RABBITMQ_TTL: ${env:RABBITMQ_TTL}
+    ELASTICSEARCH_HOST: ${env:ELASTICSEARCH_HOST}
+    ELASTICSEARCH_FILE_VERSION: ${env:ELASTICSEARCH_FILE_VERSION}
+    ELASTICSEARCH_DATAPOINT_VERSION: ${env:ELASTICSEARCH_DATAPOINT_VERSION}
+    WEBAPP_URL: ${env:WEBAPP_URL}
+    PULLING_SHORT_BREAK: ${env:PULLING_SHORT_BREAK}
+    PULLING_LONG_BREAK: ${env:PULLING_LONG_BREAK}
+    PORT: ${env:PORT}
 
 plugins:
   - serverless-webpack
   - serverless-offline
+  - serverless-nested-stack
 
 custom:
   serverless-offline:
@@ -411,6 +426,19 @@ functions:
           path: /jobs
           method: post
 
+  JOB___snapshot:
+    handler: src/handler.JOB___snapshot
+    events:
+      - http:
+          path: /jobs/snapshot
+          method: post
+
+  JOB___recovery:
+    handler: src/handler.JOB___recovery
+    events:
+      - http:
+          path: /jobs/recovery
+          method: post
   # JOB --- END
 
   # SECRET_KEY

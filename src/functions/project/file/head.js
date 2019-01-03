@@ -21,7 +21,9 @@ export default authorize([
     )
 
     if (!result) {
-      statusCode: NOT_FOUND
+      throw {
+        statusCode: NOT_FOUND
+      }
     }
 
     return {

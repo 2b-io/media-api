@@ -16,7 +16,7 @@ const connect = async () => {
     console.log('Connecting to RabbitMQ...')
 
     state.connection = await amqp.connect(config.rabbitmq.uri)
-    state.channel = await state.connection.createChannel()
+    state.channel = await state.connection.createConfirmChannel()
     await state.channel.checkQueue(state.queue)
 
     console.log('RabbitMQ connected!')
@@ -44,13 +44,43 @@ const connect = async () => {
 export const send = async (msg, options = {}) => {
   const { connection, channel, queue } = await connect()
 
-  await channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)), {
-    contentType: 'application/json',
-    contentEncoding: 'utf-8',
-    messageId: options.messageId || uuid.v4(),
-    appId: options.appId,
-    persistent: true
+  console.log('Sending message to RabbitMQ...')
+
+  await new Promise((resolve, reject) => {
+    channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)), {
+      contentType: 'application/json',
+      contentEncoding: 'utf-8',
+      messageId: options.messageId || uuid.v4(),
+      appId: options.appId,
+      persistent: true
+    }, (err) => {
+      if (err) {
+        return reject(err)
+      }
+
+      resolve()
+    })
   })
+
+  console.log('Send message done!')
+}
+
+export const get = async () => {
+  const { connection, channel, queue } = await connect()
+
+  const msg = await channel.get(queue, {
+    noAck: false
+  })
+
+  if (!msg) {
+    return null
+  }
+
+  const messageContent = JSON.parse(msg.content.toString())
+
+  await channel.ack(msg)
+
+  return { content: messageContent, identifier: msg.properties.messageId }
 }
 
 export default amqp
