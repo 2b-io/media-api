@@ -3,12 +3,12 @@ import {
 } from 'http-status-codes'
 import middy from 'middy'
 
+import secretKeyService from 'services/secret-key'
 import { normalizeHttpHeaders, parseAuthorizationHeader } from 'utils/header'
-import config from 'infrastructure/config'
 
 const auth = (allowApps) => {
   return ({
-    before: (handler, next) => {
+    before: async (handler, next) => {
       const { authorization } = normalizeHttpHeaders(handler.event.headers)
 
       if (!authorization) {
@@ -20,7 +20,6 @@ const auth = (allowApps) => {
       const {
         type,
         app,
-        account: accountIdentifier,
       } = parseAuthorizationHeader(authorization)
 
       if (type !== 'MEDIA_CDN') {
@@ -29,16 +28,15 @@ const auth = (allowApps) => {
         }
       }
 
-      // TODO hardcode into config. Move to database after confirm idea
-      const service = config.services.find(service => service.secret === app)
+      const secretKey = await secretKeyService.get(app)
 
-      if (!service) {
+      if (!secretKey) {
         throw {
           statusCode: UNAUTHORIZED
         }
       }
 
-      if (allowApps.indexOf(service.app) < 0) {
+      if (allowApps.indexOf(secretKey.app) < 0) {
         throw {
           statusCode: UNAUTHORIZED
         }

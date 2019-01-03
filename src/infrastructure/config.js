@@ -15,17 +15,6 @@ export default {
     fileVersion: process.env.ELASTICSEARCH_FILE_VERSION,
     datapointVersion: process.env.ELASTICSEARCH_DATAPOINT_VERSION
   },
-  // TODO: hardcode into config. Move to database after confirm idea
-  services: [
-    {
-      app: 'webapp',
-      secret: 'kh8i9MnwxUKrDYA37akVsa7ainA8jf7LqeZHYGuSnFsQdgk72dxga6osgNBjC6s24pFAPoSw2Ku8bCrwVyp3dLdiVc'
-    },
-    {
-      app: 'job-loop',
-      secret: 'xfq6SYnZV2Pm45bidKpiXr2E2UkSi6WoUt7JXVyjq4GUFc6JhZJmSxAAcKaPm3CddebE9n49REA9oBGEgXBVMSjFmr'
-    },
-  ],
   apps: {
     WEBAPP: 'webapp',
     JOB_LOOP: 'job-loop',
