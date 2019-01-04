@@ -1,3 +1,4 @@
+import escape from 'escape-string-regexp'
 import elasticsearch from 'infrastructure/elasticsearch'
 
 const searchAllObjects = async (projectIdentifier, type, params, pageSize = 10) => {
