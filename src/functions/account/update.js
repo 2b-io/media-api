@@ -1,4 +1,4 @@
-import { BAD_REQUEST, FORBIDDEN, NOT_FOUND, OK } from 'http-status-codes'
+import { FORBIDDEN, NOT_FOUND, OK } from 'http-status-codes'
 import joi from 'joi'
 
 import resource from 'rest/resource'
