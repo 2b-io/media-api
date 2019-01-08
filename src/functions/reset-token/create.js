@@ -3,8 +3,16 @@ import { BAD_REQUEST, CREATED, FORBIDDEN } from 'http-status-codes'
 import resource from 'rest/resource'
 import resetTokenService from 'services/reset-token'
 import sendEmailService from 'services/send-email'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
-export default resource('RESET_TOKEN')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('RESET_TOKEN')(
   async (req) => {
     const { email } = JSON.parse(req.body) || {}
 
@@ -29,4 +37,4 @@ export default resource('RESET_TOKEN')(
       resource: resetToken
     }
   }
-)
+))

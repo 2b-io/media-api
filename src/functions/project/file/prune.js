@@ -3,13 +3,21 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import projectService from 'services/project'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   lastSynchronized: joi.string().isoDate().required(),
   maxKeys: joi.number().min(0)
 })
 
-export default resource('DELETE_FILES')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('DELETE_FILES')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
     // TODO: Authorization
@@ -32,4 +40,4 @@ export default resource('DELETE_FILES')(
       resource: result
     }
   }
-)
+))

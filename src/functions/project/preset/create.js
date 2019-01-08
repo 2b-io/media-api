@@ -3,6 +3,8 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import projectService from 'services/project'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   contentType: joi.any().valid([
@@ -13,7 +15,13 @@ const SCHEMA = joi.object().keys({
   ]).required()
 })
 
-export default resource('PRESET')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('PRESET')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
     const body = JSON.parse(req.body)
@@ -33,4 +41,4 @@ export default resource('PRESET')(
       resource: preset
     }
   }
-)
+))

@@ -77,3 +77,10 @@ export { default as JOB___snapshot } from './functions/job/snapshot'
 export { default as JOB___recovery } from './functions/job/recovery'
 
 /* ====================================================================================================== */
+
+export { default as SECRET__KEY___create } from './functions/secret-key/create'
+export { default as SECRET__KEY___list } from './functions/secret-key/list'
+export { default as SECRET__KEY___get } from './functions/secret-key/get'
+export { default as SECRET__KEY___delete } from './functions/secret-key/delete'
+
+/* ====================================================================================================== */

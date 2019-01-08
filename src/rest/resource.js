@@ -8,57 +8,14 @@ import serializeError from 'serialize-error'
 
 import accountService from 'services/account'
 import * as transformers from 'transformers'
+import { normalizeHttpHeaders, parseAuthorizationHeader } from 'utils/header'
 
-const normalizeHttpHeaders = (headers) => Object.entries(headers).reduce(
-  (headers, [ name, value ]) => ({
-    ...headers,
-    [ name.toLocaleLowerCase() ]: value
-  }),
-  {}
-)
-
-const parseAuthorizationHeader = (value) => {
-  const [ type, params ] = value.split(' ')
-
-  return {
-    type,
-    ...(
-      params.split(',').reduce(
-        (map, pair) => {
-          const [ name, value ] = pair.split('=')
-
-          return {
-            ...map,
-            [ name ]: value
-          }
-        }, {}
-      )
-    )
-  }
-}
-
-const authorize = async (req) => {
+const getSession = async (req) => {
   const { authorization } = normalizeHttpHeaders(req.headers)
-
-  if (!authorization) {
-    throw {
-      statusCode: UNAUTHORIZED
-    }
-  }
-
   const {
-    type,
     app,
-    account: accountIdentifier
+    account: accountIdentifier,
   } = parseAuthorizationHeader(authorization)
-
-  if (type !== 'MEDIA_CDN') {
-    throw {
-      statusCode: UNAUTHORIZED
-    }
-  }
-
-  // TODO: verify app
 
   const account = accountIdentifier ?
     await accountService.get(accountIdentifier) :
@@ -89,7 +46,7 @@ export default (resourceType) => (logic) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     try {
-      const session = await authorize(req)
+      const session = await getSession(req)
 
       const {
         resource,

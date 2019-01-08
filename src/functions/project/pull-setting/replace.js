@@ -3,6 +3,8 @@ import joi from 'joi'
 
 import resource from 'rest/resource'
 import pullSettingService from 'services/pull-setting'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   pullUrl: joi.string().allow('').trim(),
@@ -17,7 +19,13 @@ const SCHEMA = joi.object().keys({
   )
 })
 
-export default resource('PULL_SETTING')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('PULL_SETTING')(
   async (req) => {
     const { projectIdentifier } = req.pathParameters
     const body = JSON.parse(req.body)
@@ -37,4 +45,4 @@ export default resource('PULL_SETTING')(
       resource: pullSetting
     }
   }
-)
+))

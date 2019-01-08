@@ -5,6 +5,8 @@ import resource from 'rest/resource'
 import accountService from 'services/account'
 import collaboratorService from 'services/collaborator'
 import sendEmailService from 'services/send-email'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   emails: joi.array().items(
@@ -13,7 +15,13 @@ const SCHEMA = joi.object().keys({
   message: joi.string().trim()
 })
 
-export default resource('COLLABORATOR')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('COLLABORATOR')(
   async (req, session) => {
     const { projectIdentifier } = req.pathParameters
     const { account: inviterAccount } = session
@@ -47,4 +55,4 @@ export default resource('COLLABORATOR')(
       resource: collaborators
     }
   }
-)
+))

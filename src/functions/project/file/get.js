@@ -2,10 +2,18 @@ import { OK, NOT_FOUND } from 'http-status-codes'
 
 import resource from 'rest/resource'
 import projectService from 'services/project'
+import authorize from 'middlewares/authorize'
+import config from 'infrastructure/config'
 
 import head from './head'
 
-export default resource('FILE')(
+export default authorize([
+  config.apps.WEBAPP,
+  config.apps.JOB_LOOP,
+  config.apps.CDN,
+  config.apps.S3_SYNC,
+  config.apps.ADMINAPP,
+])(resource('FILE')(
   async (req) => {
     if (req.httpMethod === 'HEAD') {
       return await head.logic(req)
@@ -29,4 +37,4 @@ export default resource('FILE')(
       resource: file
     }
   }
-)
+))

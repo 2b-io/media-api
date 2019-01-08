@@ -1,6 +1,7 @@
-import { NOT_IMPLEMENTED } from 'http-status-codes'
+import { OK } from 'http-status-codes'
 
 import resource from 'rest/resource'
+import secretKeyService from 'services/secret-key'
 import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
@@ -10,10 +11,13 @@ export default authorize([
   config.apps.CDN,
   config.apps.S3_SYNC,
   config.apps.ADMINAPP,
-])(resource(
+])(resource('SECRET_KEY')(
   async (req) => {
+    const secretKeys = await secretKeyService.list({})
+
     return {
-      statusCode: NOT_IMPLEMENTED
+      statusCode: OK,
+      resource: secretKeys
     }
   }
 ))

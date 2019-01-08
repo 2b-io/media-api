@@ -1,7 +1,7 @@
-import { NOT_FOUND, OK } from 'http-status-codes'
+import { NO_CONTENT, FORBIDDEN } from 'http-status-codes'
 
 import resource from 'rest/resource'
-import resetTokenService from 'services/reset-token'
+import secretKeyService from 'services/secret-key'
 import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
@@ -11,21 +11,19 @@ export default authorize([
   config.apps.CDN,
   config.apps.S3_SYNC,
   config.apps.ADMINAPP,
-])(resource('RESET_TOKEN')(
+])(resource('SECRET_KEY')(
   async (req) => {
-    const { token } = req.pathParameters
+    const { key } = req.pathParameters
+    const secretKey = await secretKeyService.remove(key)
 
-    const resetToken = await resetTokenService.get(token)
-
-    if (!resetToken) {
+    if (!secretKey) {
       return {
-        statusCode: NOT_FOUND
+        statusCode: FORBIDDEN
       }
     }
 
     return {
-      statusCode: OK,
-      resource: resetToken
+      statusCode: NO_CONTENT
     }
   }
 ))

@@ -1,7 +1,7 @@
-import { OK } from 'http-status-codes'
+import { OK, NOT_FOUND } from 'http-status-codes'
 
 import resource from 'rest/resource'
-import accountService from 'services/account'
+import secretKeyService from 'services/secret-key'
 import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
@@ -11,20 +11,20 @@ export default authorize([
   config.apps.CDN,
   config.apps.S3_SYNC,
   config.apps.ADMINAPP,
-])(resource('ACCOUNT')(
+])(resource('SECRET_KEY')(
   async (req) => {
-    const params = req.queryStringParameters || {}
-    const accounts = await accountService.list(params)
+    const { key } = req.pathParameters
+    const secretKey = await secretKeyService.get(key)
 
-    if (!accounts) {
-      throw {
+    if (!secretKey) {
+      return {
         statusCode: NOT_FOUND
       }
     }
 
     return {
       statusCode: OK,
-      resource: accounts
+      resource: secretKey
     }
   }
 ))
