@@ -22,7 +22,8 @@ const schema = mongoose.Schema({
     default: false
   }
 }, {
+  collection: 'secretKeys',
   timestamps: true
 })
 
-export default () => register('secretKeys', schema)
+export default () => register('SecretKeys', schema)

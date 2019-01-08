@@ -13,10 +13,6 @@ const SCHEMA = joi.object().keys({
 
 export default authorize([
   config.apps.WEBAPP,
-  config.apps.JOB_LOOP,
-  config.apps.CDN,
-  config.apps.S3_SYNC,
-  config.apps.ADMINAPP,
 ])(resource('ACCOUNT')(
   async (req) => {
     const body = JSON.parse(req.body)
