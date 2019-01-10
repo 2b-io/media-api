@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   media-api:
     build: .
@@ -50,4 +50,5 @@ services:
 
 networks:
   api:
+    name: api
     driver: bridge
