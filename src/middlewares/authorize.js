@@ -42,7 +42,7 @@ const auth = (allowApps) => {
         }
       }
     },
-    onError: async (handler, next) => {
+    onError: async (handler) => {
       handler.response = {
         statusCode: handler.error.statusCode,
         body: JSON.stringify({
