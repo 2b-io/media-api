@@ -16,6 +16,8 @@ const connect = async () => {
     console.log('Connecting to MongoDB...')
 
     connection = await mongoose.createConnection(config.mongo.uri, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
       // Buffering means mongoose will queue up operations if it gets
       // disconnected from MongoDB and send them when it reconnects.
       // With serverless, better to fail fast if not connected.

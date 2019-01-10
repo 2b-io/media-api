@@ -1,25 +1,26 @@
 import config from 'infrastructure/config'
-import { send, get } from 'infrastructure/rabbitmq'
+import { close, get, send } from 'infrastructure/rabbitmq'
 import createJobModel from 'models/job'
 
 const create = async (job, meta) => {
-  console.log('SEND_JOB', job, meta)
+  console.log('Send Job...')
 
   await send(job, meta)
+
+  await close()
 
   return job
 }
 
 const snapshot = async ({ maxJobs }) => {
   const Job = await createJobModel()
-  console.log('SNAPSHOT_JOBS')
+
+  console.log('Create Job Snapshot...')
 
   let job = {}
   let counterJob = 0
 
   while ((counterJob < maxJobs) && (job = await get())) {
-    console.log('SNAPSHOT', job)
-
     await new Job({
       ...job
     }).save()
@@ -27,7 +28,9 @@ const snapshot = async ({ maxJobs }) => {
     counterJob++
   }
 
-  console.log('SNAPSHOT_JOBS_DONE')
+  await close()
+
+  console.log('Create Job Snapshot... done')
 
   return {
     hits: counterJob
@@ -35,7 +38,7 @@ const snapshot = async ({ maxJobs }) => {
 }
 
 const recovery = async ({ maxJobs }) => {
-  console.log('RECOVERY_JOBS')
+  console.log('Create Job Recovery...')
 
   const Job = await createJobModel()
 
@@ -51,7 +54,9 @@ const recovery = async ({ maxJobs }) => {
     })
   )
 
-  console.log('RECOVERY_JOBS_DONE')
+  await close()
+
+  console.log('Create Job Recovery... done')
 
   return {
     hits: jobs.length
@@ -60,6 +65,6 @@ const recovery = async ({ maxJobs }) => {
 
 export default {
   create,
-  snapshot,
-  recovery
+  recovery,
+  snapshot
 }

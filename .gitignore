@@ -61,5 +61,5 @@ typings/
 .next
 /.serverless
 /.webpack
-/aws-undeploy.*.sh
-/aws-deploy.*.sh
+/aws*
+/data

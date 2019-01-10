@@ -1,5 +1,4 @@
 import amqp from 'amqplib'
-import ms from 'ms'
 import uuid from 'uuid'
 import config from 'infrastructure/config'
 
@@ -8,8 +7,6 @@ const state = {
   channel: null,
   queue: `${ config.rabbitmq.prefix }${ config.rabbitmq.queue }`
 }
-const ttl = ms(config.rabbitmq.ttl || '30s')
-let connectionExpiration = null
 
 const connect = async () => {
   if (state.connection === null) {
@@ -17,34 +14,18 @@ const connect = async () => {
 
     state.connection = await amqp.connect(config.rabbitmq.uri)
     state.channel = await state.connection.createConfirmChannel()
-    await state.channel.checkQueue(state.queue)
+    await state.channel.assertQueue(state.queue)
 
     console.log('RabbitMQ connected!')
   } else {
     console.log('Reuse alive RabbitMQ connection.')
   }
 
-  // reset expiration
-  clearTimeout(connectionExpiration)
-
-  connectionExpiration = setTimeout(() => {
-    console.log('RabbitMQ Connection expired!')
-
-    // close connection
-    state.connection.close()
-
-    // clear state
-    state.connection = null
-    state.channel = null
-  }, ttl)
-
   return state
 }
 
 export const send = async (msg, options = {}) => {
   const { connection, channel, queue } = await connect()
-
-  console.log('Sending message to RabbitMQ...')
 
   await new Promise((resolve, reject) => {
     channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)), {
@@ -61,8 +42,6 @@ export const send = async (msg, options = {}) => {
       resolve()
     })
   })
-
-  console.log('Send message done!')
 }
 
 export const get = async () => {
@@ -80,7 +59,25 @@ export const get = async () => {
 
   await channel.ack(msg)
 
-  return { content: messageContent, identifier: msg.properties.messageId }
+  return {
+    content: messageContent,
+    identifier: msg.properties.messageId
+  }
+}
+
+export const close = async () => {
+  console.log('Close RabbitMQ connection...')
+
+  try {
+    await state.channel.close()
+    await state.connection.close()
+  } catch (e) {
+  } finally {
+    state.channel = null
+    state.connection = null
+
+    console.log('Close RabbitMQ connection... done')
+  }
 }
 
 export default amqp
