@@ -32,14 +32,22 @@ const generateUniqueIdentifier = async (retry) => {
   return await generateUniqueIdentifier(retry - 1)
 }
 
-const create = async ({ name, provider, owner }) => {
+const create = async ({
+  domain,
+  owner,
+  name,
+  protocol,
+  provider
+}) => {
   const identifier = await generateUniqueIdentifier(10)
 
   const Project = await createProjectModel()
 
   const project = await new Project({
-    name,
+    domain,
     identifier,
+    name,
+    protocol,
     status: 'INITIALIZING'
   }).save()
 

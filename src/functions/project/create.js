@@ -8,6 +8,8 @@ import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   name: joi.string().max(50).trim().required(),
+  domain: joi.string().required(),
+  protocol: joi.string().required(),
   provider: joi.any().valid('cloudfront').required()
 })
 

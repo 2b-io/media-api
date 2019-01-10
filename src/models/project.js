@@ -1,6 +1,14 @@
 import mongoose, { register } from 'infrastructure/mongoose'
 
 const schema = mongoose.Schema({
+  domain: {
+    type: String,
+    required: true
+  },
+  protocol: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
