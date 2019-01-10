@@ -211,9 +211,6 @@ components:
     PullSetting:
       type: object
       properties:
-        pullUrl:
-          type: string
-          example: 'https://demo.com'
         allowedOrigins:
           type: array
           items:
@@ -598,6 +595,15 @@ paths:
                 provider:
                   type: string
                   example: cloudfront
+                domain:
+                  type: string
+                protocol:
+                  type: string
+              required:
+                - domain
+                - name
+                - provider
+                - protocol
       responses:
         '201':
           description: CREATED
