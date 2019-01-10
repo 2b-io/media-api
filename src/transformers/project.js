@@ -4,5 +4,7 @@ export default (project) => ({
   status: project.status,
   isActive: project.isActive,
   isDeleted: project.isDeleted,
-  createdAt: project.createdAt
+  createdAt: project.createdAt,
+  domain: project.domain,
+  protocol: project.protocol
 })

@@ -6,10 +6,13 @@ import projectService from 'services/project'
 import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
+//use url regex on this site: https://regexr.com/3au3g
+const DOMAIN_REGEX = /^(?:[a-z\d](?:[a-z\d-]{0,63}[a-z\d])?\.)+[a-z\d][a-z\d-]{0,63}[a-z\d]$/i
+
 const SCHEMA = joi.object().keys({
   name: joi.string().max(50).trim().required(),
-  domain: joi.string().required(),
-  protocol: joi.string().required(),
+  domain: joi.string().required().regex(DOMAIN_REGEX),
+  protocol: joi.string().valid([ 'http', 'https' ]).required(),
   provider: joi.any().valid('cloudfront').required()
 })
 

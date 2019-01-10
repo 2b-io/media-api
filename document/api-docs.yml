@@ -198,6 +198,10 @@ components:
         createdAt:
           type: string
           format: date-time
+        domain:
+          type: string
+        protocol:
+          type: boolean
     Preset:
       type: object
       properties:
