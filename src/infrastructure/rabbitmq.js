@@ -5,7 +5,11 @@ import config from 'infrastructure/config'
 const state = {
   connection: null,
   channel: null,
-  queue: `${ config.rabbitmq.prefix }${ config.rabbitmq.queue }`
+  queue: `${ config.rabbitmq.prefix }${ config.rabbitmq.queue }`,
+  deadLetter: {
+    exchange: `${ config.rabbitmq.prefix }${ config.rabbitmq.queue }.dead-letter`,
+    queue: `${ config.rabbitmq.prefix }${ config.rabbitmq.queue }.dead-letter`
+  }
 }
 
 const connect = async () => {
@@ -14,7 +18,20 @@ const connect = async () => {
 
     state.connection = await amqp.connect(config.rabbitmq.uri)
     state.channel = await state.connection.createConfirmChannel()
-    await state.channel.assertQueue(state.queue)
+
+    // dead-letter
+    await state.channel.assertExchange(state.deadLetter.exchange, 'fanout')
+    await state.channel.assertQueue(state.deadLetter.queue, {
+      durable: true
+    })
+    await state.channel.bindQueue(state.deadLetter.queue, state.deadLetter.exchange)
+
+    await state.channel.assertQueue(state.queue, {
+      durable: true,
+      arguments: {
+        'x-dead-letter-exchange': state.deadLetter.exchange
+      }
+    })
 
     console.log('RabbitMQ connected!')
   } else {

@@ -10,7 +10,9 @@ services:
     ports:
       - "3008:3008"
     networks:
-      - api
+      api:
+        aliases:
+          - media-api
 
   mongo:
     image: mongo:4
