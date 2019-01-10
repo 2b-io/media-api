@@ -10,10 +10,20 @@ services:
     ports:
       - "3008:3008"
     networks:
-      infra_cdn:
-        aliases:
-          - media-api
+      - api
+
+  mongo:
+    image: mongo:4
+    volumes:
+      - ./data/mongo:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - api
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
 
 networks:
-  infra_cdn:
-    external: true
+  api:
+    driver: bridge

@@ -63,3 +63,4 @@ typings/
 /.webpack
 /aws-undeploy.*.sh
 /aws-deploy.*.sh
+/data
