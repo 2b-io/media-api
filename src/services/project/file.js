@@ -6,6 +6,12 @@ const FILE_VERSION = config.elasticsearch.fileVersion
 const TYPE_NAME = `${ FILE_VERSION }-media`
 
 const list = async (projectIdentifier, params) => {
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
+
+  if (!existsIndex) {
+    return null
+  }
+
   const { pattern, preset, contentType } = params
 
   if (!projectIdentifier) {
@@ -29,6 +35,12 @@ const list = async (projectIdentifier, params) => {
 
 const get = async (projectIdentifier, fileIdentifier) => {
   if (!projectIdentifier || !fileIdentifier) {
+    return null
+  }
+
+  const existsIndex = await elasticsearchService.checkExistsIndex(projectIdentifier)
+
+  if (!existsIndex) {
     return null
   }
 
@@ -68,12 +80,19 @@ const replace = async (projectIdentifier, fileIdentifier, params) => {
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     fileIdentifier,
+    mapping,
     params
   )
 }
 
 const remove = async (projectIdentifier, fileIdentifier) => {
   if (!projectIdentifier || !fileIdentifier) {
+    return null
+  }
+
+  const existsIndex = await elasticsearchService.checkExistsIndex(projectIdentifier)
+
+  if (!existsIndex) {
     return null
   }
 
@@ -98,6 +117,12 @@ const head = async (projectIdentifier, fileIdentifier) => {
 
 const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
   if (!projectIdentifier || !lastSynchronized) {
+    return null
+  }
+
+  const existsIndex = await elasticsearchService.checkExistsIndex(projectIdentifier)
+
+  if (!existsIndex) {
     return null
   }
 
