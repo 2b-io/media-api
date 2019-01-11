@@ -7,6 +7,7 @@ import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
+  pullUrl: joi.string().allow('').trim(),
   allowedOrigins: joi.array().items(
     joi.string().trim()
   ),
