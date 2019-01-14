@@ -1,4 +1,5 @@
 import namor from 'namor'
+import uuid from 'uuid'
 
 import createProjectModel from 'models/project'
 
@@ -124,7 +125,15 @@ const remove = async (projectIdentifier) => {
     return null
   }
 
-  await invalidationService.create(project.identifier, 'BY_PROJECT')
+  await jobService.create({
+    name: 'CREATE_INVALIDATION',
+    when: Date.now(),
+    payload: {
+      projectIdentifier
+    }
+  }, {
+    messageId: uuid.v4()
+  })
 
   return await Project.findOneAndUpdate({
     _id: project._id
