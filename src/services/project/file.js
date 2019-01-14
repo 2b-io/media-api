@@ -9,7 +9,7 @@ const list = async (projectIdentifier, params) => {
   const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
 
   if (!existsIndex) {
-    return null
+    return []
   }
 
   const { pattern, preset, contentType } = params
@@ -38,7 +38,7 @@ const get = async (projectIdentifier, fileIdentifier) => {
     return null
   }
 
-  const existsIndex = await elasticsearchService.checkExistsIndex(projectIdentifier)
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
 
   if (!existsIndex) {
     return null
@@ -90,17 +90,34 @@ const remove = async (projectIdentifier, fileIdentifier) => {
     return null
   }
 
-  const existsIndex = await elasticsearchService.checkExistsIndex(projectIdentifier)
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
 
   if (!existsIndex) {
-    return null
+    return []
   }
 
-  return await elasticsearchService.remove(
+  const existsFile = await elasticsearchService.head(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     fileIdentifier
   )
+
+  if (!existsFile) {
+    return []
+  }
+
+  const { result } = await elasticsearchService.remove(
+    `${ FILE_VERSION }-${ projectIdentifier }`,
+    TYPE_NAME,
+    fileIdentifier
+  )
+
+  // check error not delete file
+  if (result !== 'deleted' ) {
+    return result
+  }
+
+  return []
 }
 
 const head = async (projectIdentifier, fileIdentifier) => {
@@ -120,10 +137,10 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
     return null
   }
 
-  const existsIndex = await elasticsearchService.checkExistsIndex(projectIdentifier)
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
 
   if (!existsIndex) {
-    return null
+    return []
   }
 
   const params = {
@@ -145,7 +162,7 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
   )
 
   if (!listFiles) {
-    return null
+    return []
   }
 
   const { deleted } = await elasticsearchService.removeWithParams(

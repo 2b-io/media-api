@@ -55,7 +55,7 @@ const create = async (index, type, id, mapping, params) => {
   })
 }
 
-const replace = async (index, type, id, , mapping, params) => {
+const replace = async (index, type, id, mapping, params) => {
   await createMapping(index, type, mapping)
 
   const { client } = await connect()
