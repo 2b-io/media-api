@@ -10,8 +10,8 @@ import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   emails: joi.array().items(
-    joi.string().trim().required()
-  ).required(),
+    joi.string().lowercase().email().required()
+  ).required().unique(),
   message: joi.string().trim()
 })
 
