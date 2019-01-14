@@ -33,7 +33,7 @@ export default authorize([
       message
     } = await joi.validate(body, SCHEMA)
 
-    //remove dupplicate email in list
+    // remove duplicate emails in list
     const emails = [ ...new Set(inputEmails) ]
 
     const accounts = await accountService.list({ email: { '$in': emails } })
@@ -53,7 +53,7 @@ export default authorize([
       }
     }
 
-    //Sent email to invite
+    // Sent email to invite
     await sendEmailService.invite(notExistedEmails, inviterAccount.name, inviterAccount.email, message)
 
     return {
