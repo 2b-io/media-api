@@ -6,7 +6,6 @@ import createProjectModel from 'models/project'
 import cacheSettingService from 'services/cache-setting'
 import collaboratorService from 'services/collaborator'
 import jobService from 'services/job'
-import invalidationService from 'services/invalidation'
 import infrastructureService from 'services/infrastructure'
 import pullSettingService from 'services/pull-setting'
 
