@@ -65,7 +65,7 @@ const create = async (projectIdentifier, fileIdentifier, params) => {
   )
 
   if (result !== 'created') {
-    return null
+    throw result
   }
 
   return params
@@ -76,13 +76,19 @@ const replace = async (projectIdentifier, fileIdentifier, params) => {
     return null
   }
 
-  return await elasticsearchService.replace(
+  const { result } = await elasticsearchService.replace(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     fileIdentifier,
     mapping,
     params
   )
+
+  if (result !== 'updated') {
+    throw result
+  }
+
+  return params
 }
 
 const remove = async (projectIdentifier, fileIdentifier) => {
@@ -93,7 +99,7 @@ const remove = async (projectIdentifier, fileIdentifier) => {
   const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
 
   if (!existsIndex) {
-    return []
+    return true
   }
 
   const existsFile = await elasticsearchService.head(
@@ -103,7 +109,7 @@ const remove = async (projectIdentifier, fileIdentifier) => {
   )
 
   if (!existsFile) {
-    return []
+    return true
   }
 
   const { result } = await elasticsearchService.remove(
@@ -114,10 +120,10 @@ const remove = async (projectIdentifier, fileIdentifier) => {
 
   // check error not delete file
   if (result !== 'deleted' ) {
-    return result
+    throw result
   }
 
-  return []
+  return true
 }
 
 const head = async (projectIdentifier, fileIdentifier) => {
@@ -140,7 +146,10 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
   const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
 
   if (!existsIndex) {
-    return []
+    return {
+      deleted: 0,
+      isTruncated: false
+    }
   }
 
   const params = {
@@ -162,7 +171,10 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
   )
 
   if (!listFiles) {
-    return []
+    return {
+      deleted: 0,
+      isTruncated: false
+    }
   }
 
   const { deleted } = await elasticsearchService.removeWithParams(

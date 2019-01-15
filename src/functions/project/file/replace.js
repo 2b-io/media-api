@@ -27,13 +27,13 @@ export default authorize([
     // TODO: Authorization
     const values = await joi.validate(body, SCHEMA)
 
-    const file = await projectService.file.replace(
+    const result = await projectService.file.replace(
       projectIdentifier,
       decodeURIComponent(fileIdentifier),
       values
     )
 
-    if (!file) {
+    if (!result) {
       throw {
         statusCode: FORBIDDEN
       }
@@ -41,7 +41,7 @@ export default authorize([
 
     return {
       statusCode: OK,
-      resource: file
+      resource: result
     }
   }
 ))
