@@ -21,5 +21,6 @@ export default {
     CDN: 'cdn',
     S3_SYNC: 's3-sync',
     ADMINAPP: 'adminapp'
-  }
+  },
+  pageSize: process.env.ELASTICSEARCH_PAGE_SIZE
 }

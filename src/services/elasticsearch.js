@@ -1,11 +1,12 @@
 import escape from 'escape-string-regexp'
 import elasticsearch from 'infrastructure/elasticsearch'
+import config from 'infrastructure/config'
 
 const checkExistsIndex = async (projectIdentifier) => {
   return await elasticsearch.checkExistsIndex(projectIdentifier)
 }
 
-const searchAllObjects = async (projectIdentifier, type, params, pageSize = 10) => {
+const searchAllObjects = async (projectIdentifier, type, params, pageSize = config.pageSize) => {
   let totalHits = 0
   let total = 0
   let sources = []
