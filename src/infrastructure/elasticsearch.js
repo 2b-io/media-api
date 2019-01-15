@@ -2,7 +2,6 @@ import elasticsearch from 'elasticsearch'
 
 import config from 'infrastructure/config'
 
-
 const state = {
   client: null
 }
@@ -21,9 +20,9 @@ const connect = async () => {
   return state
 }
 
-
 const createMapping = async (index, type, mapping) => {
   const { client } = await connect()
+
   const indexExists = await client.indices.exists({
     index
   })
@@ -56,7 +55,9 @@ const create = async (index, type, id, mapping, params) => {
   })
 }
 
-const replace = async (index, type, id, params) => {
+const replace = async (index, type, id, mapping, params) => {
+  await createMapping(index, type, mapping)
+
   const { client } = await connect()
 
   return await client.update({

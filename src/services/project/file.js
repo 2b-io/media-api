@@ -6,6 +6,12 @@ const FILE_VERSION = config.elasticsearch.fileVersion
 const TYPE_NAME = `${ FILE_VERSION }-media`
 
 const list = async (projectIdentifier, params) => {
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
+
+  if (!existsIndex) {
+    return []
+  }
+
   const { pattern, preset, contentType } = params
 
   if (!projectIdentifier) {
@@ -32,6 +38,12 @@ const get = async (projectIdentifier, fileIdentifier) => {
     return null
   }
 
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
+
+  if (!existsIndex) {
+    return null
+  }
+
   return await elasticsearchService.get(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
@@ -53,7 +65,7 @@ const create = async (projectIdentifier, fileIdentifier, params) => {
   )
 
   if (result !== 'created') {
-    return null
+    throw result
   }
 
   return params
@@ -64,12 +76,19 @@ const replace = async (projectIdentifier, fileIdentifier, params) => {
     return null
   }
 
-  return await elasticsearchService.replace(
+  const { result } = await elasticsearchService.replace(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     fileIdentifier,
+    mapping,
     params
   )
+
+  if (result !== 'updated') {
+    throw result
+  }
+
+  return params
 }
 
 const remove = async (projectIdentifier, fileIdentifier) => {
@@ -77,11 +96,34 @@ const remove = async (projectIdentifier, fileIdentifier) => {
     return null
   }
 
-  return await elasticsearchService.remove(
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
+
+  if (!existsIndex) {
+    return true
+  }
+
+  const existsFile = await elasticsearchService.head(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
     fileIdentifier
   )
+
+  if (!existsFile) {
+    return true
+  }
+
+  const { result } = await elasticsearchService.remove(
+    `${ FILE_VERSION }-${ projectIdentifier }`,
+    TYPE_NAME,
+    fileIdentifier
+  )
+
+  // check error not delete file
+  if (result !== 'deleted' ) {
+    throw result
+  }
+
+  return true
 }
 
 const head = async (projectIdentifier, fileIdentifier) => {
@@ -99,6 +141,15 @@ const head = async (projectIdentifier, fileIdentifier) => {
 const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
   if (!projectIdentifier || !lastSynchronized) {
     return null
+  }
+
+  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
+
+  if (!existsIndex) {
+    return {
+      deleted: 0,
+      isTruncated: false
+    }
   }
 
   const params = {
@@ -120,7 +171,10 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
   )
 
   if (!listFiles) {
-    return null
+    return {
+      deleted: 0,
+      isTruncated: false
+    }
   }
 
   const { deleted } = await elasticsearchService.removeWithParams(
