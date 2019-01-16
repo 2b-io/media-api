@@ -45,10 +45,14 @@ const recovery = async ({ maxJobs }) => {
   const jobs = await Job.find().limit(maxJobs).lean()
 
   await Promise.all(
-    jobs.map(({ content, identifier }) => {
-      create({ ...content }, { messageId: identifier })
+    jobs.map(async ({ content, identifier }) => {
+      await send({
+        ...content
+      }, {
+        messageId: identifier
+      })
 
-      return Job.deleteOne({
+      await Job.deleteOne({
         identifier
       })
     })

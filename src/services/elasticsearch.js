@@ -1,13 +1,12 @@
 import escape from 'escape-string-regexp'
 import elasticsearch from 'infrastructure/elasticsearch'
+import config from 'infrastructure/config'
 
-const searchAllObjects = async (projectIdentifier, type, params, pageSize = 10) => {
-  const projectExists = await elasticsearch.checkExistsIndex(projectIdentifier)
+const checkExistsIndex = async (projectIdentifier) => {
+  return await elasticsearch.checkExistsIndex(projectIdentifier)
+}
 
-  if (!projectExists) {
-    return []
-  }
-
+const searchAllObjects = async (projectIdentifier, type, params, pageSize = config.elasticsearch.pageSize) => {
   let totalHits = 0
   let total = 0
   let sources = []
@@ -47,8 +46,8 @@ const create = async (projectIdentifier, type, fileIdentifier, mapping, params) 
   return await elasticsearch.create(projectIdentifier, type, fileIdentifier, mapping, params)
 }
 
-const replace = async (projectIdentifier, type, fileIdentifier, params) => {
-  return await elasticsearch.replace(projectIdentifier, type, fileIdentifier, params)
+const replace = async (projectIdentifier, type, fileIdentifier, mapping,params) => {
+  return await elasticsearch.replace(projectIdentifier, type, fileIdentifier, mapping, params)
 }
 
 const get = async (projectIdentifier, type, fileIdentifier) => {
@@ -67,7 +66,7 @@ const remove = async (projectIdentifier, type, fileIdentifier) => {
   return await elasticsearch.remove(projectIdentifier, type, fileIdentifier)
 }
 
-const removeWithParams = async (projectIdentifier, type, params, size = 1000) => {
+const removeWithParams = async (projectIdentifier, type, params, size) => {
   return await elasticsearch.removeWithParams(projectIdentifier, type, params, size)
 }
 
@@ -138,6 +137,7 @@ const searchByContentType = async (projectIdentifier, type, contentType) => {
 
 export default {
   create,
+  checkExistsIndex,
   get,
   list,
   replace,

@@ -10,7 +10,7 @@ import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
   emails: joi.array().items(
-    joi.string().trim().required()
+    joi.string().lowercase().email().required()
   ).required(),
   message: joi.string().trim()
 })
@@ -28,7 +28,13 @@ export default authorize([
 
     const body = JSON.parse(req.body) || {}
     // TODO: Authorization
-    const { emails, message } = await joi.validate(body, SCHEMA)
+    const {
+      emails: inputEmails,
+      message
+    } = await joi.validate(body, SCHEMA)
+
+    // remove duplicate emails in list
+    const emails = [ ...new Set(inputEmails) ]
 
     const accounts = await accountService.list({ email: { '$in': emails } })
 
@@ -47,7 +53,7 @@ export default authorize([
       }
     }
 
-    //Sent email to invite
+    // Sent email to invite
     await sendEmailService.invite(notExistedEmails, inviterAccount.name, inviterAccount.email, message)
 
     return {

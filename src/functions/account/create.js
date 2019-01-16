@@ -8,7 +8,7 @@ import authorize from 'middlewares/authorize'
 import config from 'infrastructure/config'
 
 const SCHEMA = joi.object().keys({
-  email: joi.string().email().required()
+  email: joi.string().lowercase().email().required()
 })
 
 export default authorize([

@@ -2,12 +2,27 @@ import elasticsearch from 'elasticsearch'
 
 import config from 'infrastructure/config'
 
-const client = new elasticsearch.Client({
-  host: config.elasticsearch.host,
-  log: 'trace'
-})
+const state = {
+  client: null
+}
+
+const connect = async () => {
+  if (state.client === null) {
+    state.client = new elasticsearch.Client({
+      host: config.elasticsearch.host,
+      log: 'trace'
+    })
+    console.log('Elasticsearch connected!')
+  } else {
+    console.log('Reuse alive Elasticsearch connection.')
+  }
+
+  return state
+}
 
 const createMapping = async (index, type, mapping) => {
+  const { client } = await connect()
+
   const indexExists = await client.indices.exists({
     index
   })
@@ -30,6 +45,8 @@ const createMapping = async (index, type, mapping) => {
 const create = async (index, type, id, mapping, params) => {
   await createMapping(index, type, mapping)
 
+  const { client } = await connect()
+
   return await client.create({
     index,
     type,
@@ -38,7 +55,11 @@ const create = async (index, type, id, mapping, params) => {
   })
 }
 
-const replace = async (index, type, id, params) => {
+const replace = async (index, type, id, mapping, params) => {
+  await createMapping(index, type, mapping)
+
+  const { client } = await connect()
+
   return await client.update({
     index,
     type,
@@ -50,6 +71,8 @@ const replace = async (index, type, id, params) => {
 }
 
 const get = async (index, type, id) => {
+  const { client } = await connect()
+
   const object = await client.get({
     index,
     type,
@@ -60,6 +83,8 @@ const get = async (index, type, id) => {
 }
 
 const remove = async (index, type, id) => {
+  const { client } = await connect()
+
   return await client.delete({
     index,
     type,
@@ -68,6 +93,8 @@ const remove = async (index, type, id) => {
 }
 
 const removeWithParams = async (index, type, params, size) => {
+  const { client } = await connect()
+
   return await client.deleteByQuery({
     index,
     type,
@@ -81,6 +108,8 @@ const removeWithParams = async (index, type, params, size) => {
 }
 
 const searchWithParams = async (index, type, params, { from, size }) => {
+  const { client } = await connect()
+
   return await client.search({
     from,
     size,
@@ -95,6 +124,8 @@ const searchWithParams = async (index, type, params, { from, size }) => {
 }
 
 const searchWithoutParams = async (index, type, { from, size }) => {
+  const { client } = await connect()
+
   return await client.search({
     from,
     size,
@@ -104,11 +135,15 @@ const searchWithoutParams = async (index, type, { from, size }) => {
 }
 
 const checkExistsIndex = async (index) => {
+  const { client } = await connect()
+
   return await client.indices.exists({
    index
  })
 }
 const checkExistsObject = async (index, type, id) => {
+  const { client } = await connect()
+
   return await client.exists({
     index,
     type,

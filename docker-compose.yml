@@ -15,7 +15,7 @@ services:
           - media-api
 
   mongo:
-    image: mongo:4
+    image: mongo:3.6
     volumes:
       - ./data/mongo:/data/db
     ports:
