@@ -13,7 +13,8 @@ export default {
   elasticsearch: {
     host: process.env.ELASTICSEARCH_HOST,
     fileVersion: process.env.ELASTICSEARCH_FILE_VERSION,
-    datapointVersion: process.env.ELASTICSEARCH_DATAPOINT_VERSION
+    datapointVersion: process.env.ELASTICSEARCH_DATAPOINT_VERSION,
+    pageSize: process.env.ELASTICSEARCH_PAGE_SIZE
   },
   apps: {
     WEBAPP: 'webapp',
@@ -21,6 +22,5 @@ export default {
     CDN: 'cdn',
     S3_SYNC: 's3-sync',
     ADMINAPP: 'adminapp'
-  },
-  pageSize: process.env.ELASTICSEARCH_PAGE_SIZE
+  }
 }

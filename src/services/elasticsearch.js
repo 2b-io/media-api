@@ -6,7 +6,7 @@ const checkExistsIndex = async (projectIdentifier) => {
   return await elasticsearch.checkExistsIndex(projectIdentifier)
 }
 
-const searchAllObjects = async (projectIdentifier, type, params, pageSize = config.pageSize) => {
+const searchAllObjects = async (projectIdentifier, type, params, pageSize = config.elasticsearch.pageSize) => {
   let totalHits = 0
   let total = 0
   let sources = []
@@ -66,7 +66,7 @@ const remove = async (projectIdentifier, type, fileIdentifier) => {
   return await elasticsearch.remove(projectIdentifier, type, fileIdentifier)
 }
 
-const removeWithParams = async (projectIdentifier, type, params, size = 1000) => {
+const removeWithParams = async (projectIdentifier, type, params, size) => {
   return await elasticsearch.removeWithParams(projectIdentifier, type, params, size)
 }
 
