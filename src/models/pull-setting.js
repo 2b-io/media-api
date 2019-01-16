@@ -10,9 +10,6 @@ const schema = mongoose.Schema({
     name: String,
     value: String
   } ],
-  pullUrl: {
-    type: String
-  },
   allowedOrigins: [ String ]
 }, {
   collection: 'pullSettings',
