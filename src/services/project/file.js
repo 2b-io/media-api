@@ -6,6 +6,10 @@ const FILE_VERSION = config.elasticsearch.fileVersion
 const TYPE_NAME = `${ FILE_VERSION }-media`
 
 const list = async (projectIdentifier, params) => {
+  if (!projectIdentifier) {
+    return null
+  }
+
   const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
 
   if (!existsIndex) {
@@ -13,10 +17,6 @@ const list = async (projectIdentifier, params) => {
   }
 
   const { pattern, preset, contentType } = params
-
-  if (!projectIdentifier) {
-    return null
-  }
 
   if (preset) {
     return await elasticsearchService.searchByPresetHash(`${ FILE_VERSION }-${ projectIdentifier }`, TYPE_NAME, preset)
