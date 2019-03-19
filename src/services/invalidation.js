@@ -2,10 +2,15 @@ import uuid from 'uuid'
 
 import createInvalidationModel from 'models/invalidation'
 import jobService from 'services/job'
-import projectService from 'services/project'
+import createProjectModel from 'models/project'
 
 const create = async (projectIdentifier, { patterns = [] }) => {
-  const project = await projectService.get(projectIdentifier)
+  const Project = await createProjectModel()
+
+  const project = await Project.findOne({
+    identifier: projectIdentifier,
+    isDeleted: false
+  })
 
   if (!project) {
     return null
@@ -36,22 +41,35 @@ const create = async (projectIdentifier, { patterns = [] }) => {
 }
 
 const get = async (projectIdentifier, invalidationIdentifier) => {
-  const project = await projectService.get(projectIdentifier)
+  const Project = await createProjectModel()
+
+  const project = await Project.findOne({
+    identifier: projectIdentifier,
+    isDeleted: false
+  })
 
   if (!project) {
     return null
   }
 
   const Invalidation = await createInvalidationModel()
-
-  return await Invalidation.findOne({
+  console.log('invalidationIdentifier', invalidationIdentifier)
+  console.log('project._id', project._id)
+  const invalidation = await Invalidation.findOne({
     identifier: invalidationIdentifier,
     project: project._id
   })
+  console.log('invalidation', invalidation)
+  return invalidation
 }
 
 const list = async (projectIdentifier, condition = {}) => {
-  const project = await projectService.get(projectIdentifier)
+  const Project = await createProjectModel()
+
+  const project = await Project.findOne({
+    identifier: projectIdentifier,
+    isDeleted: false
+  })
 
   if (!project) {
     return null
@@ -66,7 +84,12 @@ const list = async (projectIdentifier, condition = {}) => {
 }
 
 const update = async (projectIdentifier, invalidationIdentifier, data) => {
-  const project = await projectService.get(projectIdentifier)
+  const Project = await createProjectModel()
+
+  const project = await Project.findOne({
+    identifier: projectIdentifier,
+    isDeleted: false
+  })
 
   if (!project) {
     return null
