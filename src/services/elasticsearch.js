@@ -129,7 +129,22 @@ const searchByContentType = async (projectIdentifier, type, contentType) => {
   const allObjects = await searchAllObjects(
     projectIdentifier,
     type,
-    { term: { contentType }, term: { isOrigin: false } }
+    {
+      bool: {
+        must: [
+          {
+            wildcard: {
+              contentType
+            },
+          },
+          {
+            term: {
+              isOrigin: false
+            }
+          }
+        ]
+      }
+    }
   )
 
   return allObjects || []
