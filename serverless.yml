@@ -221,6 +221,13 @@ functions:
           path: /projects/{projectIdentifier}/metrics/{metricName}/datapoints
           method: patch
 
+  PROJECT__METRIC__DATAPOINT___head:
+    handler: src/handler.PROJECT__METRIC__DATAPOINT___head
+    events:
+      - http:
+          path: /projects/{projectIdentifier}/metrics/{metricName}/datapoints/{timestamp}
+          method: head
+
   # PROJECT > METRIC --- END
 
   # PROJECT > RULE

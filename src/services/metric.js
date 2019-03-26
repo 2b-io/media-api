@@ -56,41 +56,38 @@ const formatResponseData = (metricData, { startTime, endTime, period }) => {
   return datapoints
 }
 
+const head = async (projectIdentifier, metricName, timestamp) => {
+  return await elasticsearchService.head(
+    `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
+    metricName,
+    timestamp
+  )
+}
+
 const update = async (projectIdentifier, metricName, data) => {
   if (!projectIdentifier || !metricName) {
     return null
   }
 
-  const result = await data.reduce(
-    async (previousJob, { timestamp, value }) => {
-      await previousJob
-
-      const checkExistsData = await elasticsearchService.head(
+  const result = await data.map(async ({ timestamp, value, isUpdate }) => {
+    if (isUpdate) {
+      return await elasticsearchService.replace(
         `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
         metricName,
-        timestamp
+        timestamp,
+        mapping,
+        { timestamp: new Date(timestamp), value }
       )
-
-      if (checkExistsData) {
-        return await elasticsearchService.replace(
-          `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
-          metricName,
-          timestamp,
-          mapping,
-          { timestamp: new Date(timestamp), value }
-        )
-      } else {
-        return await elasticsearchService.create(
-          `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
-          metricName,
-          timestamp,
-          mapping,
-          { timestamp: new Date(timestamp), value }
-        )
-      }
-
-    }, Promise.resolve()
-  )
+    } else {
+      return await elasticsearchService.create(
+        `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
+        metricName,
+        timestamp,
+        mapping,
+        { timestamp: new Date(timestamp), value }
+      )
+    }
+  })
 
   if (!result) {
     return null
@@ -124,5 +121,6 @@ const get = async (projectIdentifier, metricName, data) => {
 
 export default {
   get,
-  update
+  update,
+  head
 }

@@ -9,7 +9,8 @@ import config from 'infrastructure/config'
 const SCHEMA = joi.array().items(
   joi.object().keys({
     timestamp: joi.string().isoDate().required(),
-    value: joi.number().required()
+    value: joi.number().required(),
+    isUpdate: joi.boolean()
   })
 )
 
