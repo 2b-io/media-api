@@ -9,7 +9,9 @@ import config from 'infrastructure/config'
 const SCHEMA = joi.object().keys({
   startTime: joi.string().isoDate().required(),
   endTime: joi.string().isoDate().required(),
-  period: joi.number().multiple(60).required()
+  period: joi.number().multiple(60).required(),
+  from: joi.number().min(0),
+  size: joi.number().min(0)
 })
 
 export default authorize([
