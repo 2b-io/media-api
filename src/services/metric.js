@@ -60,31 +60,36 @@ const update = async (projectIdentifier, metricName, data) => {
   if (!projectIdentifier || !metricName) {
     return null
   }
-  const result = await Promise.all(
-    data.map(async ({ timestamp, value }) => {
-       const checkExistsData = await elasticsearchService.head(
-         `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
-         metricName,
-         timestamp
-       )
 
-       if (checkExistsData) {
-         return await elasticsearchService.replace(
-           `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
-           metricName,
-           timestamp,
-           { timestamp: new Date(timestamp), value }
-         )
-       }
+  const result = await data.reduce(
+    async (previousJob, { timestamp, value }) => {
+      await previousJob
 
-       return await elasticsearchService.create(
-         `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
-         metricName,
-         timestamp,
-         mapping,
-         { timestamp: new Date(timestamp), value }
-       )
-     })
+      const checkExistsData = await elasticsearchService.head(
+        `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
+        metricName,
+        timestamp
+      )
+
+      if (checkExistsData) {
+        return await elasticsearchService.replace(
+          `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
+          metricName,
+          timestamp,
+          mapping,
+          { timestamp: new Date(timestamp), value }
+        )
+      } else {
+        return await elasticsearchService.create(
+          `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
+          metricName,
+          timestamp,
+          mapping,
+          { timestamp: new Date(timestamp), value }
+        )
+      }
+
+    }, Promise.resolve()
   )
 
   if (!result) {

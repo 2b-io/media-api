@@ -46,7 +46,7 @@ const create = async (projectIdentifier, type, fileIdentifier, mapping, params) 
   return await elasticsearch.create(projectIdentifier, type, fileIdentifier, mapping, params)
 }
 
-const replace = async (projectIdentifier, type, fileIdentifier, mapping,params) => {
+const replace = async (projectIdentifier, type, fileIdentifier, mapping, params) => {
   return await elasticsearch.replace(projectIdentifier, type, fileIdentifier, mapping, params)
 }
 
