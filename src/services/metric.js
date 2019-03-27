@@ -69,24 +69,14 @@ const update = async (projectIdentifier, metricName, data) => {
     return null
   }
 
-  const result = await data.map(async ({ timestamp, value, isUpdate }) => {
-    if (isUpdate) {
-      return await elasticsearchService.replace(
-        `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
-        metricName,
-        timestamp,
-        mapping,
-        { timestamp: new Date(timestamp), value }
-      )
-    } else {
-      return await elasticsearchService.create(
-        `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
-        metricName,
-        timestamp,
-        mapping,
-        { timestamp: new Date(timestamp), value }
-      )
-    }
+  const result = await data.map(async ({ timestamp, value }) => {
+    return await elasticsearchService.create(
+      `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
+      metricName,
+      timestamp,
+      mapping,
+      { timestamp: new Date(timestamp), value }
+    )
   })
 
   if (!result) {
