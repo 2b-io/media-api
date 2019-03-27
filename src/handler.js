@@ -48,6 +48,7 @@ export { default as PROJECT__INVALIDATION___update } from './functions/project/i
 
 export { default as PROJECT__METRIC__DATAPOINT___list } from './functions/project/metric/datapoint/list'
 export { default as PROJECT__METRIC__DATAPOINT___update } from './functions/project/metric/datapoint/update'
+export { default as PROJECT__METRIC__DATAPOINT___head } from './functions/project/metric/datapoint/head'
 
 export { default as PROJECT__PRESET___create } from './functions/project/preset/create'
 export { default as PROJECT__PRESET___delete } from './functions/project/preset/delete'
