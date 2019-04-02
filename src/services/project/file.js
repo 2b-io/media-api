@@ -1,4 +1,5 @@
 import elasticsearchService from 'services/elasticsearch'
+import elasticsearchInfra from 'infrastructure/elasticsearch'
 import config from 'infrastructure/config'
 import mapping from 'mapping/file'
 
@@ -16,7 +17,7 @@ const list = async (projectIdentifier, params) => {
     return []
   }
 
-  const { pattern, preset, contentType } = params
+  const { pattern, preset, contentType, lastSynchronized, from, size } = params
 
   if (preset) {
     return await elasticsearchService.searchByPresetHash(`${ FILE_VERSION }-${ projectIdentifier }`, TYPE_NAME, preset)
@@ -28,6 +29,15 @@ const list = async (projectIdentifier, params) => {
 
   if (pattern) {
     return await elasticsearchService.searchByPattern(`${ FILE_VERSION }-${ projectIdentifier }`, TYPE_NAME, pattern)
+  }
+
+  if (lastSynchronized) {
+    return await elasticsearchService.searchByLastSynchronized(
+      `${ FILE_VERSION }-${ projectIdentifier }`,
+      TYPE_NAME,
+      lastSynchronized,
+      { from, size }
+    )
   }
 
   return await elasticsearchService.searchByProject(`${ FILE_VERSION }-${ projectIdentifier }`, TYPE_NAME)
@@ -143,15 +153,6 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
     return null
   }
 
-  const existsIndex = await elasticsearchService.checkExistsIndex(`${ FILE_VERSION }-${ projectIdentifier }`)
-
-  if (!existsIndex) {
-    return {
-      deleted: 0,
-      isTruncated: false
-    }
-  }
-
   const params = {
     bool: {
       must: [ {
@@ -164,19 +165,6 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
     }
   }
 
-  const listFiles = await elasticsearchService.searchAllObjects(
-    `${ FILE_VERSION }-${ projectIdentifier }`,
-    TYPE_NAME,
-    params
-  )
-
-  if (!listFiles) {
-    return {
-      deleted: 0,
-      isTruncated: false
-    }
-  }
-
   const { deleted } = await elasticsearchService.removeWithParams(
     `${ FILE_VERSION }-${ projectIdentifier }`,
     TYPE_NAME,
@@ -184,11 +172,8 @@ const prune = async (projectIdentifier, { lastSynchronized, maxKeys }) => {
     maxKeys
   )
 
-  const isTruncated = listFiles.length !== deleted
-
   return {
-    deleted,
-    isTruncated
+    deleted
   }
 }
 

@@ -15,7 +15,12 @@ const SCHEMA = joi.alternatives().try([
   }),
   joi.object().keys({
     contentType: joi.string().trim()
-  })
+  }),
+  joi.object().keys({
+    lastSynchronized: joi.string().isoDate().required(),
+    from: joi.number().min(0),
+    size: joi.number().min(0).max(500)
+  }),
 ])
 
 export default authorize([

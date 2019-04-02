@@ -150,6 +150,31 @@ const searchByContentType = async (projectIdentifier, type, contentType) => {
   return allObjects || []
 }
 
+const searchByLastSynchronized = async (projectIdentifier, type, lastSynchronized, { from, size }) => {
+  const params = {
+    bool: {
+      must: [ {
+        range: {
+          lastSynchronized: {
+            lt: lastSynchronized
+          }
+        }
+      } ]
+    }
+  }
+
+  const files = await elasticsearch.searchWithParams(
+    projectIdentifier,
+    type,
+    params,
+    { from, size }
+  )
+
+  console.log('files', files)
+
+  return files
+}
+
 export default {
   create,
   checkExistsIndex,
@@ -161,6 +186,7 @@ export default {
   removeWithParams,
   searchAllObjects,
   searchByContentType,
+  searchByLastSynchronized,
   searchByProject,
   searchByPattern,
   searchByPresetHash
