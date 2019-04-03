@@ -56,7 +56,6 @@ const get = async (projectIdentifier, metricName, data) => {
             }
           }
         }
-
       },
     {
       from,
