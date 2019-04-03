@@ -156,21 +156,25 @@ const searchByLastSynchronized = async (projectIdentifier, type, lastSynchronize
       must: [ {
         range: {
           lastSynchronized: {
-            lt: lastSynchronized
+            lt: Date.parse(lastSynchronized)
           }
         }
       } ]
     }
   }
 
-  const files = await elasticsearch.searchWithParams(
+  const { hits } = await elasticsearch.searchWithParams(
     projectIdentifier,
     type,
     params,
     { from, size }
   )
 
-  console.log('files', files)
+  if (!hits.hits.length) {
+    return []
+  }
+
+  const files = hits.hits.map(({ _source }) => _source)
 
   return files
 }
