@@ -24,7 +24,7 @@ const update = async (projectIdentifier, metricName, data) => {
       metricName,
       timestamp,
       mapping,
-      { timestamp: new Date(timestamp), value }
+      { timestamp, value }
     )
   })
 
