@@ -45,14 +45,18 @@ const get = async (projectIdentifier, metricName, data) => {
   const { hits } = await elasticsearchInfra.searchWithParams(
     `${ DATAPOINT_VERSION }-${ projectIdentifier }-${ metricName }`,
     metricName,
-    {
-      range: {
-        timestamp: {
-          gte: startTime,
-          lte: endTime
+      {
+        bool: {
+          must: {
+            range: {
+              timestamp: {
+                gte: Date.parse(startTime),
+                lte: Date.parse(endTime)
+              }
+            }
+          }
         }
-      }
-    },
+      },
     {
       from,
       size
