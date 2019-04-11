@@ -1,6 +1,7 @@
 import config from 'infrastructure/config'
 import { close, get, send } from 'infrastructure/rabbitmq'
 import createJobModel from 'models/job'
+import createJobLogsModel from 'models/job-logs'
 
 const create = async (job, meta) => {
   console.log('Send Job...')
@@ -67,8 +68,19 @@ const recovery = async ({ maxJobs }) => {
   }
 }
 
+const logs = async (dataLog) => {
+  console.log('Create Job logs...')
+
+  const JobLogs = await createJobLogsModel()
+
+  return await new JobLogs({
+    ...dataLog
+  }).save()
+
+}
 export default {
   create,
   recovery,
-  snapshot
+  snapshot,
+  logs
 }

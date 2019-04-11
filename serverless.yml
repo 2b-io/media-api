@@ -431,6 +431,13 @@ functions:
           path: /jobs
           method: post
 
+  JOB___logs:
+    handler: src/handler.JOB___logs
+    events:
+      - http:
+          path: /jobs/logs
+          method: post
+
   JOB___snapshot:
     handler: src/handler.JOB___snapshot
     events:
