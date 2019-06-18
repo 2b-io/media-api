@@ -451,6 +451,12 @@ functions:
       - http:
           path: /jobs/recovery
           method: post
+  JOB___dead:
+    handler: src/handler.JOB___dead
+    events:
+      - http:
+          path: /jobs/dead
+          method: post
   # JOB --- END
 
   # SECRET_KEY

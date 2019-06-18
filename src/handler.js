@@ -75,6 +75,7 @@ export { default as RESET_TOKEN___get } from './functions/reset-token/get'
 
 export { default as JOB___create } from './functions/job/create'
 export { default as JOB___logs } from './functions/job/logs'
+export { default as JOB___dead } from './functions/job/dead'
 export { default as JOB___snapshot } from './functions/job/snapshot'
 export { default as JOB___recovery } from './functions/job/recovery'
 

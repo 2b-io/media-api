@@ -82,6 +82,27 @@ export const get = async () => {
   }
 }
 
+export const getDeadMessage = async () => {
+  const { connection, channel, deadLetter, queue } = await connect()
+
+  const msg = await channel.get(deadLetter.queue, {
+    noAck: false
+  })
+
+  if (!msg) {
+    return null
+  }
+
+  const messageContent = JSON.parse(msg.content.toString())
+
+  await channel.ack(msg)
+
+  return {
+    content: messageContent,
+    identifier: uuid.v4()
+  }
+}
+
 export const close = async () => {
   console.log('Close RabbitMQ connection...')
 

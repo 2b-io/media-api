@@ -1,6 +1,7 @@
 import config from 'infrastructure/config'
-import { close, get, send } from 'infrastructure/rabbitmq'
+import { close, get, send, getDeadMessage } from 'infrastructure/rabbitmq'
 import createJobModel from 'models/job'
+import createJobDeadModel from 'models/job-dead'
 import createJobLogsModel from 'models/job-logs'
 
 const create = async (job, meta) => {
@@ -32,6 +33,31 @@ const snapshot = async ({ maxJobs }) => {
   await close()
 
   console.log('Create Job Snapshot... done')
+
+  return {
+    hits: counterJob
+  }
+}
+
+const snapshotDeadMessage = async ({ maxJobs }) => {
+  const JobDead = await createJobDeadModel()
+
+  console.log('Create Job Dead Snapshot...')
+
+  let job = {}
+  let counterJob = 0
+
+  while ((counterJob < maxJobs) && (job = await getDeadMessage())) {
+    await new JobDead({
+      ...job
+    }).save()
+
+    counterJob++
+  }
+
+  await close()
+
+  console.log('Create Job Dead Snapshot... done')
 
   return {
     hits: counterJob
@@ -82,5 +108,6 @@ export default {
   create,
   recovery,
   snapshot,
+  snapshotDeadMessage,
   logs
 }
