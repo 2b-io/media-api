@@ -41,7 +41,7 @@
     "joi": "14.3.0",
     "keygen": "0.3.1",
     "middy": "0.20.0",
-    "mongoose": "5.3.13",
+    "mongoose": "5.7.5",
     "ms": "2.1.1",
     "namor": "1.1.1",
     "serialize-error": "3.0.0",
